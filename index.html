@@ -18,15 +18,15 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 80px 15px 60px 15px;
             position: relative;
         }
 
         .logo {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 150px;
+            top: 15px;
+            left: 15px;
+            width: 120px;
             z-index: 1000;
         }
 
@@ -35,33 +35,63 @@
             height: auto;
         }
 
+        @media (min-width: 768px) {
+            .logo {
+                top: 20px;
+                left: 20px;
+                width: 150px;
+            }
+
+            body {
+                padding: 20px;
+            }
+        }
+
         .main-container {
             text-align: center;
             max-width: 1200px;
+            width: 100%;
         }
 
         .welcome-message {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 300;
             color: #333;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             letter-spacing: 0.5px;
+        }
+
+        @media (min-width: 768px) {
+            .welcome-message {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
         }
 
         .container {
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
 
         .button {
             background-color: #f8f8f8;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 20px 40px;
+            padding: 18px 30px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -69,6 +99,15 @@
             color: #333;
             text-decoration: none;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        @media (min-width: 768px) {
+            .button {
+                width: auto;
+                padding: 20px 40px;
+            }
         }
 
         .button:hover {
@@ -81,12 +120,19 @@
         .button svg {
             width: 20px;
             height: 20px;
+            flex-shrink: 0;
         }
 
         .content-section {
             display: none;
-            margin-top: 40px;
+            margin-top: 20px;
             animation: fadeIn 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .content-section {
+                margin-top: 40px;
+            }
         }
 
         .content-section.active {
@@ -112,8 +158,14 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             transition: background-color 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .back-button {
+                margin-bottom: 30px;
+            }
         }
 
         .back-button:hover {
@@ -123,22 +175,34 @@
         .submenu {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             max-width: 400px;
             margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .submenu {
+                gap: 15px;
+            }
         }
 
         .submenu-item {
             background-color: #f8f8f8;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            padding: 16px 24px;
+            padding: 14px 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: left;
             font-size: 15px;
             color: #333;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 768px) {
+            .submenu-item {
+                padding: 16px 24px;
+            }
         }
 
         .submenu-item:hover {
@@ -150,26 +214,50 @@
 
         .catalog-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 12px;
             max-width: 900px;
             margin: 0 auto;
+        }
+
+        @media (min-width: 480px) {
+            .catalog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .catalog-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+            }
         }
 
         .catalog-item {
             background-color: #f8f8f8;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            padding: 20px;
+            padding: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: #333;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
             text-decoration: none;
             display: block;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .catalog-item {
+                padding: 20px;
+                font-size: 15px;
+            }
         }
 
         .catalog-item:hover {
@@ -181,10 +269,30 @@
 
         .footer {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 12px;
+            bottom: 15px;
+            right: 15px;
+            font-size: 11px;
             color: #999;
+        }
+
+        @media (min-width: 768px) {
+            .footer {
+                bottom: 20px;
+                right: 20px;
+                font-size: 12px;
+            }
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            h2 {
+                font-size: inherit;
+                margin-bottom: 30px;
+            }
         }
     </style>
 </head>
@@ -215,7 +323,7 @@
 
         <div id="desenhos-section" class="content-section">
             <button class="back-button" onclick="showHome()">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Desenhos</h2>
+            <h2 style="color: #333; font-weight: 300;">Desenhos</h2>
             <div class="catalog-grid">
                 <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/000000000000000003/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
                     Planetário 300
@@ -249,7 +357,7 @@
 
         <div id="catalogos-section" class="content-section">
             <button class="back-button" onclick="showHome()">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos</h2>
+            <h2 style="color: #333; font-weight: 300;">Catálogos</h2>
             <div class="submenu">
                 <div class="submenu-item" onclick="showSection('catalogos-tecnicos')">
                     Catálogos técnicos
@@ -265,7 +373,7 @@
 
         <div id="catalogos-tecnicos-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos Técnicos</h2>
+            <h2 style="color: #333; font-weight: 300;">Catálogos Técnicos</h2>
             <div class="catalog-grid">
                 <a href="https://www.dropbox.com/scl/fi/mo2oljkfn606604hngf76/300-Planet-rio.pdf?rlkey=2dlmrzjl3ms6v9nnelf2qsw2b&st=jyp47ofx&dl=0" target="_blank" class="catalog-item">
                     Planetário - 300
@@ -296,7 +404,7 @@
 
         <div id="manual-instalacao-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Manual de Instalação</h2>
+            <h2 style="color: #333; font-weight: 300;">Manual de Instalação</h2>
             <div class="catalog-grid">
                 <a href="https://www.dropbox.com/scl/fi/nibhy81nsgv8syf54wwci/BR_IOM_300_ATX-INC_POR_R04_0.pdf?rlkey=0pf2ou20lscz3wxltaih3jihe&st=vfi6aii8&dl=0" target="_blank" class="catalog-item">
                     Planetário - 300
@@ -318,7 +426,7 @@
 
         <div id="partes-pecas-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Partes e Peças de Reposição</h2>
+            <h2 style="color: #333; font-weight: 300;">Partes e Peças de Reposição</h2>
             <div class="catalog-grid">
                 <a href="https://www.dropbox.com/scl/fi/hp8k8s3xob7rdf0k3w248/BR_SPR_A_STD_I-UK-DE-F-E_R00_0.pdf?rlkey=oa8z8opgwwecn22a12223v2tb&st=2wqcnfpm&dl=0" target="_blank" class="catalog-item">
                     A
@@ -358,6 +466,9 @@
 
             // Show requested section
             document.getElementById(section + '-section').classList.add('active');
+
+            // Scroll to top on mobile
+            window.scrollTo(0, 0);
         }
 
         function showHome() {
@@ -367,6 +478,9 @@
             document.getElementById('manual-instalacao-section').classList.remove('active');
             document.getElementById('partes-pecas-section').classList.remove('active');
             document.getElementById('home-section').style.display = 'block';
+
+            // Scroll to top on mobile
+            window.scrollTo(0, 0);
         }
     </script>
 </body>
