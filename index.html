@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonfiglioli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .main-container {
+            text-align: center;
+            max-width: 1200px;
+        }
+        
+        .welcome-message {
+            font-size: 32px;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .button {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .button:hover {
+            border-color: #999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .content-section {
+            display: none;
+            margin-top: 40px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .back-button {
+            background-color: #666;
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #555;
+        }
+        
+        .submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .submenu-item {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 15px;
+            color: #333;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .submenu-item:hover {
+            border-color: #999;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .catalog-item {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .catalog-item:hover {
+            border-color: #999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="welcome-message">Bem-vindo</h1>
+        
+        <div id="home-section">
+            <div class="container">
+                <a href="#" class="button" onclick="showSection('desenhos'); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Desenhos
+                </a>
+                
+                <a href="#" class="button" onclick="showSection('catalogos'); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Catálogos
+                </a>
+            </div>
+        </div>
+        
+        <div id="desenhos-section" class="content-section">
+            <button class="back-button" onclick="showHome()">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 20px;">Desenhos</h2>
+            <p style="color: #666;">Conteúdo de desenhos será exibido aqui.</p>
+        </div>
+        
+        <div id="catalogos-section" class="content-section">
+            <button class="back-button" onclick="showHome()">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos</h2>
+            <div class="submenu">
+                <div class="submenu-item" onclick="showSection('catalogos-tecnicos')">
+                    Catálogos técnicos
+                </div>
+                <div class="submenu-item" onclick="showSection('manual-instalacao')">
+                    Manual de instalação
+                </div>
+                <div class="submenu-item" onclick="showSection('partes-pecas')">
+                    Partes e peças de reposição
+                </div>
+            </div>
+        </div>
+        
+        <div id="catalogos-tecnicos-section" class="content-section">
+            <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos Técnicos</h2>
+            <div class="catalog-grid">
+                <a href="https://www.dropbox.com/scl/fi/mo2oljkfn606604hngf76/300-Planet-rio.pdf?rlkey=2dlmrzjl3ms6v9nnelf2qsw2b&st=jyp47ofx&dl=0" target="_blank" class="catalog-item">
+                    Planetário - 300
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/9ffbcsp6wuxbreaf4vh1k/300H-Planet-rio-Pesado-aplica-es-pesadas.pdf?rlkey=vivsmi9vhb2h13mll7fgfw3lu&st=sdxkqw5k&dl=0" target="_blank" class="catalog-item">
+                    3/H
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/pdbz3m56n5xxtq3eugu56/CAFS-Paralelo-Ortogonal-e-Coaxial.pdf?rlkey=k0l47iavxe7344imkqwbk7uug&st=n7qpbyaf&dl=0" target="_blank" class="catalog-item">
+                    ACFS
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/be0pj0xgd1m35t2fiaisp/HD-Eixos-paralelos-e-ortogonais-alto-torque.pdf?rlkey=8yjx0ba3m2cmt30jpcvastycx&st=jrbrv9zi&dl=0" target="_blank" class="catalog-item">
+                    HDP
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/09jz3qomu9m8518k6588l/HDPE-Redutor-para-extrusoras.pdf?rlkey=f5ldvlfrdybprzoemsurkn3zk&st=murpgwn6&dl=0" target="_blank" class="catalog-item">
+                    HDPE
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/n3hmd9nepwvixzps7ppsa/RAN-Tranmiss-es-Angulares.pdf?rlkey=syns0xl7vtppmh7e8tujpg2w4&st=tkk6jlqf&dl=0" target="_blank" class="catalog-item">
+                    RAN
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/n8iwm7lt7s9u498tjn1jq/TIR-Microplanet-rios.pdf?rlkey=xkp0xx8csawtg11g4zt4xyy1y&st=3699pmq5&dl=0" target="_blank" class="catalog-item">
+                    TIR
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/2f35c9yodf642vgkb21oo/VF-W-Rosca-e-sem-fim.pdf?rlkey=bc4f1ljwu6z2vezt9x0qfzvge&st=t4c7p8cl&dl=0" target="_blank" class="catalog-item">
+                    VF-W
+                </a>
+            </div>
+        </div>
+        
+        <div id="manual-instalacao-section" class="content-section">
+            <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Manual de Instalação</h2>
+            <div class="catalog-grid">
+                <a href="https://www.dropbox.com/scl/fi/nibhy81nsgv8syf54wwci/BR_IOM_300_ATX-INC_POR_R04_0.pdf?rlkey=0pf2ou20lscz3wxltaih3jihe&st=vfi6aii8&dl=0" target="_blank" class="catalog-item">
+                    Planetário - 300
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/icnbpxn8u91jbk392wzvb/BR_IOM_CAFS_ATX_POR_R04_2.pdf?rlkey=gibhhq73nwsjwn6h990ljgcm8&st=un03u8kw&dl=0" target="_blank" class="catalog-item">
+                    ACFS
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/fao1ku20stfbdwmd7kqij/BR_IOM_HDPO_ATX_POR_R03_0.pdf?rlkey=nlar3jn27r7y6st6pjd0nh31q&st=g2jfli03&dl=0" target="_blank" class="catalog-item">
+                    HDP
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/xyriwjt91np51lw1psycx/TI_IOM_TIR_STD_POR_R00_1.pdf?rlkey=iaiwbkuvylsqq2p1nf94gtkax&st=yl0ruldv&dl=0" target="_blank" class="catalog-item">
+                    TIR
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/vy16wz60rznnactn1vz61/BR_IOM_VF-W_ATX_POR_R03_0.pdf?rlkey=zmhzgx4nc1x7joovve9hdl43m&st=u8kmivgq&dl=0" target="_blank" class="catalog-item">
+                    VF-W
+                </a>
+            </div>
+        </div>
+        
+        <div id="partes-pecas-section" class="content-section">
+            <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Partes e Peças de Reposição</h2>
+            <div class="catalog-grid">
+                <a href="https://www.dropbox.com/scl/fi/hp8k8s3xob7rdf0k3w248/BR_SPR_A_STD_I-UK-DE-F-E_R00_0.pdf?rlkey=oa8z8opgwwecn22a12223v2tb&st=2wqcnfpm&dl=0" target="_blank" class="catalog-item">
+                    A
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/ntp925udotg2gp137fklx/BR_SPR_C_STD_I-UK-F-DE-E_R01_0.pdf?rlkey=ag4gi6hdennoisgwsr7znehph&st=ingbikhi&dl=0" target="_blank" class="catalog-item">
+                    C
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/ns2x3r868xcevc0v7to3c/BR_SPR_F_STD_I-UK-DE-F-E_R00_0.pdf?rlkey=x33lvzt8umvd4f467zxuqctcw&st=a5ujwvwd&dl=0" target="_blank" class="catalog-item">
+                    F
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/vt4pgsrhxgqq4w6qc9rh4/BR_SPR_S_STD_I-UK-F-DE-E_R00_0.pdf?rlkey=lq486qgynm3orllpk1qvcl29m&st=ntdu2igp&dl=0" target="_blank" class="catalog-item">
+                    S
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/430wlf99bt79xyjy1m6jo/BR_SPR_VF_STD_I-UK-DE-F-E_R00_0.pdf?rlkey=7esrolgv4wvmcyf8jx06lr72o&st=8sda5b89&dl=0" target="_blank" class="catalog-item">
+                    VF
+                </a>
+                <a href="https://www.dropbox.com/scl/fi/8o7eoni6abln16f766ord/BR_SPR_W_STD_I-UK-PO-F-E_R00_0.pdf?rlkey=i4bij7wa42cblx398sys2j11k&st=a3wse4h3&dl=0" target="_blank" class="catalog-item">
+                    W
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        por Glauber Sanches
+    </div>
+    
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('desenhos-section').classList.remove('active');
+            document.getElementById('catalogos-section').classList.remove('active');
+            document.getElementById('catalogos-tecnicos-section').classList.remove('active');
+            document.getElementById('manual-instalacao-section').classList.remove('active');
+            document.getElementById('partes-pecas-section').classList.remove('active');
+            
+            // Show requested section
+            document.getElementById(section + '-section').classList.add('active');
+        }
+        
+        function showHome() {
+            document.getElementById('desenhos-section').classList.remove('active');
+            document.getElementById('catalogos-section').classList.remove('active');
+            document.getElementById('catalogos-tecnicos-section').classList.remove('active');
+            document.getElementById('manual-instalacao-section').classList.remove('active');
+            document.getElementById('partes-pecas-section').classList.remove('active');
+            document.getElementById('home-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
