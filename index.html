@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: #f5f5f5;
@@ -21,12 +21,12 @@
             padding: 20px;
             position: relative;
         }
-        
+
         .main-container {
             text-align: center;
             max-width: 1200px;
         }
-        
+
         .welcome-message {
             font-size: 32px;
             font-weight: 300;
@@ -34,14 +34,14 @@
             margin-bottom: 40px;
             letter-spacing: 0.5px;
         }
-        
+
         .container {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         .button {
             background-color: white;
             border: 2px solid #e0e0e0;
@@ -57,28 +57,28 @@
             text-decoration: none;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
-        
+
         .button:hover {
             border-color: #999;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
         }
-        
+
         .button svg {
             width: 20px;
             height: 20px;
         }
-        
+
         .content-section {
             display: none;
             margin-top: 40px;
             animation: fadeIn 0.3s ease;
         }
-        
+
         .content-section.active {
             display: block;
         }
-        
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -89,7 +89,7 @@
                 transform: translateY(0);
             }
         }
-        
+
         .back-button {
             background-color: #666;
             border: none;
@@ -101,11 +101,11 @@
             margin-bottom: 30px;
             transition: background-color 0.3s ease;
         }
-        
+
         .back-button:hover {
             background-color: #555;
         }
-        
+
         .submenu {
             display: flex;
             flex-direction: column;
@@ -113,7 +113,7 @@
             max-width: 400px;
             margin: 0 auto;
         }
-        
+
         .submenu-item {
             background-color: white;
             border: 2px solid #e0e0e0;
@@ -126,13 +126,13 @@
             color: #333;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
-        
+
         .submenu-item:hover {
             border-color: #999;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transform: translateX(5px);
         }
-        
+
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -140,7 +140,7 @@
             max-width: 900px;
             margin: 0 auto;
         }
-        
+
         .catalog-item {
             background-color: white;
             border: 2px solid #e0e0e0;
@@ -156,13 +156,13 @@
             text-decoration: none;
             display: block;
         }
-        
+
         .catalog-item:hover {
             border-color: #999;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transform: translateY(-3px);
         }
-        
+
         .footer {
             position: fixed;
             bottom: 20px;
@@ -175,7 +175,7 @@
 <body>
     <div class="main-container">
         <h1 class="welcome-message">Bem-vindo</h1>
-        
+
         <div id="home-section">
             <div class="container">
                 <a href="#" class="button" onclick="showSection('desenhos'); return false;">
@@ -184,7 +184,7 @@
                     </svg>
                     Desenhos
                 </a>
-                
+
                 <a href="#" class="button" onclick="showSection('catalogos'); return false;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -193,13 +193,41 @@
                 </a>
             </div>
         </div>
-        
+
         <div id="desenhos-section" class="content-section">
             <button class="back-button" onclick="showHome()">← Voltar</button>
-            <h2 style="color: #333; font-weight: 300; margin-bottom: 20px;">Desenhos</h2>
-            <p style="color: #666;">Conteúdo de desenhos será exibido aqui.</p>
+            <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Desenhos</h2>
+            <div class="catalog-grid">
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/000000000000000003/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    Planetário 300
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/A/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    A - Ortogonal
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/C/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    C - Coaxial
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/F/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    F - Paralelo
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/S/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    S - Simples estágio
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/VF/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    VF - Rosca e sem fim
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/W/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    W - Rosca e sem fim
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/HDP/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    HDP - Heavy Duty
+                </a>
+                <a href="https://shop.bonfiglioli.com/store/bonfigliolib2c/en/product/HDO/configuratorPage/CPQCONFIGURATOR" target="_blank" class="catalog-item">
+                    HDO - Heavy Duty
+                </a>
+            </div>
         </div>
-        
+
         <div id="catalogos-section" class="content-section">
             <button class="back-button" onclick="showHome()">← Voltar</button>
             <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos</h2>
@@ -215,7 +243,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="catalogos-tecnicos-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
             <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Catálogos Técnicos</h2>
@@ -246,7 +274,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div id="manual-instalacao-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
             <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Manual de Instalação</h2>
@@ -268,7 +296,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div id="partes-pecas-section" class="content-section">
             <button class="back-button" onclick="showSection('catalogos')">← Voltar</button>
             <h2 style="color: #333; font-weight: 300; margin-bottom: 30px;">Partes e Peças de Reposição</h2>
@@ -294,11 +322,11 @@
             </div>
         </div>
     </div>
-    
+
     <div class="footer">
         por Glauber Sanches
     </div>
-    
+
     <script>
         function showSection(section) {
             // Hide all sections
@@ -308,11 +336,11 @@
             document.getElementById('catalogos-tecnicos-section').classList.remove('active');
             document.getElementById('manual-instalacao-section').classList.remove('active');
             document.getElementById('partes-pecas-section').classList.remove('active');
-            
+
             // Show requested section
             document.getElementById(section + '-section').classList.add('active');
         }
-        
+
         function showHome() {
             document.getElementById('desenhos-section').classList.remove('active');
             document.getElementById('catalogos-section').classList.remove('active');
