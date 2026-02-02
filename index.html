@@ -68,7 +68,11 @@
             }
         }
 
-        .container {
+        .buttons-container {
+            display: inline-block;
+        }
+
+        .button-row {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -76,10 +80,9 @@
         }
 
         @media (min-width: 768px) {
-            .container {
+            .button-row {
                 flex-direction: row;
                 gap: 20px;
-                flex-wrap: wrap;
                 justify-content: center;
             }
         }
@@ -115,6 +118,16 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transform: translateY(-2px);
             background-color: #ffffff;
+        }
+
+        .button.full-width-button {
+            max-width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .button.full-width-button {
+                width: 100%;
+            }
         }
 
         .button svg {
@@ -304,20 +317,32 @@
     <div class="main-container">
         <div id="home-section">
             <h1 class="welcome-message">Bem-vindo</h1>
-            <div class="container">
-                <a href="#" class="button" onclick="showSection('desenhos'); return false;">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                    Desenhos
-                </a>
+            
+            <div class="buttons-container">
+                <div class="button-row">
+                    <a href="#" class="button" onclick="showSection('desenhos'); return false;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                        Desenhos
+                    </a>
 
-                <a href="#" class="button" onclick="showSection('catalogos'); return false;">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    Catálogos
-                </a>
+                    <a href="#" class="button" onclick="showSection('catalogos'); return false;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        Catálogos
+                    </a>
+                </div>
+
+                <div class="button-row" style="margin-top: 15px;">
+                    <a href="#" class="button full-width-button" onclick="showSection('material-apoio'); return false;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Material de Apoio
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -368,6 +393,16 @@
                 <div class="submenu-item" onclick="showSection('partes-pecas')">
                     Partes e peças de reposição
                 </div>
+            </div>
+        </div>
+
+        <div id="material-apoio-section" class="content-section">
+            <button class="back-button" onclick="showHome()">← Voltar</button>
+            <h2 style="color: #333; font-weight: 300;">Material de Apoio</h2>
+            <div class="submenu">
+                <a href="https://engsanches-eng.github.io/catalogo/apostila%20atualizada.pdf" target="_blank" class="submenu-item" style="text-decoration: none;">
+                    Apostila
+                </a>
             </div>
         </div>
 
@@ -460,6 +495,7 @@
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('desenhos-section').classList.remove('active');
             document.getElementById('catalogos-section').classList.remove('active');
+            document.getElementById('material-apoio-section').classList.remove('active');
             document.getElementById('catalogos-tecnicos-section').classList.remove('active');
             document.getElementById('manual-instalacao-section').classList.remove('active');
             document.getElementById('partes-pecas-section').classList.remove('active');
@@ -474,6 +510,7 @@
         function showHome() {
             document.getElementById('desenhos-section').classList.remove('active');
             document.getElementById('catalogos-section').classList.remove('active');
+            document.getElementById('material-apoio-section').classList.remove('active');
             document.getElementById('catalogos-tecnicos-section').classList.remove('active');
             document.getElementById('manual-instalacao-section').classList.remove('active');
             document.getElementById('partes-pecas-section').classList.remove('active');
