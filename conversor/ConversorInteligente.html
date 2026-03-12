@@ -157,7 +157,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
   .ds-k, .ds-v, .ds-v .u { font-size: 15px !important; }
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -1550,93 +1550,142 @@ function instalarApp() {
 }
 
 function gerarPDF() {
-  const sewModel = document.getElementById('dsModel').innerText.trim();
-  const bfModel  = document.getElementById('bfModel').innerText.trim();
-  const sewContent = document.getElementById('dsContent').innerHTML;
-  const bfContent  = document.getElementById('bfContent').innerHTML;
+  const sewModel   = document.getElementById('dsModel').innerText.trim();
+  const bfModel    = document.getElementById('bfModel').innerText.trim();
   const sewVisible = document.getElementById('dsContent').style.display !== 'none';
   const bfVisible  = document.getElementById('bfContent').style.display !== 'none';
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-
-  // Strip CSS variables for PDF rendering
-  function fixVars(s){
-    return s
-      .replace(/color\s*:\s*var\(--acc\)/g,'color:#004B87')
-      .replace(/color\s*:\s*var\(--cyan\)/g,'color:#0079C1')
-      .replace(/color\s*:\s*var\(--grn\)/g,'color:#1A7F42')
-      .replace(/color\s*:\s*var\(--red\)/g,'color:#C62828')
-      .replace(/color\s*:\s*var\(--pur\)/g,'color:#4A2D87')
-      .replace(/color\s*:\s*var\(--br\)/g,'color:#0D1B33')
-      .replace(/color\s*:\s*var\(--dim\)/g,'color:#6B7A94')
-      .replace(/color\s*:\s*var\(--txt\)/g,'color:#1B2A4A')
-      .replace(/background\s*:\s*var\(--s2\)/g,'background:#F2F4F7')
-      .replace(/background\s*:\s*var\(--s3\)/g,'background:#EBF0F5')
-      .replace(/border[^:]*:\s*[^;]*var\(--b\)[^;]*/g,'border:1px solid #DCE1E8')
-      .replace(/var\(--[a-z0-9-]+\)/g,'inherit');
+  if (!sewVisible && !bfVisible) {
+    alert('Gere o Datasheet antes de exportar o PDF.');
+    return;
   }
 
-  const rowStyle = 'display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #EBF0F5;gap:8px;';
-  const kStyle   = 'font-size:14px;color:#6B7A94;';
-  const vStyle   = 'font-family:monospace;font-size:15px;font-weight:600;color:#0D1B33;text-align:right;';
-  const secStyle = 'font-size:11px;font-weight:700;letter-spacing:3px;color:#6B7A94;text-transform:uppercase;margin:14px 0 6px;padding-top:10px;border-top:1px solid #EBF0F5;';
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 
-  const pdfContent = `
-<div style="font-family:Arial,sans-serif;font-size:13px;color:#1B2A4A;padding:14px 18px;max-width:100%;margin:0 auto;">
+  /* ── helpers ─────────────────────────────────────────── */
+  function rowsFromEl(el) {
+    const rows = [];
+    el.querySelectorAll('.ds-sec').forEach(sec => {
+      rows.push({ type:'sec', text: sec.textContent.trim() });
+    });
+    el.querySelectorAll('.ds-row').forEach(row => {
+      const k = row.querySelector('.ds-k');
+      const v = row.querySelector('.ds-v');
+      if (k && v) rows.push({ type:'row', k: k.textContent.trim(), v: v.textContent.trim() });
+    });
+    // interleave: secs appear before their rows in DOM order
+    const result = [];
+    el.childNodes.forEach(n => {
+      if (!n.classList) return;
+      if (n.classList.contains('ds-sec'))  result.push({ type:'sec',  text: n.textContent.trim() });
+      if (n.classList.contains('ds-row'))  result.push({ type:'row',  k: n.querySelector('.ds-k')?.textContent.trim(), v: n.querySelector('.ds-v')?.textContent.trim() });
+    });
+    return result.length ? result : rows;
+  }
 
-  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #004B87;padding-bottom:6px;margin-bottom:12px;">
-    <div>
-      <div style="font-weight:900;font-size:16px;color:#004B87;letter-spacing:1.8px;">CONVERSOR INTELIGENTE</div>
-      <div style="font-size:10px;color:#6B7A94;letter-spacing:1.2px;text-transform:uppercase;">Gerador de Código de Produto — Bonfiglioli</div>
-    </div>
-    <div style="font-size:10px;color:#6B7A94;text-align:right;">${dateStr}</div>
-  </div>
+  /* ── jsPDF ───────────────────────────────────────────── */
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4', orientation:'portrait' });
+  const PW = 210, PH = 297, ML = 14, MR = 14, MT = 14, MB = 14;
+  const CW = PW - ML - MR;  // 182mm usable width
+  let y = MT;
 
-  ${bfVisible ? `
-  <div style="margin-bottom:12px;">
-    <div style="background:#004B87;color:#fff;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 10px;border-radius:3px 3px 0 0;">
-      ▸ BONFIGLIOLI
-    </div>
-    <div style="border:1px solid #DCE1E8;border-top:none;padding:8px 12px;border-radius:0 0 4px 4px;background:#fff;">
-      <div style="font-family:monospace;font-size:15px;font-weight:700;color:#004B87;margin-bottom:8px;word-break:break-all;">${bfModel}</div>
-      ${fixVars(bfContent).replace(/padding:\s*6px\s*0/g, 'padding:3px 0').replace(/font-size:\s*12px/g, 'font-size:12px').replace(/font-size:\s*14px/g, 'font-size:13px')}
-    </div>
-  </div>
-  ` : ''}
+  function checkPage(need) {
+    if (y + need > PH - MB) { doc.addPage(); y = MT; }
+  }
 
-  ${(bfVisible && sewVisible) ? `
-  <div style="margin:10px 0;border-top:1.5px dashed #C8CFD9;text-align:center;">
-    <span style="display:inline-block;margin-top:-8px;background:#fff;padding:0 10px;font-size:10px;color:#6B7A94;letter-spacing:1.8px;text-transform:uppercase;">Redutor SEW — Código do Produto</span>
-  </div>
-  ` : ''}
+  /* header */
+  doc.setFillColor(0, 75, 135);
+  doc.rect(ML, y, CW, 10, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(11);
+  doc.setTextColor(255,255,255);
+  doc.text('CONVERSOR INTELIGENTE — Gerador de Código de Produto Bonfiglioli', ML + 3, y + 6.8);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  doc.text(dateStr, PW - MR - doc.getTextWidth(dateStr) - 2, y + 6.8);
+  y += 12;
 
-  ${sewVisible ? `
-  <div>
-    <div style="background:#6B7A94;color:#fff;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 10px;border-radius:3px 3px 0 0;">
-      ▸ CÓDIGO DO PRODUTO SEW
-    </div>
-    <div style="border:1px solid #DCE1E8;border-top:none;padding:8px 12px;border-radius:0 0 4px 4px;background:#fff;">
-      <div style="font-family:monospace;font-size:15px;font-weight:700;color:#0D1B33;margin-bottom:8px;word-break:break-all;">${sewModel}</div>
-      ${fixVars(sewContent).replace(/padding:\s*6px\s*0/g, 'padding:3px 0').replace(/font-size:\s*12px/g, 'font-size:12px').replace(/font-size:\s*14px/g, 'font-size:13px')}
-    </div>
-  </div>
-  ` : ''}
+  /* ── section renderer ────────────────────────────────── */
+  function renderBlock(title, modelCode, contentEl) {
+    if (!contentEl) return;
+    checkPage(18);
 
-</div>`;
+    // block title bar
+    doc.setFillColor(235,240,245);
+    doc.rect(ML, y, CW, 7, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9);
+    doc.setTextColor(0,27,51);
+    doc.text(title.toUpperCase(), ML + 2, y + 5);
+    y += 9;
 
-  const el = document.createElement('div');
-  el.innerHTML = pdfContent;
+    // model code
+    if (modelCode) {
+      checkPage(9);
+      doc.setFont('courier','bold'); doc.setFontSize(13);
+      doc.setTextColor(0,75,135);
+      doc.text(modelCode, ML, y + 6);
+      doc.setDrawColor(0,75,135);
+      doc.line(ML, y + 7.5, ML + CW, y + 7.5);
+      y += 11;
+    }
 
-  const fname = ('Conversao_SEW_Bonfiglioli.pdf');
+    // rows
+    const rows = rowsFromEl(contentEl);
+    rows.forEach(r => {
+      if (r.type === 'sec') {
+        checkPage(8);
+        doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+        doc.setTextColor(107,122,148);
+        doc.text(r.text.toUpperCase(), ML, y + 4);
+        doc.setDrawColor(220,225,232);
+        doc.line(ML, y + 5, ML + CW, y + 5);
+        y += 7;
+      } else if (r.type === 'row' && r.k && r.v) {
+        checkPage(6);
+        doc.setFont('helvetica','normal'); doc.setFontSize(9);
+        doc.setTextColor(107,122,148);
+        doc.text(r.k, ML, y + 4.5);
+        doc.setFont('helvetica','bold');
+        doc.setTextColor(13,27,51);
+        // right-align value
+        doc.text(r.v, ML + CW, y + 4.5, { align:'right' });
+        doc.setDrawColor(235,240,245);
+        doc.line(ML, y + 5.5, ML + CW, y + 5.5);
+        y += 6.5;
+      }
+    });
+    y += 4;
+  }
 
-  html2pdf().set({
-    margin: [8,10,8,10],
-    filename: fname,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 1.8, useCORS: true, logging: false },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  }).from(el).save();
+  // ORDEM CORRIGIDA: Bonfiglioli primeiro, SEW como equivalente
+  if (bfVisible) {
+    renderBlock('Bonfiglioli — Produto Principal', bfModel, document.getElementById('bfContent'));
+  }
+  if (sewVisible) {
+    if (bfVisible) checkPage(14);
+    renderBlock('SEW — Equivalente', sewModel, document.getElementById('dsContent'));
+  }
+
+  /* footer on every page */
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.setTextColor(171,181,196);
+    const footer = `Página ${p} de ${totalPages}  •  Conversor Inteligente REV 2026  •  por Glauber Sanches`;
+    doc.text(footer, PW/2, PH - 6, { align:'center' });
+  }
+
+  // Nome do arquivo: "Bonfiglioli - SEW.pdf"
+  let fname = 'Conversao';
+  if (bfVisible && sewVisible) {
+    fname = `${bfModel} - ${sewModel}`;
+  } else if (bfVisible) {
+    fname = bfModel;
+  } else if (sewVisible) {
+    fname = sewModel;
+  }
+  doc.save(`${fname.replace(/[/\\:*?"<>|]/g,'_')}.pdf`);
 }
 
 </script>
