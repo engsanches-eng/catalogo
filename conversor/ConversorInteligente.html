@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/engsanches-eng/catalogo/main/conversor/unnamed2.jpg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ferramenta de Conversão</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +16,7 @@
   --grn:#1A7F42;--red:#C62828;--blu:#004B87;--pur:#4A2D87;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;font-size:14px;min-height:100vh}
+body{background:var(--bg);color:var(--txt);font-family:'IBM Plex Sans',sans-serif;font-size:16px;min-height:100vh}
 
 /* HEADER */
 header{display:flex;align-items:center;justify-content:space-between;padding:6px 20px;
@@ -26,24 +25,24 @@ header{display:flex;align-items:center;justify-content:space-between;padding:6px
   box-shadow:0 1px 3px rgba(0,40,80,.05)}
 .hd-left{display:flex;align-items:center;gap:8px}
 .badge{background:var(--acc);color:#fff;font-family:'Rajdhani',sans-serif;font-weight:800;
-  font-size:10px;padding:2px 8px;letter-spacing:1.5px;border-radius:3px}
-.hd-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;color:var(--br);letter-spacing:2px}
-.hd-sub{font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase}
-.hd-right{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);
+  font-size:12px;padding:2px 8px;letter-spacing:1.5px;border-radius:3px}
+.hd-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:var(--br);letter-spacing:2px}
+.hd-sub{font-size:11px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase}
+.hd-right{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);
   border:1px solid var(--b);padding:2px 8px;letter-spacing:1px;border-radius:3px;background:var(--s2)}
 
 /* CODE BAR */
 .codebar{display:flex;align-items:center;gap:10px;padding:6px 20px;
   background:#fff;border-bottom:1px solid var(--b);
   position:sticky;top:36px;z-index:100;box-shadow:0 1px 2px rgba(0,40,80,.03)}
-.codebar-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);
+.codebar-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);
   letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
-.codebar-val{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;
+.codebar-val{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;
   color:var(--acc);letter-spacing:1.5px;flex:1;min-height:22px;word-break:break-all}
 .codebar-val .pf{color:var(--acc)} .codebar-val .pt{color:var(--cyan)}
 .codebar-val .pc{color:var(--pur)} .codebar-val .pm{color:var(--grn)}
 .codebar-val .pa{color:#B26500}  .codebar-val .ps{color:var(--dim)}
-.codebar-val .ph{color:var(--bhi);font-size:13px;font-weight:400}
+.codebar-val .ph{color:var(--bhi);font-size:15px;font-weight:400}
 
 /* LAYOUT */
 main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px)}
@@ -55,17 +54,17 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 /* SECTION */
 .sec{margin-bottom:14px}
 .sec-title{display:flex;align-items:center;gap:8px;margin-bottom:10px;
-  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:9px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;
   letter-spacing:3px;color:var(--dim);text-transform:uppercase}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--b)}
-.sn{background:var(--acc);color:#fff;font-size:9px;font-weight:800;
+.sn{background:var(--acc);color:#fff;font-size:11px;font-weight:800;
   width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:3px}
 
 /* DROPDOWN */
 .dd-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .dd{position:relative}
 .dd select{appearance:none;background:#fff;border:1.5px solid var(--b);
-  color:var(--br);font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;
+  color:var(--br);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;
   padding:8px 32px 8px 12px;cursor:pointer;outline:none;transition:border-color .15s,box-shadow .15s;
   min-width:140px;border-radius:4px}
 .dd select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,121,193,.12)}
@@ -73,75 +72,92 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 .dd select option{background:#fff;color:var(--br)}
 .dd select optgroup{background:var(--s2);color:var(--acc);font-weight:600}
 .dd::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  pointer-events:none;color:var(--dim);font-size:11px}
+  pointer-events:none;color:var(--dim);font-size:13px}
 .dd.w120 select{min-width:120px} .dd.w160 select{min-width:160px}
 .dd.w200 select{min-width:200px} .dd.w260 select{min-width:260px}
 .dd.w320 select{min-width:320px}
-.dd-hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)}
+.dd-hint{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim)}
 
 /* ACESSÓRIOS */
 .ac-grid{display:flex;flex-direction:column;gap:7px}
 .ac-row{display:flex;align-items:center;gap:8px}
-.ac-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);
+.ac-lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);
   width:38px;flex-shrink:0}
 
 /* REDUÇÃO */
 .red-row{display:flex;align-items:center;gap:10px}
-.red-lbl{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim)}
+.red-lbl{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--dim)}
 .red-inp{background:#fff;border:1.5px solid var(--b);color:var(--acc);
-  font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;
+  font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;
   padding:7px 12px;width:120px;outline:none;transition:border-color .15s,box-shadow .15s;border-radius:4px}
 .red-inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,121,193,.12)}
-.red-closest{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);margin-top:4px}
+.red-closest{display:none}
 .red-closest .rc{color:var(--cyan);font-weight:600}
 
 /* BOTÃO */
 .btn{width:100%;margin-top:18px;padding:13px;background:var(--cyan);color:#fff;
-  font-family:'Rajdhani',sans-serif;font-weight:800;font-size:14px;letter-spacing:3px;
+  font-family:'Rajdhani',sans-serif;font-weight:800;font-size:16px;letter-spacing:3px;
   text-transform:uppercase;border:none;cursor:pointer;transition:all .15s;
   border-radius:5px;box-shadow:0 2px 8px rgba(0,75,135,.18)}
 .btn:hover{background:var(--acc2);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,75,135,.25)}
 .btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
-.status{margin-top:9px;padding:9px 13px;font-family:'IBM Plex Mono',monospace;font-size:11px;display:none;border-radius:4px}
+.status{margin-top:9px;padding:9px 13px;font-family:'IBM Plex Mono',monospace;font-size:13px;display:none;border-radius:4px}
 .status.ok{display:block;background:#E8F5E9;border:1px solid #A5D6A7;color:var(--grn)}
 .status.wn{display:block;background:#FFF8E1;border:1px solid #FFE082;color:#E68A00}
 .status.er{display:block;background:#FFEBEE;border:1px solid #EF9A9A;color:var(--red)}
 
 /* DATASHEET */
 .ds-head{padding-bottom:13px;border-bottom:2px solid var(--acc);margin-bottom:4px}
-.ds-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:4px}
-.ds-model{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--br);min-height:20px;word-break:break-all}
+.ds-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px;margin-bottom:4px}
+.ds-model{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:var(--br);min-height:20px;word-break:break-all}
 .ds-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:10px;padding:50px 16px;border:1px dashed var(--b);margin-top:16px;text-align:center;border-radius:6px;background:var(--s2)}
-.ds-empty .ico{font-size:34px;opacity:.2}
-.ds-empty .msg{font-size:12px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6}
+.ds-empty .ico{font-size:36px;opacity:.2}
+.ds-empty .msg{font-size:14px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6}
 
-.ds-sec{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:9px;
-  letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin:16px 0 7px;
-  padding-top:12px;border-top:1px solid var(--s3)}
+.ds-sec{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin:10px 0 4px;
+  padding-top:8px;border-top:1px solid var(--s3)}
 .ds-row{display:flex;justify-content:space-between;align-items:baseline;
-  padding:6px 0;border-bottom:1px solid var(--s2);gap:8px}
+  padding:4px 0;border-bottom:1px solid var(--s2);gap:8px}
 .ds-row:last-child{border:none}
-.ds-k{font-size:12px;color:var(--dim)}
-.ds-v{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--br);text-align:right}
-.ds-v .u{font-size:10px;color:var(--dim);font-weight:400;margin-left:2px}
-.ds-v.xl{font-size:20px;color:var(--cyan)}
+.ds-k{font-size:16px;color:var(--dim)}
+.ds-v{font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:600;color:var(--br);text-align:right}
+.ds-v .u{font-family:'IBM Plex Sans',sans-serif;font-size:16px;color:var(--dim);font-weight:400;margin-left:2px}
+.ds-v.xl{font-size:16px;color:var(--cyan)}
 .ds-v.ok{color:var(--grn)} .ds-v.ng{color:var(--red)}
-.pb{font-size:9px;padding:1px 5px;font-weight:700;margin-left:4px;vertical-align:middle;border-radius:2px}
+.pb{font-size:11px;padding:1px 5px;font-weight:700;margin-left:4px;vertical-align:middle;border-radius:2px}
 .p4{background:rgba(0,75,135,.08);color:var(--acc)}
 .p6{background:rgba(74,45,135,.08);color:var(--pur)}
 .p8{background:rgba(0,121,193,.08);color:var(--cyan)}
 .ac-list{margin-top:4px}
 .ac-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--s2)}
 .ac-item:last-child{border:none}
-.ac-code{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--acc);
+.ac-code{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:var(--acc);
   background:rgba(0,75,135,.06);border:1px solid rgba(0,75,135,.15);padding:2px 7px;white-space:nowrap;flex-shrink:0;border-radius:3px}
-.ac-desc{font-size:11px;color:var(--dim);line-height:1.4;padding-top:2px}
+.ac-desc{font-size:13px;color:var(--dim);line-height:1.4;padding-top:2px}
 
 .fade{animation:fd .25s ease}
 @keyframes fd{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media(max-width:860px){main{grid-template-columns:1fr}.right{border-top:1px solid var(--b);border-right:none;max-height:none}.bonfig{border-top:1px solid var(--b);max-height:none}.left{max-height:none}}
+
+/* BOTÃO PDF */
+.btn-pdf{width:100%;margin-top:8px;padding:13px;background:#1A7F42;color:#fff;
+  font-family:'Rajdhani',sans-serif;font-weight:800;font-size:16px;letter-spacing:3px;
+  text-transform:uppercase;border:none;cursor:pointer;transition:all .15s;
+  border-radius:5px;box-shadow:0 2px 8px rgba(0,100,50,.18);}
+.btn-pdf:hover{background:#155f32;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,100,50,.25);}
+.btn-pdf:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;pointer-events:none;}
+.btn-pdf:not([disabled]){opacity:1 !important;cursor:pointer !important;pointer-events:auto !important;}
+
+@media print {
+  .ds-row { padding: 3px 0 !important; }
+  .ds-sec { margin: 8px 0 3px !important; padding-top: 6px !important; }
+  body { font-size: 15px !important; }
+  .ds-k, .ds-v, .ds-v .u { font-size: 15px !important; }
+}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -155,7 +171,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
   <div style="display:flex;align-items:center;gap:10px">
   <div class="hd-right">REV 2026</div>
   <button onclick="instalarApp()" style="background:var(--cyan);color:#fff;border:none;padding:4px 12px;
-    font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.5px;
+    font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;
     cursor:pointer;border-radius:3px;text-transform:uppercase">⬇ Instalar como App</button>
 </div>
 </header>
@@ -224,7 +240,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 4. COMPLEMENTO -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">4</span>Complemento <span style="font-size:10px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(opcional)</span></div>
+      <div class="sec-title"><span class="sn">4</span>Complemento <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(opcional)</span></div>
       <div class="dd-row">
         <div class="dd w200" id="ddComp">
           <select id="selComp" disabled onchange="updateCode()">
@@ -313,7 +329,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 6. ACESSÓRIOS (cascata G6→I6→K6) -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">6</span>Acessórios de Motor <span style="font-size:10px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(até 3 — sem repetição)</span></div>
+      <div class="sec-title"><span class="sn">6</span>Acessórios de Motor <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(até 3 — sem repetição)</span></div>
       <div class="ac-grid">
         <div class="ac-row">
           <span class="ac-lbl">AC 1</span>
@@ -342,6 +358,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     </div>
 
     <button class="btn" id="btnCalc" onclick="calc()" disabled>▶ Gerar Datasheet</button>
+    <button class="btn-pdf" id="btnPDF" onclick="gerarPDF()" disabled>📄 Gerar PDF</button>
     <div class="status" id="status"></div>
 
   </div>
@@ -362,7 +379,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 <!-- BONFIGLIOLI -->
 <div class="bonfig">
   <div class="ds-head">
-    <div class="ds-lbl">▸ Equivalente Bonfiglioli</div>
+    <div class="ds-lbl">▸ Bonfiglioli</div>
     <div class="ds-model" id="bfModel">—</div>
   </div>
   <div class="ds-empty" id="bfEmpty">
@@ -1346,20 +1363,16 @@ function calc() {
   const compDesc = {F:'Flange adicional','/R':'Folga reduzida (Reduced Backlash)','/T':'TorqLOC®'};
 
   let html = `
-    <div class="ds-sec">Redutora</div>
-    <div class="ds-row"><span class="ds-k">Linha</span><span class="ds-v">${l} — ${linhaDesc}</span></div>
-    <div class="ds-row"><span class="ds-k">Forma construtiva</span><span class="ds-v">${f}</span></div>
-    <div class="ds-row"><span class="ds-k">Tamanho</span><span class="ds-v">${t} <span style="font-size:10px;color:var(--dim)">(${stages})</span></span></div>
     <div class="ds-row"><span class="ds-k">Redução (i)</span><span class="ds-v xl">${redReal!==null?(Number.isInteger(redReal)?redReal:redReal.toFixed(2)):'—'}</span></div>
     <div class="ds-row"><span class="ds-k">Torque de saída</span><span class="ds-v">${torque!==null?torque:'—'}<span class="u">Nm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Torque máx. carcaça</span><span class="ds-v">${tMax}<span class="u">Nm</span></span></div>
+    <div class="ds-row"><span class="ds-k">Torque nominal</span><span class="ds-v">${tMax}<span class="u">Nm</span></span></div>
     <div class="ds-row"><span class="ds-k">Ø Eixo de saída</span><span class="ds-v">${eixo}<span class="u">mm</span></span></div>
     <div class="ds-row"><span class="ds-k">Rotação saída (n₂)</span><span class="ds-v">${n2!==null?n2:'—'}<span class="u">rpm</span></span></div>
     <div class="ds-row"><span class="ds-k">Fator de serviço</span><span class="ds-v ${fs!==null?(fsOk?'ok':'ng'):''}">${fs!==null?fs:'—'}</span></div>
-    ${c?`<div class="ds-row"><span class="ds-k">Complemento</span><span class="ds-v">${c} <span style="font-size:10px;color:var(--dim)">${compDesc[c]||''}</span></span></div>`:''}
+    ${c?`<div class="ds-row"><span class="ds-k">Complemento</span><span class="ds-v">${c} <span style="font-size:12px;color:var(--dim)">${compDesc[c]||''}</span></span></div>`:''}
 
     <div class="ds-sec">Motor</div>
-    <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v" style="font-size:12px">${mCode}<span class="pb ${pc}">${motor.poles}p</span></span></div>
+    <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v">${mCode}<span class="pb ${pc}">${motor.poles}p</span></span></div>
     <div class="ds-row"><span class="ds-k">Potência</span><span class="ds-v">${motor.kw}<span class="u">kW</span></span></div>
     <div class="ds-row"><span class="ds-k">Rotação nominal (n₁)</span><span class="ds-v">${motor.rpm}<span class="u">rpm</span></span></div>
     <div class="ds-row"><span class="ds-k">Polos</span><span class="ds-v">${motor.poles}</span></div>
@@ -1384,27 +1397,27 @@ function calc() {
       const bFS = equiv.fs;
       const bFSOk = bFS !== '—' && parseFloat(bFS) >= 1;
       bonfigHTML = `
-        <div class="ds-row"><span class="ds-k">Descrição</span><span class="ds-v" style="font-size:11px;font-weight:500;max-width:220px;text-align:right;line-height:1.3">${equiv.description}</span></div>
-        <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v xl">${equiv.model}</span></div>
+        <span class="bf-model-code" style="display:none">${equiv.model}</span>
+        <div class="ds-row"><span class="ds-k">Descrição</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.description}</span></div>
+        <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v" style="font-size:13px;white-space:nowrap">${equiv.model}</span></div>
         <div class="ds-row"><span class="ds-k">Torque nominal</span><span class="ds-v">${equiv.torqueNom}<span class="u">Nm</span></span></div>
         <div class="ds-row"><span class="ds-k">Torque de saída</span><span class="ds-v">${equiv.torqueSaida}<span class="u">Nm</span></span></div>
-        <div class="ds-row"><span class="ds-k">Rotação entrada / saída</span><span class="ds-v" style="font-size:12px">${equiv.rpmEntrada} / ${equiv.rpmSaida}<span class="u">rpm</span></span></div>
+        <div class="ds-row"><span class="ds-k">Rotação entrada / saída</span><span class="ds-v">${equiv.rpmEntrada} / ${equiv.rpmSaida}<span class="u">rpm</span></span></div>
         <div class="ds-row"><span class="ds-k">Redução</span><span class="ds-v xl">${equiv.ratioStr}</span></div>
-        <div class="ds-row"><span class="ds-k">Nº Estágios</span><span class="ds-v">${equiv.bStages}</span></div>
         <div class="ds-row"><span class="ds-k">Fator de serviço</span><span class="ds-v ${bFSOk?'ok':'ng'}">${bFS}</span></div>
-        <div class="ds-row"><span class="ds-k">Config. de entrada</span><span class="ds-v" style="font-size:11px;max-width:200px;text-align:right;line-height:1.3">${equiv.entradaDesc}</span></div>
-        <div class="ds-row"><span class="ds-k">Config. de saída</span><span class="ds-v" style="font-size:11px;max-width:200px;text-align:right;line-height:1.3">${equiv.saidaDesc}</span></div>
+        <div class="ds-row"><span class="ds-k">Config. de entrada</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.entradaDesc}</span></div>
+        <div class="ds-row"><span class="ds-k">Config. de saída</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.saidaDesc}</span></div>
         <div class="ds-row"><span class="ds-k">Posição de montagem</span><span class="ds-v">${equiv.posMont || '—'}</span></div>
         <div class="ds-row"><span class="ds-k">Ø Eixo de saída</span><span class="ds-v">${equiv.shaftDiam}<span class="u">mm</span></span></div>
         <div class="ds-row"><span class="ds-k">Carcaça</span><span class="ds-v">Ferro Fundido</span></div>
         <div class="ds-row"><span class="ds-k">Peso</span><span class="ds-v">${equiv.weight}<span class="u">kg</span></span></div>
-        <div class="ds-row"><span class="ds-k">Lubrificação</span><span class="ds-v" style="font-size:11px">Banho de Óleo</span></div>
-        <div class="ds-row"><span class="ds-k">Refrigeração</span><span class="ds-v" style="font-size:11px">Natural</span></div>
-        <div class="ds-row"><span class="ds-k">Vedação</span><span class="ds-v" style="font-size:11px">Borracha Nitrílica</span></div>
+        <div class="ds-row"><span class="ds-k">Lubrificação</span><span class="ds-v" style="font-size:13px">Banho de Óleo</span></div>
+        <div class="ds-row"><span class="ds-k">Refrigeração</span><span class="ds-v" style="font-size:13px">Natural</span></div>
+        <div class="ds-row"><span class="ds-k">Vedação</span><span class="ds-v" style="font-size:13px">Borracha Nitrílica</span></div>
       `;
     } else {
       bonfigHTML = `
-        <div style="padding:16px 0;color:var(--dim);font-size:12px;text-align:center">
+        <div style="padding:16px 0;color:var(--dim);font-size:14px;text-align:center">
           Nenhum modelo equivalente encontrado para esta configuração.
         </div>
       `;
@@ -1413,6 +1426,7 @@ function calc() {
   
   // SEW datasheet
   el.style.display='block'; el.innerHTML=html; el.className='fade';
+  document.getElementById('btnPDF').removeAttribute('disabled'); document.getElementById('btnPDF').style.opacity='1'; document.getElementById('btnPDF').style.cursor='pointer';
 
   // Bonfiglioli na coluna separada
   const bfEl = document.getElementById('bfContent');
@@ -1423,11 +1437,12 @@ function calc() {
     bfEl.style.display='block';
     bfEl.innerHTML=bonfigHTML;
     bfEl.className='fade';
+    document.getElementById('btnPDF').removeAttribute('disabled'); document.getElementById('btnPDF').style.opacity='1'; document.getElementById('btnPDF').style.cursor='pointer';
     // Tenta extrair o modelo da primeira linha ds-v xl encontrada
     const tmpDiv = document.createElement('div');
     tmpDiv.innerHTML = bonfigHTML;
-    const xlEl = tmpDiv.querySelector('.ds-v.xl');
-    bfModelEl.textContent = xlEl ? xlEl.textContent : '—';
+    const modelSpan = tmpDiv.querySelector('.bf-model-code');
+    bfModelEl.textContent = modelSpan ? modelSpan.textContent : '—';
   } else {
     bfEmpty.style.display='flex';
     bfEl.style.display='none';
@@ -1438,7 +1453,7 @@ function calc() {
     const diff=Math.abs(redReal-rv), pct=((diff/rv)*100).toFixed(1);
     if(!reds) { sb.className='status ok'; sb.textContent=`✓ Redução informada: i = ${rv} (sem tabela de reduções para este tamanho)`; }
     else if(diff<0.01){ sb.className='status ok'; sb.textContent=`✓ Redução exata: i = ${redReal}`; }
-    else{ sb.className='status wn'; sb.textContent=`⚠ Redução aproximada: i = ${Number.isInteger(redReal)?redReal:redReal.toFixed(2)} (${pct}% de diferença)`; }
+    else{ sb.className=''; sb.textContent=''; sb.style.display='none'; }
   } else {
     sb.className='status wn'; sb.textContent='⚠ Informe uma redução para calcular torque e n₂.';
   }
@@ -1534,9 +1549,99 @@ function instalarApp() {
   URL.revokeObjectURL(a.href);
 }
 
+function gerarPDF() {
+  const sewModel = document.getElementById('dsModel').innerText.trim();
+  const bfModel  = document.getElementById('bfModel').innerText.trim();
+  const sewContent = document.getElementById('dsContent').innerHTML;
+  const bfContent  = document.getElementById('bfContent').innerHTML;
+  const sewVisible = document.getElementById('dsContent').style.display !== 'none';
+  const bfVisible  = document.getElementById('bfContent').style.display !== 'none';
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+  // Strip CSS variables for PDF rendering
+  function fixVars(s){
+    return s
+      .replace(/color\s*:\s*var\(--acc\)/g,'color:#004B87')
+      .replace(/color\s*:\s*var\(--cyan\)/g,'color:#0079C1')
+      .replace(/color\s*:\s*var\(--grn\)/g,'color:#1A7F42')
+      .replace(/color\s*:\s*var\(--red\)/g,'color:#C62828')
+      .replace(/color\s*:\s*var\(--pur\)/g,'color:#4A2D87')
+      .replace(/color\s*:\s*var\(--br\)/g,'color:#0D1B33')
+      .replace(/color\s*:\s*var\(--dim\)/g,'color:#6B7A94')
+      .replace(/color\s*:\s*var\(--txt\)/g,'color:#1B2A4A')
+      .replace(/background\s*:\s*var\(--s2\)/g,'background:#F2F4F7')
+      .replace(/background\s*:\s*var\(--s3\)/g,'background:#EBF0F5')
+      .replace(/border[^:]*:\s*[^;]*var\(--b\)[^;]*/g,'border:1px solid #DCE1E8')
+      .replace(/var\(--[a-z0-9-]+\)/g,'inherit');
+  }
+
+  const rowStyle = 'display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid #EBF0F5;gap:8px;';
+  const kStyle   = 'font-size:14px;color:#6B7A94;';
+  const vStyle   = 'font-family:monospace;font-size:15px;font-weight:600;color:#0D1B33;text-align:right;';
+  const secStyle = 'font-size:11px;font-weight:700;letter-spacing:3px;color:#6B7A94;text-transform:uppercase;margin:14px 0 6px;padding-top:10px;border-top:1px solid #EBF0F5;';
+
+  const pdfContent = `
+<div style="font-family:Arial,sans-serif;font-size:13px;color:#1B2A4A;padding:14px 18px;max-width:100%;margin:0 auto;">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #004B87;padding-bottom:6px;margin-bottom:12px;">
+    <div>
+      <div style="font-weight:900;font-size:16px;color:#004B87;letter-spacing:1.8px;">CONVERSOR INTELIGENTE</div>
+      <div style="font-size:10px;color:#6B7A94;letter-spacing:1.2px;text-transform:uppercase;">Gerador de Código de Produto — Bonfiglioli</div>
+    </div>
+    <div style="font-size:10px;color:#6B7A94;text-align:right;">${dateStr}</div>
+  </div>
+
+  ${bfVisible ? `
+  <div style="margin-bottom:12px;">
+    <div style="background:#004B87;color:#fff;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 10px;border-radius:3px 3px 0 0;">
+      ▸ BONFIGLIOLI
+    </div>
+    <div style="border:1px solid #DCE1E8;border-top:none;padding:8px 12px;border-radius:0 0 4px 4px;background:#fff;">
+      <div style="font-family:monospace;font-size:15px;font-weight:700;color:#004B87;margin-bottom:8px;word-break:break-all;">${bfModel}</div>
+      ${fixVars(bfContent).replace(/padding:\s*6px\s*0/g, 'padding:3px 0').replace(/font-size:\s*12px/g, 'font-size:12px').replace(/font-size:\s*14px/g, 'font-size:13px')}
+    </div>
+  </div>
+  ` : ''}
+
+  ${(bfVisible && sewVisible) ? `
+  <div style="margin:10px 0;border-top:1.5px dashed #C8CFD9;text-align:center;">
+    <span style="display:inline-block;margin-top:-8px;background:#fff;padding:0 10px;font-size:10px;color:#6B7A94;letter-spacing:1.8px;text-transform:uppercase;">Redutor SEW — Código do Produto</span>
+  </div>
+  ` : ''}
+
+  ${sewVisible ? `
+  <div>
+    <div style="background:#6B7A94;color:#fff;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:3px 10px;border-radius:3px 3px 0 0;">
+      ▸ CÓDIGO DO PRODUTO SEW
+    </div>
+    <div style="border:1px solid #DCE1E8;border-top:none;padding:8px 12px;border-radius:0 0 4px 4px;background:#fff;">
+      <div style="font-family:monospace;font-size:15px;font-weight:700;color:#0D1B33;margin-bottom:8px;word-break:break-all;">${sewModel}</div>
+      ${fixVars(sewContent).replace(/padding:\s*6px\s*0/g, 'padding:3px 0').replace(/font-size:\s*12px/g, 'font-size:12px').replace(/font-size:\s*14px/g, 'font-size:13px')}
+    </div>
+  </div>
+  ` : ''}
+
+</div>`;
+
+  const el = document.createElement('div');
+  el.innerHTML = pdfContent;
+
+  const fname = ('Conversao_SEW_Bonfiglioli.pdf');
+
+  html2pdf().set({
+    margin: [8,10,8,10],
+    filename: fname,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 1.8, useCORS: true, logging: false },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }).from(el).save();
+}
+
 </script>
 
-<footer style="position:fixed;bottom:0;right:0;padding:4px 12px;font-size:10px;font-style:italic;color:var(--dim);pointer-events:none;">
+<footer style="position:fixed;bottom:0;right:0;padding:4px 12px;font-size:12px;font-style:italic;color:var(--dim);pointer-events:none;">
   por Glauber Sanches
 </footer>
 </body>
