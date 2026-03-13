@@ -697,11 +697,11 @@ const SEW_FORMA_BASE = {
   'R': 'P', 'RF': 'F', 'RM': 'U',
   // SEW F line → Bonfiglioli F: R=maciço padrão, H=vazado+diam, FA=flange
   'F': 'R', 'FA': 'H', 'FV': 'H', 'FH': 'S',
-  'FF': 'FA', 'FAF': 'FA', 'FVF': 'FA', 'FHF': 'FA',
+  'FF': 'FA', 'FAF': 'FA', 'FVF': 'FA', 'FHF': 'S',
   'FT': 'FA', 'FAZ': 'H', 'FVZ': 'H', 'FHZ': 'S',
   // SEW K line → Bonfiglioli A: UR=maciço, UH=vazado+diam, F1A=flange
   'K': 'UR', 'KA': 'UH', 'KV': 'UH', 'KH': 'US',
-  'KF': 'F1A', 'KAF': 'F1A', 'KVF': 'F1A', 'KHF': 'F1A',
+  'KF': 'F1A', 'KAF': 'F1A', 'KVF': 'F1A', 'KHF': 'US',
   'KT': 'F1A', 'KAZ': 'UH', 'KVZ': 'UH', 'KHZ': 'US',
   // SEW S line → Bonfiglioli S: P=pés, F=flange
   'S': 'P', 'SF': 'F', 'SAF': 'F', 'SHF': 'F',
@@ -866,6 +866,18 @@ function resolveBonfigForma(sewForma, bLine, bSize, sewShaftMM, sewSize) {
   if (bLine === 'F') {
     const allOpts = [...(sizeOpts.shaft||[]), ...(sizeOpts.flange||[])];
     if (baseForma === 'R' || baseForma === 'S') {
+      // FHF/FHZ: disco de contração — se tem flange de entrada (FF, FHF), retornar S + flange
+      const hasFlangeIn = ['FF','FAF','FVF','FHF','FT'].includes(sewForma);
+      if (baseForma === 'S' && hasFlangeIn) {
+        // Selecionar flange de saída pelo Ø EXTERNO do flange SEW
+        const sewSizeNum = sewSize ? sewSize.replace(/^[A-Za-z]+/,'').replace(/R\d+$/,'') : '';
+        const sewFlangeDiam = SEW_F_OUTPUT_FLANGE_DIAM[sewSizeNum] || sewShaftMM;
+        const bonfKey = 'F ' + bSize;
+        const ofCode = matchOutputFlange(bonfKey, sewFlangeDiam);
+        const flangeOut = ofCode && (sizeOpts.flange||[]).includes(ofCode) ? ofCode
+                          : (sizeOpts.flange||[])[0] || 'FA';
+        return 'S ' + flangeOut;
+      }
       return allOpts.includes(baseForma) ? baseForma : allOpts[0];
     }
     if (baseForma === 'H') {
@@ -934,6 +946,19 @@ function resolveBonfigForma(sewForma, bLine, bSize, sewShaftMM, sewSize) {
   if (bLine === 'A') {
     const allOpts = [...(sizeOpts.shaft||[]), ...(sizeOpts.flange||[])];
     if (baseForma === 'UR' || baseForma === 'UD' || baseForma === 'US') {
+      // KHF: disco de contração com flange de entrada → US + flange
+      const hasFlangeIn = ['KF','KAF','KVF','KHF','KT'].includes(sewForma);
+      if (baseForma === 'US' && hasFlangeIn) {
+        const sewSizeNum = sewSize ? sewSize.replace(/^[A-Za-z]+/,'').replace(/R\d+$/,'') : '';
+        const sewFlangeDiam = SEW_K_OUTPUT_FLANGE_DIAM[sewSizeNum] || sewShaftMM;
+        const bonfKey = 'A ' + bSize;
+        const ofCode = matchOutputFlange(bonfKey, sewFlangeDiam);
+        const flangeMap = { FA: 'F1A', FB: 'F1B', FC: 'F1C' };
+        const flangeTarget = ofCode ? (flangeMap[ofCode] || 'F1A') : 'F1A';
+        const flange = (sizeOpts.flange||[]).includes(flangeTarget) ? flangeTarget
+                       : (sizeOpts.flange||[])[0] || 'F1A';
+        return 'US ' + flange;
+      }
       return allOpts.includes(baseForma) ? baseForma : allOpts[0];
     }
     if (baseForma === 'UH') {
