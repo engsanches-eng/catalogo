@@ -1084,7 +1084,7 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     return Math.abs(a.eFS - targetFS) - Math.abs(b.eFS - targetFS);
   });
   
-  const best = scored[0];
+  const best = scored_sorted[0];
   const e = best.entry;
   const typeParts = e[1].split(/\s+/).filter(Boolean);
   const bLine = typeParts[0];
@@ -1234,22 +1234,23 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
   });
   
   // Sort: eixo exato primeiro, depois FS, depois RPM
-  scored.sort((a, b) => {
-    // Priority 1: eixo exato (shaftDiff === 0) tem prioridade absoluta
+  // Filtrar candidatos com FS minimo aceitavel (>= 1.0), salvo se nao houver nenhum
+  const fsMin = scored.filter(c => c.eFS >= 1.0);
+  const pool = fsMin.length > 0 ? fsMin : scored;
+
+  pool.sort((a, b) => {
+    // Priority 1: reducao/RPM mais proximo da SEW (define a aplicacao)
+    if (Math.abs(a.n2Pct - b.n2Pct) > 0.03) return a.n2Pct - b.n2Pct;
+    // Priority 2: eixo exato
     const aExact = a.shaftDiff === 0 ? 1 : 0;
     const bExact = b.shaftDiff === 0 ? 1 : 0;
     if (aExact !== bExact) return bExact - aExact;
-    // Priority 2: FS adequado
-    if (a.fsOk && !b.fsOk) return -1;
-    if (!a.fsOk && b.fsOk) return 1;
-    // Priority 3: eixo mais proximo (quando nenhum e exato)
+    // Priority 3: eixo mais proximo
     if (a.shaftDiff !== b.shaftDiff) return a.shaftDiff - b.shaftDiff;
-    // Priority 4: RPM mais proximo
-    if (Math.abs(a.n2Pct - b.n2Pct) > 0.03) return a.n2Pct - b.n2Pct;
-    // Priority 5: menor FS acima do target
-    if (a.fsOk && b.fsOk) return a.eFS - b.eFS;
-    return Math.abs(a.eFS - (sewFS||1)) - Math.abs(b.eFS - (sewFS||1));
+    // Priority 4: menor superdimensionamento de FS
+    return a.eFS - b.eFS;
   });
+  const scored_sorted = pool;
   
   const best = scored[0];
   const e = best.entry;
