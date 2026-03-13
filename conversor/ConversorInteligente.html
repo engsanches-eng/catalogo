@@ -1627,42 +1627,36 @@ function instalarApp() {
     '@echo off',
     'chcp 65001 >nul',
     'title Instalador Conversor Inteligente Bonfiglioli',
-    '',
     'set "DEST=%APPDATA%\\Conversor"',
     'set "SMENU=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Conversor Inteligente.lnk"',
     'set "ACAO=Instalando"',
     'if exist "%DEST%\\ConversorInteligente.html" set "ACAO=Atualizando"',
-    '',
     'echo.',
     'echo  ============================================',
     'echo   Conversor Inteligente Bonfiglioli',
     'echo   %ACAO%, aguarde...',
     'echo  ============================================',
     'echo.',
-    '',
     'if not exist "%DEST%" mkdir "%DEST%" >nul 2>&1',
     'if not exist "%DEST%" ( echo ERRO ao criar pasta & pause & exit /b 1 )',
-    '',
     'powershell -NoProfile -WindowStyle Hidden -Command "Invoke-WebRequest -Uri \'https://engsanches-eng.github.io/catalogo/conversor/ConversorInteligente.html\' -OutFile \'%DEST%\\ConversorInteligente.html\' -UseBasicParsing" >nul 2>&1',
     'if not exist "%DEST%\\ConversorInteligente.html" ( echo ERRO no download. Verifique sua conexao. & pause & exit /b 1 )',
-    '',
-    '> "%DEST%\\AbrirConversor.bat" echo @echo off',
-    '>> "%DEST%\\AbrirConversor.bat" echo set "FILE=file:///C:/Users/%USERNAME%/AppData/Roaming/Conversor/ConversorInteligente.html"',
-    '>> "%DEST%\\AbrirConversor.bat" echo set "EDGE=%ProgramFiles(x86)%\\Microsoft\\Edge\\Application\\msedge.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo if not exist "%EDGE%" set "EDGE=%ProgramFiles%\\Microsoft\\Edge\\Application\\msedge.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo set "CHROME=%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo if not exist "%CHROME%" set "CHROME=%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo set "FIREFOX=%ProgramFiles%\\Mozilla Firefox\\firefox.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo if not exist "%FIREFOX%" set "FIREFOX=%ProgramFiles(x86)%\\Mozilla Firefox\\firefox.exe"',
-    '>> "%DEST%\\AbrirConversor.bat" echo if exist "%EDGE%" ( start "" "%EDGE%" --app="%FILE%" --start-maximized ^& exit /b )',
-    '>> "%DEST%\\AbrirConversor.bat" echo if exist "%CHROME%" ( start "" "%CHROME%" --app="%FILE%" --start-maximized ^& exit /b )',
-    '>> "%DEST%\\AbrirConversor.bat" echo if exist "%FIREFOX%" ( start "" "%FIREFOX%" --kiosk "%FILE%" ^& exit /b )',
-    '>> "%DEST%\\AbrirConversor.bat" echo start "" "%DEST%\\ConversorInteligente.html"',
-    '',
+    'powershell -NoProfile -WindowStyle Hidden -Command "Set-Content -Path \'%DEST%\\AbrirConversor.bat\' -Encoding ASCII -Value @\'
+@echo off
+set "FILE=file:///C:/Users/%USERNAME%/AppData/Roaming/Conversor/ConversorInteligente.html"
+set "EDGE=%ProgramFiles(x86)%\\Microsoft\\Edge\\Application\\msedge.exe"
+if not exist "%EDGE%" set "EDGE=%ProgramFiles%\\Microsoft\\Edge\\Application\\msedge.exe"
+set "CHROME=%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe"
+if not exist "%CHROME%" set "CHROME=%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe"
+set "FIREFOX=%ProgramFiles%\\Mozilla Firefox\\firefox.exe"
+if not exist "%FIREFOX%" set "FIREFOX=%ProgramFiles(x86)%\\Mozilla Firefox\\firefox.exe"
+if exist "%EDGE%" ( start "" "%EDGE%" --app="%FILE%" --start-maximized & exit /b )
+if exist "%CHROME%" ( start "" "%CHROME%" --app="%FILE%" --start-maximized & exit /b )
+if exist "%FIREFOX%" ( start "" "%FIREFOX%" --kiosk "%FILE%" & exit /b )
+start "" "%APPDATA%\\Conversor\\ConversorInteligente.html"
+\'@"  >nul 2>&1',
     'if not exist "%SMENU%" powershell -NoProfile -WindowStyle Hidden -Command "$ws=New-Object -ComObject WScript.Shell;$s=$ws.CreateShortcut(\'%SMENU%\');$s.TargetPath=\'%DEST%\\AbrirConversor.bat\';$s.WorkingDirectory=\'%DEST%\';$s.Save()" >nul 2>&1',
-    '',
     'powershell -NoProfile -WindowStyle Hidden -Command "$d=[Environment]::GetFolderPath(\'Desktop\');$lnk=$d+\'\\Conversor Inteligente.lnk\';if(-not(Test-Path $lnk)){$ws=New-Object -ComObject WScript.Shell;$s=$ws.CreateShortcut($lnk);$s.TargetPath=\'%DEST%\\AbrirConversor.bat\';$s.WorkingDirectory=\'%DEST%\';$s.Save()}" >nul 2>&1',
-    '',
     'echo.',
     'echo  ============================================',
     'if "%ACAO%"=="Atualizando" ( echo   Atualizacao concluida! ) else ( echo   Instalacao concluida! )',
