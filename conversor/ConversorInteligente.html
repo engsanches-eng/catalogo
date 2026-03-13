@@ -905,12 +905,27 @@ function resolveBonfigForma(sewForma, bLine, bSize, sewShaftMM, sewSize) {
   // For C line
   if (bLine === 'C') {
     const opts = Array.isArray(sizeOpts) ? sizeOpts : [];
-    let resolvedForma = opts.includes(baseForma) ? baseForma : opts[0] || baseForma;
-    // Se SEW tem flange de SAÍDA (RF ou RM), adicionar código FA/FB/FC ao modelo
-    if (sewSize && (sewForma === 'RF' || sewForma === 'RM')) {
-      const sewDiam = SEW_OUTPUT_FLANGE_DIAM[sewSize];
-      const ofCode = matchOutputFlange(bLine + ' ' + bSize, sewDiam);
-      if (ofCode) resolvedForma = resolvedForma + ' ' + ofCode;
+    let resolvedForma;
+
+    if (sewForma === 'RF' || sewForma === 'RM') {
+      // RF/RM = fixacao por flange na carcaca
+      // Preferencia: 'F' se disponivel, senao UFA/UFB/UFC pelo diametro externo do flange SEW
+      if (opts.includes('F')) {
+        resolvedForma = 'F';
+      } else {
+        const sewDiam = SEW_OUTPUT_FLANGE_DIAM[sewSize];
+        const ofCode = matchOutputFlange(bLine + ' ' + bSize, sewDiam);
+        const ufOpts = opts.filter(o => ['UFA','UFB','UFC'].includes(o));
+        if (ofCode && opts.includes('U' + ofCode)) {
+          resolvedForma = 'U' + ofCode;
+        } else if (ufOpts.length > 0) {
+          resolvedForma = ufOpts[0];
+        } else {
+          resolvedForma = opts[0] || baseForma;
+        }
+      }
+    } else {
+      resolvedForma = opts.includes(baseForma) ? baseForma : opts[0] || baseForma;
     }
     return resolvedForma;
   }
