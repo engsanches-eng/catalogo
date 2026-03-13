@@ -170,9 +170,21 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
   </div>
   <div style="display:flex;align-items:center;gap:10px">
   <div class="hd-right">REV 2026</div>
-  <button onclick="instalarApp()" style="background:var(--cyan);color:#fff;border:none;padding:4px 12px;
-    font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;
-    cursor:pointer;border-radius:3px;text-transform:uppercase">⬇ Instalar como App</button>
+  <div id="btnInstalarWrap">
+    <button onclick="instalarApp()" id="btnInstalar" style="background:var(--cyan);color:#fff;border:none;padding:4px 12px;
+      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;
+      cursor:pointer;border-radius:3px;text-transform:uppercase">⬇ Instalar como App</button>
+  </div>
+  <script>
+    (function(){
+      if (window.location.protocol === 'file:') {
+        var w = document.getElementById('btnInstalarWrap');
+        if (w) w.innerHTML = '<div style="background:var(--cyan);color:#fff;padding:4px 12px;' +
+          'font-family:\'Rajdhani\',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;' +
+          'border-radius:3px;text-transform:uppercase;user-select:none;">&#10004; VERS&Atilde;O DESKTOP</div>';
+      }
+    })();
+  </script>
 </div>
 </header>
 
