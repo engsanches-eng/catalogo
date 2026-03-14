@@ -1636,9 +1636,8 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
   } else if (formaShaftPart === 'U' || formaShaftPart.startsWith('UH') || formaShaftPart.startsWith('UF')) {
     saidaDesc = t('cfg_hollow') + bShaftDiam + ' mm';
   } else if (formaShaftPart === 'S' || formaShaftPart === 'US') {
-    // TorqLOC: disco de contração
-    const dcTipo = formaShaftPart === 'US' ? t('cfg_shrink') : t('cfg_shrinkTL');
-    saidaDesc = dcTipo + ' Ø' + bShaftDiam + ' mm';
+    // Eixo Vazado com Disco de Contração (código S na Bonfiglioli)
+    saidaDesc = t('cfg_shrink') + ' Ø' + bShaftDiam + ' mm';
   } else {
     saidaDesc = 'Eixo de saída Ø' + bShaftDiam + ' mm';
   }
