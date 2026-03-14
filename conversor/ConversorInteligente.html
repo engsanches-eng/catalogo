@@ -45,7 +45,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:6px
 .codebar-val .ph{color:var(--bhi);font-size:15px;font-weight:400}
 
 /* LAYOUT */
-main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px)}
+main{display:grid;grid-template-columns:0.75fr 1fr 1fr;min-height:calc(100vh - 68px)}
 .left{border-right:1px solid var(--b);overflow-y:auto;max-height:calc(100vh - 68px);background:var(--bg)}
 .left-inner{padding:14px 20px 30px}
 .right{border-right:1px solid var(--b);overflow-y:auto;max-height:calc(100vh - 68px);padding:14px 18px 30px;background:#fff}
@@ -61,21 +61,28 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
   width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:3px}
 
 /* DROPDOWN */
-.dd-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dd-row{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
 .dd{position:relative}
 .dd select{appearance:none;background:#fff;border:1.5px solid var(--b);
   color:var(--br);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;
   padding:8px 32px 8px 12px;cursor:pointer;outline:none;transition:border-color .15s,box-shadow .15s;
-  min-width:140px;border-radius:4px}
+  min-width:0;border-radius:4px;width:100%;box-sizing:border-box}
 .dd select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,121,193,.12)}
 .dd select:disabled{opacity:.35;cursor:not-allowed;background:var(--s2)}
 .dd select option{background:#fff;color:var(--br)}
 .dd select optgroup{background:var(--s2);color:var(--acc);font-weight:600}
 .dd::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
   pointer-events:none;color:var(--dim);font-size:13px}
-.dd.w120 select{min-width:120px} .dd.w160 select{min-width:160px}
-.dd.w200 select{min-width:200px} .dd.w260 select{min-width:260px}
-.dd.w320 select{min-width:320px}
+/* Legacy fixed-width classes (still used in non-form contexts) */
+.dd.w120{width:120px} .dd.w160{width:160px}
+.dd.w200{width:200px} .dd.w260{width:260px}
+.dd.w320{width:320px} .dd.w240{width:240px} .dd.w100{width:100px}
+/* Flex layout — main field grows, secondary field is fixed */
+.dd.grow{flex:1;min-width:0}
+.dd.fixed-sm{flex:0 0 120px;width:120px}
+.dd.fixed-md{flex:0 0 160px;width:160px}
+/* Accessories row */
+.ac-row .dd{flex:1;min-width:0}
 .dd-hint{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim)}
 
 /* ACESSÓRIOS */
@@ -220,7 +227,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     <div class="sec">
       <div class="sec-title"><span class="sn">1</span><span data-i18n="sec1">Linha do Produto</span></div>
       <div class="dd-row">
-        <div class="dd w200">
+        <div class="dd grow">
           <select id="selLinha" onchange="onLinha()">
             <option value="">— selecione a linha —</option>
             <option value="R">Linha R — Coaxial (≡ C / CP)</option>
@@ -236,7 +243,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     <div class="sec">
       <div class="sec-title"><span class="sn">2</span><span data-i18n="sec2">Forma Construtiva</span></div>
       <div class="dd-row">
-        <div class="dd w260" id="ddForma">
+        <div class="dd grow" id="ddForma">
           <select id="selForma" disabled onchange="onForma()">
             <option value="">— selecione a linha primeiro —</option>
           </select>
@@ -248,12 +255,12 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     <div class="sec">
       <div class="sec-title"><span class="sn">3</span><span data-i18n="sec3">Tamanho</span></div>
       <div class="dd-row">
-        <div class="dd w260" id="ddTam">
+        <div class="dd grow" id="ddTam">
           <select id="selTam" disabled onchange="onTam()">
             <option value="">— selecione a forma primeiro —</option>
           </select>
         </div>
-        <div class="dd w160">
+        <div class="dd fixed-md">
           <select id="selPosMont" onchange="updateCode()">
             <option value="">Pos. Montagem</option>
             <option value="M1">M1</option>
@@ -271,7 +278,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     <div class="sec">
       <div class="sec-title"><span class="sn">4</span><span data-i18n="sec4">Complemento</span> <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none" data-i18n="optional">(opcional)</span></div>
       <div class="dd-row">
-        <div class="dd w200" id="ddComp">
+        <div class="dd grow" id="ddComp">
           <select id="selComp" disabled onchange="updateCode()">
             <option value="">— nenhum —</option>
           </select>
@@ -283,10 +290,10 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
     <div class="sec">
       <div class="sec-title"><span class="sn">5</span><span data-i18n="sec5">Motor</span></div>
       <div class="dd-row">
-        <div class="dd w320">
+        <div class="dd grow">
           <select id="selMotor" onchange="updateCode()">
             <option value="">— selecione o motor —</option>
-            <optgroup label="── 4 Polos · 1800 rpm ──">
+            <optgroup id="og4p" label="── 4 Polos · 1800 rpm ──">
               <option value="DFT56M4">DFT56M4 — 0.11 kW</option>
               <option value="DFT56L4">DFT56L4 — 0.15 kW</option>
               <option value="DFR63S4">DFR63S4 — 0.12 kW</option>
@@ -315,7 +322,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
               <option value="DV250M4">DV250M4 — 55 kW</option>
               <option value="DV280S4">DV280S4 — 75 kW</option>
             </optgroup>
-            <optgroup label="── 6 Polos · 1200 rpm ──">
+            <optgroup id="og6p" label="── 6 Polos · 1200 rpm ──">
               <option value="DZ71D6">DZ71D6 — 0.18 kW</option>
               <option value="DZ80K6">DZ80K6 — 0.28 kW</option>
               <option value="DZ80N6">DZ80N6 — 0.37 kW</option>
@@ -334,7 +341,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
               <option value="DV250M6">DV250M6 — 37 kW</option>
               <option value="DV280S6">DV280S6 — 45 kW</option>
             </optgroup>
-            <optgroup label="── 8 Polos · 900 rpm ──">
+            <optgroup id="og8p" label="── 8 Polos · 900 rpm ──">
               <option value="DZ71D8">DZ71D8 — 0.15 kW</option>
               <option value="DZ80K8">DZ80K8 — 0.18 kW</option>
               <option value="DZ80N8">DZ80N8 — 0.25 kW</option>
@@ -353,6 +360,12 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
             </optgroup>
           </select>
         </div>
+        <div class="dd fixed-sm">
+          <select id="selFreq" onchange="onFreqChange()">
+            <option value="60" selected>60 Hz</option>
+            <option value="50">50 Hz</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -362,15 +375,15 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
       <div class="ac-grid">
         <div class="ac-row">
           <span class="ac-lbl">AC 1</span>
-          <div class="dd w260"><select id="selAc1" onchange="onAc1()"><option value="">— nenhum —</option></select></div>
+          <div class="dd"><select id="selAc1" onchange="onAc1()"><option value="">— nenhum —</option></select></div>
         </div>
         <div class="ac-row">
           <span class="ac-lbl">AC 2</span>
-          <div class="dd w260"><select id="selAc2" disabled onchange="onAc2()"><option value="">— nenhum —</option></select></div>
+          <div class="dd"><select id="selAc2" disabled onchange="onAc2()"><option value="">— nenhum —</option></select></div>
         </div>
         <div class="ac-row">
           <span class="ac-lbl">AC 3</span>
-          <div class="dd w260"><select id="selAc3" disabled onchange="updateCode()"><option value="">— nenhum —</option></select></div>
+          <div class="dd"><select id="selAc3" disabled onchange="updateCode()"><option value="">— nenhum —</option></select></div>
         </div>
       </div>
     </div>
@@ -1469,14 +1482,14 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
   const entries = BDATA[bType];
   if (!entries || !entries.length) return null;
   
-  let tIdx, pIdx, nIdx, n1;
-  if (sewMotorRPM >= 1500) { tIdx=4; pIdx=5; nIdx=6; n1=1750; }
-  else if (sewMotorRPM >= 1000) { tIdx=7; pIdx=8; nIdx=9; n1=1100; }
-  else { tIdx=10; pIdx=11; nIdx=12; n1=900; }
+  let tIdx, pIdx, nIdx;
+  if (sewMotorRPM >= 1500) { tIdx=4; pIdx=5; nIdx=6; }
+  else if (sewMotorRPM >= 1000) { tIdx=7; pIdx=8; nIdx=9; }
+  else { tIdx=10; pIdx=11; nIdx=12; }
   
   const targetShaft = sewShaftMM || 0;
   const targetFS = sewFS || 1.0;
-  const targetN2 = n1 / sewRatio; // target output RPM
+  const targetN2 = sewMotorRPM / sewRatio; // RPM real já ajustado por frequência
   
   // Build size→available shafts mapping
   const sizeShaftOpts = BSHAFT_OPTS[bType] || {};
@@ -1494,8 +1507,8 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     const eRatio = e[2];
     const ePower = e[pIdx] || 0;
     
-    // Output RPM
-    const eN2 = n1 / eRatio;
+    // Output RPM — usa RPM real do motor (ajustado por frequência)
+    const eN2 = sewMotorRPM / eRatio;
     const eActualTorque = (sewPowerKW * 9550) / eN2;
     const eFS = eActualTorque > 0 ? eTorqueNom / eActualTorque : 0;
     
@@ -1651,8 +1664,8 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     description: (BONFIG_DESC[bLine] ? BONFIG_DESC[bLine]() : ''),
     entradaDesc,
     saidaDesc,
-    n1Label: n1,
-    rpmEntrada: n1,
+    n1Label: sewMotorRPM,
+    rpmEntrada: sewMotorRPM,
     rpmSaida: actualN2.toFixed(1)
   };
 }
@@ -1667,14 +1680,14 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
   if (!entries || !entries.length) return null;
   
   // VFW speed columns: [code,type,ratio,stages, t1400,p1400,n1400, t900,p900,n900, t500,p500,n500]
-  let tIdx, pIdx, nIdx, n1;
-  if (sewMotorRPM >= 1500) { tIdx=4; pIdx=5; nIdx=6; n1=1400; }
-  else if (sewMotorRPM >= 800) { tIdx=7; pIdx=8; nIdx=9; n1=900; }
-  else { tIdx=10; pIdx=11; nIdx=12; n1=500; }
+  let tIdx, pIdx, nIdx;
+  if (sewMotorRPM >= 1500) { tIdx=4; pIdx=5; nIdx=6; }
+  else if (sewMotorRPM >= 800) { tIdx=7; pIdx=8; nIdx=9; }
+  else { tIdx=10; pIdx=11; nIdx=12; }
   
   const targetShaft = sewShaftMM || 0;
   const targetFS = sewFS || 1.0;
-  const targetN2 = n1 / sewRatio;
+  const targetN2 = sewMotorRPM / sewRatio;
   
   // Filter: must have torque data, only single-stage models (VF, W, VFR, WR)
   let candidates = entries.filter(e => e[tIdx] && e[tIdx] > 0);
@@ -1694,7 +1707,7 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
     const eRatio = e[2];
     const ePower = e[pIdx] || 0;
     
-    const eN2 = n1 / eRatio;
+    const eN2 = sewMotorRPM / eRatio;
     const eActualTorque = (sewPowerKW * 9550) / eN2;
     const eFS = eActualTorque > 0 ? eTorqueNom / eActualTorque : 0;
     
@@ -1861,8 +1874,8 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
     description: t('bDesc_W'),
     entradaDesc,
     saidaDesc,
-    n1Label: n1,
-    rpmEntrada: n1,
+    n1Label: sewMotorRPM,
+    rpmEntrada: sewMotorRPM,
     rpmSaida: actualN2.toFixed(1)
   };
 }
@@ -1974,6 +1987,46 @@ function resetAcs() {
   s2.disabled=true; s3.disabled=true;
 }
 
+/* ── Frequência ─────────────────────────────────────────────── */
+const RPM_BY_POLES = {
+  60: {2:3600, 4:1800, 6:1200, 8:900},
+  50: {2:3000, 4:1500, 6:1000, 8:750}
+};
+
+function getMotorRpm(poles) {
+  const hz = parseInt(val('selFreq')) || 60;
+  return (RPM_BY_POLES[hz] || RPM_BY_POLES[60])[poles] || 1800;
+}
+
+function onFreqChange() {
+  const hz = parseInt(val('selFreq')) || 60;
+  const rpmMap = RPM_BY_POLES[hz];
+
+  // Atualiza labels dos optgroups com RPM correto
+  const og4 = document.getElementById('og4p');
+  const og6 = document.getElementById('og6p');
+  const og8 = document.getElementById('og8p');
+  if(og4) og4.label = `── 4 Polos · ${rpmMap[4]} rpm ──`;
+  if(og6) og6.label = `── 6 Polos · ${rpmMap[6]} rpm ──`;
+  if(og8) og8.label = `── 8 Polos · ${rpmMap[8]} rpm ──`;
+
+  // Mantém formulário, limpa apenas os datasheets
+  const dsContent = document.getElementById('dsContent');
+  const dsEmpty   = document.getElementById('dsEmpty');
+  const dsModel   = document.getElementById('dsModel');
+  const bfContent = document.getElementById('bfContent');
+  const bfEmpty   = document.getElementById('bfEmpty');
+  const bfModel   = document.getElementById('bfModel');
+  if(dsContent) { dsContent.innerHTML = ''; dsContent.style.display = 'none'; }
+  if(dsEmpty)   dsEmpty.style.display = 'flex';
+  if(dsModel)   dsModel.textContent = '—';
+  if(bfContent) { bfContent.innerHTML = ''; bfContent.style.display = 'none'; }
+  if(bfEmpty)   bfEmpty.style.display = 'flex';
+  if(bfModel)   bfModel.textContent = '—';
+  const btnPDF = document.getElementById('btnPDF');
+  if(btnPDF) btnPDF.disabled = true;
+}
+
 function onAc1() {
   const a1 = val('selAc1');
   const s2=$('selAc2'), s3=$('selAc3');
@@ -2048,6 +2101,7 @@ function calc() {
   if(!f||!tam||!mCode){ sb.className='status er'; sb.textContent=t('st_selectFields'); return; }
 
   const motor = MOTORS[mCode];
+  const n1 = getMotorRpm(motor.poles); // RPM ajustado por frequência
   const eixo  = (EIXO[l]||{})[tam] || '—';
   const baseT  = tam.replace(/R\d+.*/, '');
   const tMax   = (TMAX[l]||{})[baseT] || (TMAX[l]||{})[tam] || '—';
@@ -2057,13 +2111,13 @@ function calc() {
   let redReal=null, n2=null, torque=null, fs=null;
   if(reds && !isNaN(rv) && rv>0) {
     redReal = reds.reduce((a,b)=>Math.abs(b-rv)<Math.abs(a-rv)?b:a);
-    n2 = Math.round(motor.rpm / redReal);
+    n2 = Math.round(n1 / redReal);
     torque = ((motor.kw*9550)/n2).toFixed(1);
     if(tMax!=='—') fs=(parseFloat(tMax)/parseFloat(torque)).toFixed(2);
   } else if(!reds && !isNaN(rv) && rv>0) {
     // 2-stage or unlisted size: use user-typed reduction directly
     redReal = rv;
-    n2 = Math.round(motor.rpm / redReal);
+    n2 = Math.round(n1 / redReal);
     torque = ((motor.kw*9550)/n2).toFixed(1);
     if(tMax!=='—') fs=(parseFloat(tMax)/parseFloat(torque)).toFixed(2);
   }
@@ -2087,7 +2141,7 @@ function calc() {
     <div class="ds-sec">${t('ds_motorSec')}</div>
     <div class="ds-row"><span class="ds-k">${t('ds_model')}</span><span class="ds-v">${mCode}<span class="pb ${pc}">${motor.poles}p</span></span></div>
     <div class="ds-row"><span class="ds-k">${t('ds_power')}</span><span class="ds-v">${motor.kw}<span class="u">kW</span></span></div>
-    <div class="ds-row"><span class="ds-k">${t('ds_n1')}</span><span class="ds-v">${motor.rpm}<span class="u">rpm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_n1')}</span><span class="ds-v">${n1}<span class="u">rpm</span></span></div>
     <div class="ds-row"><span class="ds-k">${t('ds_poles')}</span><span class="ds-v">${motor.poles}</span></div>
 
     ${acs.length?`
@@ -2105,7 +2159,7 @@ function calc() {
   if (redReal !== null && torque !== null) {
     const sewPosMont = val('selPosMont');
     const bonfigPosMont = convertPosMont(l, f, sewPosMont);
-    const equiv = findBonfiglioliEquiv(l, parseFloat(torque), redReal, motor.rpm, motor.kw, parseInt(eixo)||0, mCode, f, fs!==null?parseFloat(fs):1.0, bonfigPosMont, tam);
+    const equiv = findBonfiglioliEquiv(l, parseFloat(torque), redReal, n1, motor.kw, parseInt(eixo)||0, mCode, f, fs!==null?parseFloat(fs):1.0, bonfigPosMont, tam);
     if (equiv && equiv.splineUnsupported) {
       bonfigHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
