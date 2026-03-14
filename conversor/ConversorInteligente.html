@@ -164,16 +164,33 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 <header>
   <div class="hd-left">
     <div>
-      <div class="hd-title">CONVERSOR INTELIGENTE</div>
-      <div class="hd-sub">Gerador de Código de Produto</div>
+      <div class="hd-title" data-i18n="appTitle">CONVERSOR INTELIGENTE</div>
+      <div class="hd-sub" data-i18n="appSub">Gerador de Código de Produto</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
   <div class="hd-right">REV 2026</div>
+  <div style="position:relative">
+    <select id="selLang" onchange="changeLang(this.value)" style="appearance:none;background:#fff;
+      border:1.5px solid var(--b);color:var(--dim);font-family:'Rajdhani',sans-serif;font-weight:700;
+      font-size:13px;letter-spacing:1.5px;padding:3px 32px 3px 10px;min-width:90px;cursor:pointer;border-radius:3px;
+      text-transform:uppercase;transition:border-color .15s,color .15s;outline:none"
+      onfocus="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'"
+      onblur="this.style.borderColor='var(--b)';this.style.color='var(--dim)'">
+      <option value="pt">🌐 PT</option>
+      <option value="en">🌐 EN</option>
+      <option value="it">🌐 IT</option>
+      <option value="es">🌐 ES</option>
+      <option value="fr">🌐 FR</option>
+      <option value="de">🌐 DE</option>
+    </select>
+    <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;
+      color:var(--dim);font-size:11px">▾</span>
+  </div>
   <div id="btnInstalarWrap">
     <button onclick="instalarApp()" id="btnInstalar" style="background:var(--cyan);color:#fff;border:none;padding:4px 12px;
       font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;
-      cursor:pointer;border-radius:3px;text-transform:uppercase">⬇ Instalar como App</button>
+      cursor:pointer;border-radius:3px;text-transform:uppercase" data-i18n-attr="innerHTML:installApp">⬇ Instalar como App</button>
   </div>
   <script>
     (function(){
@@ -193,7 +210,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
   <!-- CODE BAR -->
   <div class="codebar">
-    <span class="codebar-lbl">CÓDIGO</span>
+    <span class="codebar-lbl" data-i18n="code">CÓDIGO</span>
     <div class="codebar-val" id="codeBar"><span class="ph">— selecione os campos —</span></div>
   </div>
 
@@ -201,7 +218,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 1. LINHA -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">1</span>Linha do Produto</div>
+      <div class="sec-title"><span class="sn">1</span><span data-i18n="sec1">Linha do Produto</span></div>
       <div class="dd-row">
         <div class="dd w200">
           <select id="selLinha" onchange="onLinha()">
@@ -217,7 +234,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 2. FORMA -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">2</span>Forma Construtiva</div>
+      <div class="sec-title"><span class="sn">2</span><span data-i18n="sec2">Forma Construtiva</span></div>
       <div class="dd-row">
         <div class="dd w260" id="ddForma">
           <select id="selForma" disabled onchange="onForma()">
@@ -229,7 +246,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 3. TAMANHO + POSIÇÃO DE MONTAGEM -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">3</span>Tamanho</div>
+      <div class="sec-title"><span class="sn">3</span><span data-i18n="sec3">Tamanho</span></div>
       <div class="dd-row">
         <div class="dd w260" id="ddTam">
           <select id="selTam" disabled onchange="onTam()">
@@ -252,7 +269,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 4. COMPLEMENTO -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">4</span>Complemento <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(opcional)</span></div>
+      <div class="sec-title"><span class="sn">4</span><span data-i18n="sec4">Complemento</span> <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none" data-i18n="optional">(opcional)</span></div>
       <div class="dd-row">
         <div class="dd w200" id="ddComp">
           <select id="selComp" disabled onchange="updateCode()">
@@ -264,7 +281,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 5. MOTOR -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">5</span>Motor</div>
+      <div class="sec-title"><span class="sn">5</span><span data-i18n="sec5">Motor</span></div>
       <div class="dd-row">
         <div class="dd w320">
           <select id="selMotor" onchange="updateCode()">
@@ -341,7 +358,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 6. ACESSÓRIOS (cascata G6→I6→K6) -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">6</span>Acessórios de Motor <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none">(até 3 — sem repetição)</span></div>
+      <div class="sec-title"><span class="sn">6</span><span data-i18n="sec6">Acessórios de Motor</span> <span style="font-size:12px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none" data-i18n="acc3">(até 3 — sem repetição)</span></div>
       <div class="ac-grid">
         <div class="ac-row">
           <span class="ac-lbl">AC 1</span>
@@ -360,17 +377,17 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 
     <!-- 7. REDUÇÃO -->
     <div class="sec">
-      <div class="sec-title"><span class="sn">7</span>Redução Desejada</div>
+      <div class="sec-title"><span class="sn">7</span><span data-i18n="sec7">Redução Desejada</span></div>
       <div class="red-row">
         <span class="red-lbl">i =</span>
         <input class="red-inp" type="number" id="redInp" placeholder="20" min="1" step="0.01" oninput="updateCode()">
-        <span class="dd-hint">relação de redução</span>
+        <span class="dd-hint" data-i18n="ratioHint">relação de redução</span>
       </div>
       <div class="red-closest" id="redClosest"></div>
     </div>
 
-    <button class="btn" id="btnCalc" onclick="calc()" disabled>▶ Gerar Datasheet</button>
-    <button class="btn-pdf" id="btnPDF" onclick="gerarPDF()" disabled>📄 Gerar PDF</button>
+    <button class="btn" id="btnCalc" onclick="calc()" disabled data-i18n="btnCalc">▶ Gerar Datasheet</button>
+    <button class="btn-pdf" id="btnPDF" onclick="gerarPDF()" disabled data-i18n="btnPDF">📄 Gerar PDF</button>
     <div class="status" id="status"></div>
 
   </div>
@@ -379,12 +396,12 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 <!-- RIGHT -->
 <div class="right">
   <div class="ds-head">
-    <div class="ds-lbl">▸ Código do Produto</div>
+    <div class="ds-lbl" data-i18n="productCode">▸ Código do Produto</div>
     <div class="ds-model" id="dsModel">—</div>
   </div>
   <div class="ds-empty" id="dsEmpty">
     <div class="ico">⚙</div>
-    <div class="msg">Preencha os campos e clique em<br><strong style="color:var(--acc)">Gerar Datasheet</strong></div>
+    <div class="msg" data-i18n="emptyMsg">Preencha os campos e clique em<br><strong style="color:var(--acc)" data-i18n="btnCalcShort">Gerar Datasheet</strong></div>
   </div>
   <div id="dsContent" style="display:none"></div>
 </div>
@@ -396,7 +413,7 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
   </div>
   <div class="ds-empty" id="bfEmpty">
     <div class="ico">⚙</div>
-    <div class="msg">Preencha os campos e clique em<br><strong style="color:var(--acc)">Gerar Datasheet</strong></div>
+    <div class="msg" data-i18n="emptyMsg">Preencha os campos e clique em<br><strong style="color:var(--acc)" data-i18n="btnCalcShort">Gerar Datasheet</strong></div>
   </div>
   <div id="bfContent" style="display:none"></div>
 </div>
@@ -404,56 +421,487 @@ main{display:grid;grid-template-columns:1fr 1fr 1fr;min-height:calc(100vh - 68px
 </main>
 
 <script>
+// Declaração antecipada — deve estar antes de qualquer dado que referencie currentLang
+let currentLang = 'pt';
+/* ══════════════════════════════════════════
+   i18n — Internationalisation (PT / EN)
+══════════════════════════════════════════ */
+const LANG = {
+  pt: {
+    appTitle:'CONVERSOR INTELIGENTE', appSub:'Gerador de Código de Produto',
+    installApp:'⬇ Instalar como App', desktopBadge:'✔ VERSÃO DESKTOP',
+    code:'CÓDIGO', codebarPh:'— selecione os campos —',
+    sec1:'Linha do Produto', sec2:'Forma Construtiva', sec3:'Tamanho',
+    sec4:'Complemento', optional:'(opcional)',
+    sec5:'Motor', sec6:'Acessórios de Motor', acc3:'(até 3 — sem repetição)',
+    sec7:'Redução Desejada', ratioHint:'relação de redução',
+    btnCalc:'▶ Gerar Datasheet', btnCalcShort:'Gerar Datasheet',
+    btnPDF:'📄 Gerar PDF',
+    productCode:'▸ Código do Produto',
+    emptyMsg:'Preencha os campos e clique em',
+    footerBy:'por',
+    posMont:'Pos. Montagem',
+    nenhum:'— nenhum —',
+    selecioneLinha:'— selecione a linha —',
+    selecioneForma:'— selecione a forma primeiro —',
+    selecioneTamanho:'— selecione —',
+    selecionePrimeiro:'— selecione —',
+    selecioneMotor:'— selecione o motor —',
+    // Motor optgroup labels
+    mg4:'── 4 Polos · 1800 rpm ──',
+    mg6:'── 6 Polos · 1200 rpm ──',
+    mg8:'── 8 Polos · 900 rpm ──',
+    // Line descriptions
+    linhaR:'Linha R — Coaxial (≡ C / CP)',
+    linhaF:'Linha F — Eixos paralelos (≡ F)',
+    linhaK:'Linha K — Ortogonal angular (≡ A)',
+    linhaS:'Linha S — Ortogonal (≡ VF / W)',
+    // Datasheet labels
+    ds_ratio:'Redução (i)', ds_torqueOut:'Torque de saída',
+    ds_torqueNom:'Torque nominal', ds_shaft:'Ø Eixo de saída',
+    ds_n2:'Rotação saída (n₂)', ds_sf:'Fator de serviço',
+    ds_complement:'Complemento',
+    ds_motorSec:'Motor', ds_model:'Modelo', ds_power:'Potência',
+    ds_n1:'Rotação nominal (n₁)', ds_poles:'Polos',
+    ds_accSec:'Acessórios',
+    ds_desc:'Descrição', ds_torqueNomB:'Torque nominal',
+    ds_torqueOutB:'Torque de saída', ds_n1n2:'Rotação entrada / saída',
+    ds_reduction:'Redução', ds_sfB:'Fator de serviço',
+    ds_inputCfg:'Config. de entrada', ds_outputCfg:'Config. de saída',
+    ds_mountPos:'Posição de montagem', ds_shaftB:'Ø Eixo de saída',
+    ds_housing:'Carcaça', ds_weight:'Peso', ds_lub:'Lubrificação',
+    ds_cool:'Refrigeração', ds_seal:'Vedação',
+    ds_housingVal:'Ferro Fundido', ds_lubVal:'Banho de Óleo',
+    ds_coolVal:'Natural', ds_sealVal:'Borracha Nitrílica',
+    // Status messages
+    st_selectFields:'✗ Selecione Forma, Tamanho e Motor.',
+    st_noReduction:'⚠ Informe uma redução para calcular torque e n₂.',
+    st_exact:'✓ Redução exata: i = ',
+    st_noTable:'✓ Redução informada: i = ',
+    st_noTableSuffix:' (sem tabela de reduções para este tamanho)',
+    st_closestPre:'Redução disponível mais próxima: ',
+    // No equiv messages
+    noEquiv:'Nenhum modelo equivalente encontrado para esta configuração.',
+    noSpline:'Não há equivalente Bonfiglioli<br>para eixo estriado (spline DIN 5480).',
+    // Bonfiglioli descriptions
+    bDesc_C:'Redutor Coaxial de Engrenagens Helicoidais',
+    bDesc_F:'Redutor de Eixos Paralelos e Engrenagens Helicoidais',
+    bDesc_A:'Redutor Angular de Engrenagens Helicoidais e Cônicas',
+    bDesc_S:'Redutor de Engrenagens Helicoidais e Coroa / Sem-fim',
+    bDesc_W:'Redutor Rosca Sem Fim',
+    // Config descriptions
+    cfg_inputFlange:'Flange de entrada para motor elétrico padrão IEC ',
+    cfg_solidShaft:'Com Eixo Maciço Chavetado Diâmetro ',
+    cfg_hollow:'Saída com Eixo Vazado Ø',
+    cfg_shrink:'Eixo Vazado com Disco de Contração',
+    cfg_shrinkTL:'Eixo Vazado com Disco de Contração (TorqLOC®)',
+    cfg_b5:' + Flange de Entrada B5',
+    vfw_solid:'Eixo Maciço Chavetado', vfw_hollow:'Eixo Ôco Chavetado',
+    // PDF header
+    pdfHeader:'CONVERSOR INTELIGENTE — Gerador de Código de Produto Bonfiglioli',
+    pdfBonfig:'Bonfiglioli — Produto Principal',
+    pdfSEW:'SEW — Equivalente',
+    pdfFooter:'Conversor Inteligente REV 2026  •  por Glauber Sanches',
+  },
+  en: {
+    appTitle:'INTELLIGENT CONVERTER', appSub:'Product Code Generator',
+    installApp:'⬇ Install as App', desktopBadge:'✔ DESKTOP VERSION',
+    code:'CODE', codebarPh:'— select the fields —',
+    sec1:'Product Line', sec2:'Construction Type', sec3:'Frame Size',
+    sec4:'Option', optional:'(optional)',
+    sec5:'Motor', sec6:'Motor Accessories', acc3:'(up to 3 — no repeats)',
+    sec7:'Desired Ratio', ratioHint:'gear ratio',
+    btnCalc:'▶ Generate Datasheet', btnCalcShort:'Generate Datasheet',
+    btnPDF:'📄 Generate PDF',
+    productCode:'▸ Product Code',
+    emptyMsg:'Fill in the fields and click',
+    footerBy:'by',
+    posMont:'Mount. Position',
+    nenhum:'— none —',
+    selecioneLinha:'— select a line —',
+    selecioneForma:'— select line first —',
+    selecioneTamanho:'— select —',
+    selecionePrimeiro:'— select —',
+    selecioneMotor:'— select motor —',
+    mg4:'── 4 Poles · 1800 rpm ──',
+    mg6:'── 6 Poles · 1200 rpm ──',
+    mg8:'── 8 Poles · 900 rpm ──',
+    linhaR:'Line R — Inline/Coaxial (≡ C / CP)',
+    linhaF:'Line F — Parallel Shaft (≡ F)',
+    linhaK:'Line K — Bevel-Helical (≡ A)',
+    linhaS:'Line S — Worm (≡ VF / W)',
+    ds_ratio:'Ratio (i)', ds_torqueOut:'Output torque',
+    ds_torqueNom:'Rated torque', ds_shaft:'Output shaft Ø',
+    ds_n2:'Output speed (n₂)', ds_sf:'Service factor',
+    ds_complement:'Option',
+    ds_motorSec:'Motor', ds_model:'Model', ds_power:'Power',
+    ds_n1:'Nominal speed (n₁)', ds_poles:'Poles',
+    ds_accSec:'Accessories',
+    ds_desc:'Description', ds_torqueNomB:'Rated torque',
+    ds_torqueOutB:'Output torque', ds_n1n2:'Input / Output speed',
+    ds_reduction:'Ratio', ds_sfB:'Service factor',
+    ds_inputCfg:'Input config.', ds_outputCfg:'Output config.',
+    ds_mountPos:'Mounting position', ds_shaftB:'Output shaft Ø',
+    ds_housing:'Housing', ds_weight:'Weight', ds_lub:'Lubrication',
+    ds_cool:'Cooling', ds_seal:'Sealing',
+    ds_housingVal:'Cast Iron', ds_lubVal:'Oil Bath',
+    ds_coolVal:'Natural', ds_sealVal:'Nitrile Rubber',
+    st_selectFields:'✗ Select Construction Type, Frame Size and Motor.',
+    st_noReduction:'⚠ Enter a ratio to calculate torque and n₂.',
+    st_exact:'✓ Exact ratio: i = ',
+    st_noTable:'✓ Ratio entered: i = ',
+    st_noTableSuffix:' (no ratio table for this frame size)',
+    st_closestPre:'Closest available ratio: ',
+    noEquiv:'No equivalent model found for this configuration.',
+    noSpline:'No Bonfiglioli equivalent<br>for splined shaft (DIN 5480 spline).',
+    bDesc_C:'Helical Inline Gearbox',
+    bDesc_F:'Parallel Shaft Helical Gearbox',
+    bDesc_A:'Bevel-Helical Gearbox',
+    bDesc_S:'Helical-Worm Gearbox',
+    bDesc_W:'Worm Gearbox',
+    cfg_inputFlange:'Input flange for IEC standard electric motor ',
+    cfg_solidShaft:'Solid Keyed Output Shaft Ø',
+    cfg_hollow:'Hollow Output Shaft Ø',
+    cfg_shrink:'Hollow Shaft with Shrink Disc',
+    cfg_shrinkTL:'Hollow Shaft with Shrink Disc (TorqLOC®)',
+    cfg_b5:' + B5 Input Flange',
+    vfw_solid:'Solid Keyed Shaft', vfw_hollow:'Hollow Keyed Shaft',
+    pdfHeader:'INTELLIGENT CONVERTER — Bonfiglioli Product Code Generator',
+    pdfBonfig:'Bonfiglioli — Main Product',
+    pdfSEW:'SEW — Equivalent',
+    pdfFooter:'Intelligent Converter REV 2026  •  by Glauber Sanches',
+  },
+  it: {
+    appTitle:'CONVERTITORE INTELLIGENTE', appSub:'Generatore di Codice Prodotto',
+    installApp:'⬇ Installa come App', desktopBadge:'✔ VERSIONE DESKTOP',
+    code:'CODICE', codebarPh:'— seleziona i campi —',
+    sec1:'Linea di Prodotto', sec2:'Tipo Costruttivo', sec3:'Grandezza',
+    sec4:'Opzione', optional:'(opzionale)',
+    sec5:'Motore', sec6:'Accessori Motore', acc3:'(fino a 3 — senza ripetizioni)',
+    sec7:'Rapporto Desiderato', ratioHint:'rapporto di riduzione',
+    btnCalc:'▶ Genera Scheda Tecnica', btnCalcShort:'Genera Scheda Tecnica',
+    btnPDF:'📄 Genera PDF',
+    productCode:'▸ Codice Prodotto',
+    emptyMsg:'Compila i campi e clicca',
+    footerBy:'di',
+    posMont:'Pos. Montaggio',
+    nenhum:'— nessuno —',
+    selecioneLinha:'— seleziona la linea —',
+    selecioneForma:'— seleziona prima la linea —',
+    selecioneTamanho:'— seleziona —',
+    selecionePrimeiro:'— seleziona —',
+    selecioneMotor:'— seleziona il motore —',
+    mg4:'── 4 Poli · 1800 giri ──',
+    mg6:'── 6 Poli · 1200 giri ──',
+    mg8:'── 8 Poli · 900 giri ──',
+    linhaR:'Linea R — Coassiale (≡ C / CP)',
+    linhaF:'Linea F — Assi Paralleli (≡ F)',
+    linhaK:'Linea K — Elico-Conico (≡ A)',
+    linhaS:'Linea S — Vite Senza Fine (≡ VF / W)',
+    ds_ratio:'Rapporto (i)', ds_torqueOut:'Coppia di uscita',
+    ds_torqueNom:'Coppia nominale', ds_shaft:'Ø Albero di uscita',
+    ds_n2:'Velocità uscita (n₂)', ds_sf:'Fattore di servizio',
+    ds_complement:'Opzione',
+    ds_motorSec:'Motore', ds_model:'Modello', ds_power:'Potenza',
+    ds_n1:'Velocità nominale (n₁)', ds_poles:'Poli',
+    ds_accSec:'Accessori',
+    ds_desc:'Descrizione', ds_torqueNomB:'Coppia nominale',
+    ds_torqueOutB:'Coppia di uscita', ds_n1n2:'Velocità ingresso / uscita',
+    ds_reduction:'Rapporto', ds_sfB:'Fattore di servizio',
+    ds_inputCfg:'Config. ingresso', ds_outputCfg:'Config. uscita',
+    ds_mountPos:'Posizione di montaggio', ds_shaftB:'Ø Albero di uscita',
+    ds_housing:'Corpo', ds_weight:'Peso', ds_lub:'Lubrificazione',
+    ds_cool:'Raffreddamento', ds_seal:'Tenuta',
+    ds_housingVal:'Ghisa', ds_lubVal:'Bagno d\u2019olio',
+    ds_coolVal:'Naturale', ds_sealVal:'Gomma Nitrilica',
+    st_selectFields:'✗ Seleziona Tipo Costruttivo, Grandezza e Motore.',
+    st_noReduction:'⚠ Inserisci un rapporto per calcolare la coppia e n₂.',
+    st_exact:'✓ Rapporto esatto: i = ',
+    st_noTable:'✓ Rapporto inserito: i = ',
+    st_noTableSuffix:' (nessuna tabella di rapporti per questa grandezza)',
+    st_closestPre:'Rapporto disponibile più vicino: ',
+    noEquiv:'Nessun modello equivalente trovato per questa configurazione.',
+    noSpline:'Nessun equivalente Bonfiglioli<br>per albero scanalato (scanalatura DIN 5480).',
+    bDesc_C:'Riduttore Coassiale ad Ingranaggi Elicoidali',
+    bDesc_F:'Riduttore ad Assi Paralleli ed Ingranaggi Elicoidali',
+    bDesc_A:'Riduttore Angolare Elico-Conico',
+    bDesc_S:'Riduttore Elicoidale a Vite Senza Fine',
+    bDesc_W:'Riduttore a Vite Senza Fine',
+    cfg_inputFlange:'Flangia di ingresso per motore elettrico standard IEC ',
+    cfg_solidShaft:'Albero di uscita pieno Ø',
+    cfg_hollow:'Albero cavo di uscita Ø',
+    cfg_shrink:'Albero cavo con disco di serraggio',
+    cfg_shrinkTL:'Albero cavo con disco di serraggio (TorqLOC®)',
+    cfg_b5:' + Flangia di ingresso B5',
+    vfw_solid:'Albero Pieno', vfw_hollow:'Albero Cavo',
+    pdfHeader:'CONVERTITORE INTELLIGENTE — Generatore di Codice Prodotto Bonfiglioli',
+    pdfBonfig:'Bonfiglioli — Prodotto Principale',
+    pdfSEW:'SEW — Equivalente',
+    pdfFooter:'Convertitore Intelligente REV 2026  •  di Glauber Sanches',
+  },
+  es: {
+    appTitle:'CONVERTIDOR INTELIGENTE', appSub:'Generador de Código de Producto',
+    installApp:'⬇ Instalar como App', desktopBadge:'✔ VERSIÓN ESCRITORIO',
+    code:'CÓDIGO', codebarPh:'— seleccione los campos —',
+    sec1:'Línea de Producto', sec2:'Tipo Constructivo', sec3:'Tamaño',
+    sec4:'Opción', optional:'(opcional)',
+    sec5:'Motor', sec6:'Accesorios de Motor', acc3:'(hasta 3 — sin repetición)',
+    sec7:'Relación Deseada', ratioHint:'relación de reducción',
+    btnCalc:'▶ Generar Ficha Técnica', btnCalcShort:'Generar Ficha Técnica',
+    btnPDF:'📄 Generar PDF',
+    productCode:'▸ Código de Producto',
+    emptyMsg:'Complete los campos y haga clic en',
+    footerBy:'por',
+    posMont:'Pos. Montaje',
+    nenhum:'— ninguno —',
+    selecioneLinha:'— seleccione la línea —',
+    selecioneForma:'— seleccione la línea primero —',
+    selecioneTamanho:'— seleccione —',
+    selecionePrimeiro:'— seleccione —',
+    selecioneMotor:'— seleccione el motor —',
+    mg4:'── 4 Polos · 1800 rpm ──',
+    mg6:'── 6 Polos · 1200 rpm ──',
+    mg8:'── 8 Polos · 900 rpm ──',
+    linhaR:'Línea R — Coaxial (≡ C / CP)',
+    linhaF:'Línea F — Ejes Paralelos (≡ F)',
+    linhaK:'Línea K — Helicoidal-Cónico (≡ A)',
+    linhaS:'Línea S — Tornillo Sin Fin (≡ VF / W)',
+    ds_ratio:'Relación (i)', ds_torqueOut:'Par de salida',
+    ds_torqueNom:'Par nominal', ds_shaft:'Ø Eje de salida',
+    ds_n2:'Velocidad salida (n₂)', ds_sf:'Factor de servicio',
+    ds_complement:'Opción',
+    ds_motorSec:'Motor', ds_model:'Modelo', ds_power:'Potencia',
+    ds_n1:'Velocidad nominal (n₁)', ds_poles:'Polos',
+    ds_accSec:'Accesorios',
+    ds_desc:'Descripción', ds_torqueNomB:'Par nominal',
+    ds_torqueOutB:'Par de salida', ds_n1n2:'Velocidad entrada / salida',
+    ds_reduction:'Relación', ds_sfB:'Factor de servicio',
+    ds_inputCfg:'Config. entrada', ds_outputCfg:'Config. salida',
+    ds_mountPos:'Posición de montaje', ds_shaftB:'Ø Eje de salida',
+    ds_housing:'Carcasa', ds_weight:'Peso', ds_lub:'Lubricación',
+    ds_cool:'Refrigeración', ds_seal:'Sellado',
+    ds_housingVal:'Hierro Fundido', ds_lubVal:'Baño de Aceite',
+    ds_coolVal:'Natural', ds_sealVal:'Goma Nitrílica',
+    st_selectFields:'✗ Seleccione Tipo Constructivo, Tamaño y Motor.',
+    st_noReduction:'⚠ Introduzca una relación para calcular el par y n₂.',
+    st_exact:'✓ Relación exacta: i = ',
+    st_noTable:'✓ Relación introducida: i = ',
+    st_noTableSuffix:' (sin tabla de relaciones para este tamaño)',
+    st_closestPre:'Relación disponible más cercana: ',
+    noEquiv:'No se encontró modelo equivalente para esta configuración.',
+    noSpline:'No hay equivalente Bonfiglioli<br>para eje estriado (estrías DIN 5480).',
+    bDesc_C:'Reductor Coaxial de Engranajes Helicoidales',
+    bDesc_F:'Reductor de Ejes Paralelos y Engranajes Helicoidales',
+    bDesc_A:'Reductor Angular Helicoidal-Cónico',
+    bDesc_S:'Reductor Helicoidal de Tornillo Sin Fin',
+    bDesc_W:'Reductor de Tornillo Sin Fin',
+    cfg_inputFlange:'Brida de entrada para motor eléctrico estándar IEC ',
+    cfg_solidShaft:'Eje de salida macizo Ø',
+    cfg_hollow:'Eje hueco de salida Ø',
+    cfg_shrink:'Eje hueco con disco de apriete',
+    cfg_shrinkTL:'Eje hueco con disco de apriete (TorqLOC®)',
+    cfg_b5:' + Brida de entrada B5',
+    vfw_solid:'Eje Macizo', vfw_hollow:'Eje Hueco',
+    pdfHeader:'CONVERTIDOR INTELIGENTE — Generador de Código de Producto Bonfiglioli',
+    pdfBonfig:'Bonfiglioli — Producto Principal',
+    pdfSEW:'SEW — Equivalente',
+    pdfFooter:'Convertidor Inteligente REV 2026  •  por Glauber Sanches',
+  },
+  fr: {
+    appTitle:'CONVERTISSEUR INTELLIGENT', appSub:'Générateur de Code Produit',
+    installApp:'⬇ Installer comme App', desktopBadge:'✔ VERSION BUREAU',
+    code:'CODE', codebarPh:'— sélectionnez les champs —',
+    sec1:'Gamme de Produit', sec2:'Type Constructif', sec3:'Taille',
+    sec4:'Option', optional:'(optionnel)',
+    sec5:'Moteur', sec6:'Accessoires Moteur', acc3:'(jusqu’à 3 — sans répétition)',
+    sec7:'Rapport Souhaité', ratioHint:'rapport de réduction',
+    btnCalc:'▶ Générer Fiche Technique', btnCalcShort:'Générer Fiche Technique',
+    btnPDF:'📄 Générer PDF',
+    productCode:'▸ Code Produit',
+    emptyMsg:'Remplissez les champs et cliquez sur',
+    footerBy:'par',
+    posMont:'Pos. Montage',
+    nenhum:'— aucun —',
+    selecioneLinha:'— sélectionnez la gamme —',
+    selecioneForma:'— sélectionnez la gamme d’abord —',
+    selecioneTamanho:'— sélectionnez —',
+    selecionePrimeiro:'— sélectionnez —',
+    selecioneMotor:'— sélectionnez le moteur —',
+    mg4:'── 4 Pôles · 1800 tr/min ──',
+    mg6:'── 6 Pôles · 1200 tr/min ──',
+    mg8:'── 8 Pôles · 900 tr/min ──',
+    linhaR:'Ligne R — Coaxial (≡ C / CP)',
+    linhaF:'Ligne F — Arbres Parallèles (≡ F)',
+    linhaK:'Ligne K — Hélicoïdal-Conique (≡ A)',
+    linhaS:'Ligne S — Vis Sans Fin (≡ VF / W)',
+    ds_ratio:'Rapport (i)', ds_torqueOut:'Couple de sortie',
+    ds_torqueNom:'Couple nominal', ds_shaft:'Ø Arbre de sortie',
+    ds_n2:'Vitesse sortie (n₂)', ds_sf:'Facteur de service',
+    ds_complement:'Option',
+    ds_motorSec:'Moteur', ds_model:'Modèle', ds_power:'Puissance',
+    ds_n1:'Vitesse nominale (n₁)', ds_poles:'Pôles',
+    ds_accSec:'Accessoires',
+    ds_desc:'Description', ds_torqueNomB:'Couple nominal',
+    ds_torqueOutB:'Couple de sortie', ds_n1n2:'Vitesse entrée / sortie',
+    ds_reduction:'Rapport', ds_sfB:'Facteur de service',
+    ds_inputCfg:'Config. entrée', ds_outputCfg:'Config. sortie',
+    ds_mountPos:'Position de montage', ds_shaftB:'Ø Arbre de sortie',
+    ds_housing:'Carter', ds_weight:'Poids', ds_lub:'Lubrification',
+    ds_cool:'Refroidissement', ds_seal:'Étanchéité',
+    ds_housingVal:'Fonte', ds_lubVal:'Bain d’huile',
+    ds_coolVal:'Naturel', ds_sealVal:'Caoutchouc Nitrile',
+    st_selectFields:'✗ Sélectionnez Type Constructif, Taille et Moteur.',
+    st_noReduction:'⚠ Entrez un rapport pour calculer le couple et n₂.',
+    st_exact:'✓ Rapport exact : i = ',
+    st_noTable:'✓ Rapport saisi : i = ',
+    st_noTableSuffix:' (pas de table de rapports pour cette taille)',
+    st_closestPre:'Rapport disponible le plus proche : ',
+    noEquiv:'Aucun modèle équivalent trouvé pour cette configuration.',
+    noSpline:'Pas d’équivalent Bonfiglioli<br>pour arbre cannelé (cannelures DIN 5480).',
+    bDesc_C:'Réducteur Coaxial à Engrenages Hélicoïdaux',
+    bDesc_F:'Réducteur à Arbres Parallèles et Engrenages Hélicoïdaux',
+    bDesc_A:'Réducteur Angulaire Hélicoïdal-Conique',
+    bDesc_S:'Réducteur Hélicoïdal à Vis Sans Fin',
+    bDesc_W:'Réducteur à Vis Sans Fin',
+    cfg_inputFlange:'Bride d’entrée pour moteur électrique standard IEC ',
+    cfg_solidShaft:'Arbre de sortie plein Ø',
+    cfg_hollow:'Arbre creux de sortie Ø',
+    cfg_shrink:'Arbre creux avec disque de serrage',
+    cfg_shrinkTL:'Arbre creux avec disque de serrage (TorqLOC®)',
+    cfg_b5:' + Bride d’entrée B5',
+    vfw_solid:'Arbre Plein', vfw_hollow:'Arbre Creux',
+    pdfHeader:'CONVERTISSEUR INTELLIGENT — Générateur de Code Produit Bonfiglioli',
+    pdfBonfig:'Bonfiglioli — Produit Principal',
+    pdfSEW:'SEW — Équivalent',
+    pdfFooter:'Convertisseur Intelligent REV 2026  •  par Glauber Sanches',
+  },
+  de: {
+    appTitle:'INTELLIGENTER KONVERTER', appSub:'Produktcode-Generator',
+    installApp:'⬇ Als App installieren', desktopBadge:'✔ DESKTOP-VERSION',
+    code:'CODE', codebarPh:'— Felder auswählen —',
+    sec1:'Produktreihe', sec2:'Bauform', sec3:'Baugröß',
+    sec4:'Option', optional:'(optional)',
+    sec5:'Motor', sec6:'Motorzubehör', acc3:'(bis zu 3 — keine Wiederholung)',
+    sec7:'Gewünschtes Übersetzungsverhältnis', ratioHint:'Übersetzungsverhältnis',
+    btnCalc:'▶ Datenblatt erstellen', btnCalcShort:'Datenblatt erstellen',
+    btnPDF:'📄 PDF erstellen',
+    productCode:'▸ Produktcode',
+    emptyMsg:'Felder ausfüllen und klicken auf',
+    footerBy:'von',
+    posMont:'Einbaulage',
+    nenhum:'— keine —',
+    selecioneLinha:'— Reihe auswählen —',
+    selecioneForma:'— zuerst Reihe auswählen —',
+    selecioneTamanho:'— auswählen —',
+    selecionePrimeiro:'— auswählen —',
+    selecioneMotor:'— Motor auswählen —',
+    mg4:'── 4-polig · 1800 U/min ──',
+    mg6:'── 6-polig · 1200 U/min ──',
+    mg8:'── 8-polig · 900 U/min ──',
+    linhaR:'Reihe R — Koaxial (≡ C / CP)',
+    linhaF:'Reihe F — Parallelwelle (≡ F)',
+    linhaK:'Reihe K — Kegelradgetriebe (≡ A)',
+    linhaS:'Reihe S — Schneckengetriebe (≡ VF / W)',
+    ds_ratio:'Übersetzung (i)', ds_torqueOut:'Abtriebsdrehmoment',
+    ds_torqueNom:'Nenndrehmoment', ds_shaft:'Ø Abtriebswelle',
+    ds_n2:'Abtriebsdrehzahl (n₂)', ds_sf:'Betriebsfaktor',
+    ds_complement:'Option',
+    ds_motorSec:'Motor', ds_model:'Modell', ds_power:'Leistung',
+    ds_n1:'Nenndrehzahl (n₁)', ds_poles:'Pole',
+    ds_accSec:'Zubehör',
+    ds_desc:'Beschreibung', ds_torqueNomB:'Nenndrehmoment',
+    ds_torqueOutB:'Abtriebsdrehmoment', ds_n1n2:'Antriebs- / Abtriebsdrehzahl',
+    ds_reduction:'Übersetzung', ds_sfB:'Betriebsfaktor',
+    ds_inputCfg:'Antriebskonfig.', ds_outputCfg:'Abtriebskonfig.',
+    ds_mountPos:'Einbaulage', ds_shaftB:'Ø Abtriebswelle',
+    ds_housing:'Gehäuse', ds_weight:'Gewicht', ds_lub:'Schmierung',
+    ds_cool:'Kühlung', ds_seal:'Dichtung',
+    ds_housingVal:'Grauguss', ds_lubVal:'Ölbad',
+    ds_coolVal:'Natürlich', ds_sealVal:'Nitrilkautschuk',
+    st_selectFields:'✗ Bauform, Baugröß und Motor auswählen.',
+    st_noReduction:'⚠ Übersetzungsverhältnis eingeben, um Drehmoment und n₂ zu berechnen.',
+    st_exact:'✓ Exaktes Übersetzungsverhältnis: i = ',
+    st_noTable:'✓ Eingegebenes Übersetzungsverhältnis: i = ',
+    st_noTableSuffix:' (keine Übersetzungstabelle für diese Baugröß)',
+    st_closestPre:'Nächste verfügbare Übersetzung: ',
+    noEquiv:'Kein äquivalentes Modell für diese Konfiguration gefunden.',
+    noSpline:'Kein Bonfiglioli-Äquivalent<br>für Keilwelle (DIN 5480 Kerbverzahnung).',
+    bDesc_C:'Koaxialgetriebe mit Stirnrädern',
+    bDesc_F:'Parallelwellengetriebe mit Stirnrädern',
+    bDesc_A:'Kegelradgetriebe',
+    bDesc_S:'Schneckengetriebe',
+    bDesc_W:'Schneckengetriebe',
+    cfg_inputFlange:'Antriebsflansch für Normmotor IEC ',
+    cfg_solidShaft:'Vollwelle Ø',
+    cfg_hollow:'Hohlwelle Ø',
+    cfg_shrink:'Hohlwelle mit Schrumpfscheibe',
+    cfg_shrinkTL:'Hohlwelle mit Schrumpfscheibe (TorqLOC®)',
+    cfg_b5:' + Antriebsflansch B5',
+    vfw_solid:'Vollwelle', vfw_hollow:'Hohlwelle',
+    pdfHeader:'INTELLIGENTER KONVERTER — Bonfiglioli Produktcode-Generator',
+    pdfBonfig:'Bonfiglioli — Hauptprodukt',
+    pdfSEW:'SEW — Äquivalent',
+    pdfFooter:'Intelligenter Konverter REV 2026  •  von Glauber Sanches',
+  }
+};
+
+// currentLang já declarado no topo do script
+
+function t(key) {
+  return (LANG[currentLang] || LANG.pt)[key] || (LANG.pt[key] || key);
+}
+
+
 /* ══════════════════════════════════════════
    DATA  (extraído de Conversor_SEW.xlsm)
 ══════════════════════════════════════════ */
 
 const FORMAS = {
   R: [
-    {v:'R',  d:'Pés'},
-    {v:'RF', d:'Flange + Pés'},
-    {v:'RM', d:'Flange'}
+    {v:'R',  d:()=>currentLang==='en'?'Foot mounted':currentLang==='it'?'A piedi':currentLang==='es'?'A pies':currentLang==='fr'?'Sur pieds':currentLang==='de'?'Fußausführung':'Pés'},
+    {v:'RF', d:()=>currentLang==='en'?'Flange + Foot':currentLang==='it'?'Flangia + Piedi':currentLang==='es'?'Brida + Pies':currentLang==='fr'?'Bride + Pieds':currentLang==='de'?'Flansch + Füße':'Flange + Pés'},
+    {v:'RM', d:()=>currentLang==='en'?'Flange mounted':currentLang==='it'?'A flangia':currentLang==='es'?'A brida':currentLang==='fr'?'Sur bride':currentLang==='de'?'Flanschausführung':'Flange'}
   ],
   F: [
-    {v:'F',    d:'Pés, saída maciça'},
-    {v:'FA',   d:'Pés, saída vazada chavetada'},
-    {v:'FV',   d:'Pés, saída vazada spline DIN 5480'},
-    {v:'FH',   d:'Pés, saída vazada c/ disco de contração'},
-    {v:'FF',   d:'Flange B5, saída maciça'},
-    {v:'FAF',  d:'Flange B5, saída vazada chavetada'},
-    {v:'FVF',  d:'Flange B5, saída vazada spline'},
-    {v:'FHF',  d:'Flange B5, saída vazada c/ disco de contração'},
-    {v:'FT',   d:'Flange B5, eixo TorqLOC®'},
-    {v:'FAZ',  d:'Pés, saída vazada chavetada, carcaça cilíndrica'},
-    {v:'FVZ',  d:'Pés, saída vazada spline, carcaça cilíndrica'},
-    {v:'FHZ',  d:'Pés, saída vazada c/ disco, carcaça cilíndrica'}
+    {v:'F',    d:()=>currentLang==='en'?'Foot, solid output shaft':currentLang==='it'?'A piedi, albero uscita pieno':currentLang==='es'?'A pies, eje salida macizo':currentLang==='fr'?'Sur pieds, arbre sortie plein':currentLang==='de'?'Fußausführung, Vollwelle':'Pés, saída maciça'},
+    {v:'FA',   d:()=>currentLang==='en'?'Foot, hollow keyed shaft':currentLang==='it'?'A piedi, albero cavo con linguetta':currentLang==='es'?'A pies, eje hueco con chavetero':currentLang==='fr'?'Sur pieds, arbre creux avec clavette':currentLang==='de'?'Fußausführung, Hohlwelle mit Passfeder':'Pés, saída vazada chavetada'},
+    {v:'FV',   d:()=>currentLang==='en'?'Foot, splined hollow shaft DIN 5480':currentLang==='it'?'A piedi, albero cavo scanalato DIN 5480':currentLang==='es'?'A pies, eje hueco estriado DIN 5480':currentLang==='fr'?'Sur pieds, arbre creux cannelé DIN 5480':currentLang==='de'?'Fußausführung, Keilwelle DIN 5480':'Pés, saída vazada spline DIN 5480'},
+    {v:'FH',   d:()=>currentLang==='en'?'Foot, shrink disc hollow shaft':currentLang==='it'?'A piedi, albero cavo con disco di serraggio':currentLang==='es'?'A pies, eje hueco con disco de apriete':currentLang==='fr'?'Sur pieds, arbre creux avec disque de serrage':currentLang==='de'?'Fußausführung, Hohlwelle mit Schrumpfscheibe':'Pés, saída vazada c/ disco de contração'},
+    {v:'FF',   d:()=>currentLang==='en'?'B5 Flange, solid output shaft':currentLang==='it'?'Flangia B5, albero uscita pieno':currentLang==='es'?'Brida B5, eje salida macizo':currentLang==='fr'?'Bride B5, arbre sortie plein':currentLang==='de'?'B5-Flansch, Vollwelle':'Flange B5, saída maciça'},
+    {v:'FAF',  d:()=>currentLang==='en'?'B5 Flange, hollow keyed shaft':currentLang==='it'?'Flangia B5, albero cavo con linguetta':currentLang==='es'?'Brida B5, eje hueco con chavetero':currentLang==='fr'?'Bride B5, arbre creux avec clavette':currentLang==='de'?'B5-Flansch, Hohlwelle mit Passfeder':'Flange B5, saída vazada chavetada'},
+    {v:'FVF',  d:()=>currentLang==='en'?'B5 Flange, splined hollow shaft':currentLang==='it'?'Flangia B5, albero cavo scanalato':currentLang==='es'?'Brida B5, eje hueco estriado':currentLang==='fr'?'Bride B5, arbre creux cannelé':currentLang==='de'?'B5-Flansch, Keilwelle':'Flange B5, saída vazada spline'},
+    {v:'FHF',  d:()=>currentLang==='en'?'B5 Flange, shrink disc hollow shaft':currentLang==='it'?'Flangia B5, albero cavo con disco di serraggio':currentLang==='es'?'Brida B5, eje hueco con disco de apriete':currentLang==='fr'?'Bride B5, arbre creux avec disque de serrage':currentLang==='de'?'B5-Flansch, Hohlwelle mit Schrumpfscheibe':'Flange B5, saída vazada c/ disco de contração'},
+    {v:'FT',   d:()=>currentLang==='en'?'B5 Flange, TorqLOC® shaft':currentLang==='it'?'Flangia B5, albero TorqLOC®':currentLang==='es'?'Brida B5, eje TorqLOC®':currentLang==='fr'?'Bride B5, arbre TorqLOC®':currentLang==='de'?'B5-Flansch, TorqLOC®-Welle':'Flange B5, eixo TorqLOC®'},
+    {v:'FAZ',  d:()=>currentLang==='en'?'Foot, hollow keyed shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo con linguetta, corpo cilindrico':currentLang==='es'?'A pies, eje hueco con chavetero, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux avec clavette, carter cylindrique':currentLang==='de'?'Fußausführung, Hohlwelle mit Passfeder, Rundflanschgehäuse':'Pés, saída vazada chavetada, carcaça cilíndrica'},
+    {v:'FVZ',  d:()=>currentLang==='en'?'Foot, splined hollow shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo scanalato, corpo cilindrico':currentLang==='es'?'A pies, eje hueco estriado, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux cannelé, carter cylindrique':currentLang==='de'?'Fußausführung, Keilwelle, Rundflanschgehäuse':'Pés, saída vazada spline, carcaça cilíndrica'},
+    {v:'FHZ',  d:()=>currentLang==='en'?'Foot, shrink disc hollow shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo con disco di serraggio, corpo cilindrico':currentLang==='es'?'A pies, eje hueco con disco de apriete, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux avec disque de serrage, carter cylindrique':currentLang==='de'?'Fußausführung, Hohlwelle mit Schrumpfscheibe, Rundflanschgehäuse':'Pés, saída vazada c/ disco, carcaça cilíndrica'}
   ],
   K: [
-    {v:'K',    d:'Pés, saída maciça'},
-    {v:'KA',   d:'Pés, saída vazada chavetada'},
-    {v:'KV',   d:'Pés, saída vazada spline DIN 5480'},
-    {v:'KH',   d:'Pés, saída vazada c/ disco de contração'},
-    {v:'KF',   d:'Flange B5, saída maciça'},
-    {v:'KAF',  d:'Flange B5, saída vazada chavetada'},
-    {v:'KVF',  d:'Flange B5, saída vazada spline'},
-    {v:'KHF',  d:'Flange B5, saída vazada c/ disco de contração'},
-    {v:'KT',   d:'Flange B5, eixo TorqLOC®'},
-    {v:'KAZ',  d:'Pés, saída vazada chavetada, carcaça cilíndrica'},
-    {v:'KVZ',  d:'Pés, saída vazada spline, carcaça cilíndrica'},
-    {v:'KHZ',  d:'Pés, saída vazada c/ disco, carcaça cilíndrica'}
+    {v:'K',    d:()=>currentLang==='en'?'Foot, solid output shaft':currentLang==='it'?'A piedi, albero uscita pieno':currentLang==='es'?'A pies, eje salida macizo':currentLang==='fr'?'Sur pieds, arbre sortie plein':currentLang==='de'?'Fußausführung, Vollwelle':'Pés, saída maciça'},
+    {v:'KA',   d:()=>currentLang==='en'?'Foot, hollow keyed shaft':currentLang==='it'?'A piedi, albero cavo con linguetta':currentLang==='es'?'A pies, eje hueco con chavetero':currentLang==='fr'?'Sur pieds, arbre creux avec clavette':currentLang==='de'?'Fußausführung, Hohlwelle mit Passfeder':'Pés, saída vazada chavetada'},
+    {v:'KV',   d:()=>currentLang==='en'?'Foot, splined hollow shaft DIN 5480':currentLang==='it'?'A piedi, albero cavo scanalato DIN 5480':currentLang==='es'?'A pies, eje hueco estriado DIN 5480':currentLang==='fr'?'Sur pieds, arbre creux cannelé DIN 5480':currentLang==='de'?'Fußausführung, Keilwelle DIN 5480':'Pés, saída vazada spline DIN 5480'},
+    {v:'KH',   d:()=>currentLang==='en'?'Foot, shrink disc hollow shaft':currentLang==='it'?'A piedi, albero cavo con disco di serraggio':currentLang==='es'?'A pies, eje hueco con disco de apriete':currentLang==='fr'?'Sur pieds, arbre creux avec disque de serrage':currentLang==='de'?'Fußausführung, Hohlwelle mit Schrumpfscheibe':'Pés, saída vazada c/ disco de contração'},
+    {v:'KF',   d:()=>currentLang==='en'?'B5 Flange, solid output shaft':currentLang==='it'?'Flangia B5, albero uscita pieno':currentLang==='es'?'Brida B5, eje salida macizo':currentLang==='fr'?'Bride B5, arbre sortie plein':currentLang==='de'?'B5-Flansch, Vollwelle':'Flange B5, saída maciça'},
+    {v:'KAF',  d:()=>currentLang==='en'?'B5 Flange, hollow keyed shaft':currentLang==='it'?'Flangia B5, albero cavo con linguetta':currentLang==='es'?'Brida B5, eje hueco con chavetero':currentLang==='fr'?'Bride B5, arbre creux avec clavette':currentLang==='de'?'B5-Flansch, Hohlwelle mit Passfeder':'Flange B5, saída vazada chavetada'},
+    {v:'KVF',  d:()=>currentLang==='en'?'B5 Flange, splined hollow shaft':currentLang==='it'?'Flangia B5, albero cavo scanalato':currentLang==='es'?'Brida B5, eje hueco estriado':currentLang==='fr'?'Bride B5, arbre creux cannelé':currentLang==='de'?'B5-Flansch, Keilwelle':'Flange B5, saída vazada spline'},
+    {v:'KHF',  d:()=>currentLang==='en'?'B5 Flange, shrink disc hollow shaft':currentLang==='it'?'Flangia B5, albero cavo con disco di serraggio':currentLang==='es'?'Brida B5, eje hueco con disco de apriete':currentLang==='fr'?'Bride B5, arbre creux avec disque de serrage':currentLang==='de'?'B5-Flansch, Hohlwelle mit Schrumpfscheibe':'Flange B5, saída vazada c/ disco de contração'},
+    {v:'KT',   d:()=>currentLang==='en'?'B5 Flange, TorqLOC® shaft':currentLang==='it'?'Flangia B5, albero TorqLOC®':currentLang==='es'?'Brida B5, eje TorqLOC®':currentLang==='fr'?'Bride B5, arbre TorqLOC®':currentLang==='de'?'B5-Flansch, TorqLOC®-Welle':'Flange B5, eixo TorqLOC®'},
+    {v:'KAZ',  d:()=>currentLang==='en'?'Foot, hollow keyed shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo con linguetta, corpo cilindrico':currentLang==='es'?'A pies, eje hueco con chavetero, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux avec clavette, carter cylindrique':currentLang==='de'?'Fußausführung, Hohlwelle mit Passfeder, Rundflanschgehäuse':'Pés, saída vazada chavetada, carcaça cilíndrica'},
+    {v:'KVZ',  d:()=>currentLang==='en'?'Foot, splined hollow shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo scanalato, corpo cilindrico':currentLang==='es'?'A pies, eje hueco estriado, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux cannelé, carter cylindrique':currentLang==='de'?'Fußausführung, Keilwelle, Rundflanschgehäuse':'Pés, saída vazada spline, carcaça cilíndrica'},
+    {v:'KHZ',  d:()=>currentLang==='en'?'Foot, shrink disc hollow shaft, cylindrical housing':currentLang==='it'?'A piedi, albero cavo con disco di serraggio, corpo cilindrico':currentLang==='es'?'A pies, eje hueco con disco de apriete, carcasa cilíndrica':currentLang==='fr'?'Sur pieds, arbre creux avec disque de serrage, carter cylindrique':currentLang==='de'?'Fußausführung, Hohlwelle mit Schrumpfscheibe, Rundflanschgehäuse':'Pés, saída vazada c/ disco, carcaça cilíndrica'}
   ],
   S: [
-    {v:'S',    d:'Pés, saída maciça'},
-    {v:'SF',   d:'Flange B5, saída maciça'},
-    {v:'SAF',  d:'Flange B5, saída vazada chavetada'},
-    {v:'SHF',  d:'Flange B5, saída vazada c/ disco de contração'},
-    {v:'SA',   d:'Saída vazada chavetada'},
-    {v:'SH',   d:'Saída vazada c/ disco de contração'},
-    {v:'ST',   d:'Saída vazada TorqLOC®'},
-    {v:'SAZ',  d:'Saída vazada chavetada, carcaça cilíndrica'},
-    {v:'SHZ',  d:'Saída vazada c/ disco, carcaça cilíndrica'},
-    {v:'SA/T', d:'Saída vazada chavetada + TorqLOC®'},
-    {v:'SH/T', d:'Saída vazada c/ disco + TorqLOC®'}
+    {v:'S',    d:()=>currentLang==='en'?'Foot, solid output shaft':currentLang==='it'?'A piedi, albero uscita pieno':currentLang==='es'?'A pies, eje salida macizo':currentLang==='fr'?'Sur pieds, arbre sortie plein':currentLang==='de'?'Fußausführung, Vollwelle':'Pés, saída maciça'},
+    {v:'SF',   d:()=>currentLang==='en'?'B5 Flange, solid output shaft':currentLang==='it'?'Flangia B5, albero uscita pieno':currentLang==='es'?'Brida B5, eje salida macizo':currentLang==='fr'?'Bride B5, arbre sortie plein':currentLang==='de'?'B5-Flansch, Vollwelle':'Flange B5, saída maciça'},
+    {v:'SAF',  d:()=>currentLang==='en'?'B5 Flange, hollow keyed shaft':currentLang==='it'?'Flangia B5, albero cavo con linguetta':currentLang==='es'?'Brida B5, eje hueco con chavetero':currentLang==='fr'?'Bride B5, arbre creux avec clavette':currentLang==='de'?'B5-Flansch, Hohlwelle mit Passfeder':'Flange B5, saída vazada chavetada'},
+    {v:'SHF',  d:()=>currentLang==='en'?'B5 Flange, shrink disc hollow shaft':currentLang==='it'?'Flangia B5, albero cavo con disco di serraggio':currentLang==='es'?'Brida B5, eje hueco con disco de apriete':currentLang==='fr'?'Bride B5, arbre creux avec disque de serrage':currentLang==='de'?'B5-Flansch, Hohlwelle mit Schrumpfscheibe':'Flange B5, saída vazada c/ disco de contração'},
+    {v:'SA',   d:()=>currentLang==='en'?'Hollow keyed shaft':currentLang==='it'?'Albero cavo con linguetta':currentLang==='es'?'Eje hueco con chavetero':currentLang==='fr'?'Arbre creux avec clavette':currentLang==='de'?'Hohlwelle mit Passfeder':'Saída vazada chavetada'},
+    {v:'SH',   d:()=>currentLang==='en'?'Shrink disc hollow shaft':currentLang==='it'?'Albero cavo con disco di serraggio':currentLang==='es'?'Eje hueco con disco de apriete':currentLang==='fr'?'Arbre creux avec disque de serrage':currentLang==='de'?'Hohlwelle mit Schrumpfscheibe':'Saída vazada c/ disco de contração'},
+    {v:'ST',   d:()=>currentLang==='en'?'TorqLOC® hollow shaft':currentLang==='it'?'Albero cavo TorqLOC®':currentLang==='es'?'Eje hueco TorqLOC®':currentLang==='fr'?'Arbre creux TorqLOC®':currentLang==='de'?'TorqLOC®-Hohlwelle':'Saída vazada TorqLOC®'},
+    {v:'SAZ',  d:()=>currentLang==='en'?'Hollow keyed shaft, cylindrical housing':currentLang==='it'?'Albero cavo con linguetta, corpo cilindrico':currentLang==='es'?'Eje hueco con chavetero, carcasa cilíndrica':currentLang==='fr'?'Arbre creux avec clavette, carter cylindrique':currentLang==='de'?'Hohlwelle mit Passfeder, Rundflanschgehäuse':'Saída vazada chavetada, carcaça cilíndrica'},
+    {v:'SHZ',  d:()=>currentLang==='en'?'Shrink disc hollow shaft, cylindrical housing':currentLang==='it'?'Albero cavo con disco di serraggio, corpo cilindrico':currentLang==='es'?'Eje hueco con disco de apriete, carcasa cilíndrica':currentLang==='fr'?'Arbre creux avec disque de serrage, carter cylindrique':currentLang==='de'?'Hohlwelle mit Schrumpfscheibe, Rundflanschgehäuse':'Saída vazada c/ disco, carcaça cilíndrica'},
+    {v:'SA/T', d:()=>currentLang==='en'?'Hollow keyed shaft + TorqLOC®':currentLang==='it'?'Albero cavo con linguetta + TorqLOC®':currentLang==='es'?'Eje hueco con chavetero + TorqLOC®':currentLang==='fr'?'Arbre creux avec clavette + TorqLOC®':currentLang==='de'?'Hohlwelle mit Passfeder + TorqLOC®':'Saída vazada chavetada + TorqLOC®'},
+    {v:'SH/T', d:()=>currentLang==='en'?'Shrink disc hollow shaft + TorqLOC®':currentLang==='it'?'Albero cavo con disco di serraggio + TorqLOC®':currentLang==='es'?'Eje hueco con disco de apriete + TorqLOC®':currentLang==='fr'?'Arbre creux avec disque de serrage + TorqLOC®':currentLang==='de'?'Hohlwelle mit Schrumpfscheibe + TorqLOC®':'Saída vazada c/ disco + TorqLOC®'}
   ]
 };
 
@@ -472,30 +920,27 @@ const TAMANHOS = {
 // Complemento disponível por linha/forma
 function getComplementos(linha, forma) {
   if (linha === 'R') {
-    const opts = [{v:'', d:'— nenhum —'}];
-    if (forma === 'R') opts.push({v:'F', d:'F — Flange adicional'});
-    opts.push({v:'/R', d:'/R — Folga reduzida'});
+    const opts = [{v:'', d:t('nenhum')}];
+    if (forma === 'R') opts.push({v:'F', d:'F — ' + (currentLang==='en'?'Additional flange':currentLang==='it'?'Flangia aggiuntiva':currentLang==='es'?'Brida adicional':currentLang==='fr'?'Bride additionnelle':currentLang==='de'?'Zusatzflansch':'Flange adicional')});
+    opts.push({v:'/R', d:'/R — ' + (currentLang==='en'?'Reduced Backlash':currentLang==='it'?'Gioco ridotto':currentLang==='es'?'Juego reducido':currentLang==='fr'?'Jeu réduit':currentLang==='de'?'Reduziertes Spiel':'Folga reduzida')});
     return opts;
   }
   if (linha === 'F') {
-    // B suffix: available for FA, FV, FH forms; \G suffix for FA\G etc — captured in forma code itself
-    return [{v:'', d:'— nenhum —'}];
+    return [{v:'', d:t('nenhum')}];
   }
   if (linha === 'K') {
-    // /T available for KA, KV, KH forms
     const kFormasT = ['KA','KV','KH'];
-    const opts = [{v:'', d:'— nenhum —'}];
+    const opts = [{v:'', d:t('nenhum')}];
     if (kFormasT.includes(forma)) opts.push({v:'/T', d:'/T — TorqLOC®'});
     return opts;
   }
   if (linha === 'S') {
-    // /T available for SA, SH forms
     const sFormasT = ['SA','SH'];
-    const opts = [{v:'', d:'— nenhum —'}];
+    const opts = [{v:'', d:t('nenhum')}];
     if (sFormasT.includes(forma)) opts.push({v:'/T', d:'/T — TorqLOC®'});
     return opts;
   }
-  return [{v:'', d:'— nenhum —'}];
+  return [{v:'', d:t('nenhum')}];
 }
 
 // Eixo de saída (mm) por tamanho
@@ -652,10 +1097,10 @@ const MOTOR_IEC = {"DFT56M4":63,"DFT56L4":63,"DFR63S4":63,"DFR63M4":63,"DFR63L4"
 const SEW_TO_BONFIG = {R:'C', F:'F', K:'A', S:'VFW'};
 
 const BONFIG_DESC = {
-  C: 'Redutor Coaxial de Engrenagens Helicoidais',
-  F: 'Redutor de Eixos Paralelos e Engrenagens Helicoidais',
-  A: 'Redutor Angular de Engrenagens Helicoidais e Cônicas',
-  S: 'Redutor de Engrenagens Helicoidais e Coroa / Sem-fim'
+  C: () => t('bDesc_C'),
+  F: () => t('bDesc_F'),
+  A: () => t('bDesc_A'),
+  S: () => t('bDesc_S')
 };
 
 // Posição de montagem: SEW → Bonfiglioli (from Posições_de_montagem.xlsx)
@@ -688,7 +1133,7 @@ const BSHAFT_OPTS = {
   F:{'10':[25,30],'20':[30,35],'25':[35,40],'31':[35,40],'41':[40,45],'51':[50,55],'60':[60,70],'70':[70,80],'80':[80,90],'90':[90,100]},
   C:{'05':[16],'12':[20],'22':[25],'32':[30],'36':[35],'41':[35],'51':[40],'61':[50],'70':[60],'80':[80],'90':[90],'100':[100]},
   S:{'10':[14],'20':[19],'30':[24],'40':[28],'50':[38]},
-  VFW:{'27':[14],'30':[18],'44':[25],'49':[30],'63':[25],'75':[30],'86':[35],'110':[42],'130':[50],'150':[60],'185':[70],'210':[80],'250':[90]}
+  VFW:{'27':[14],'30':[18],'44':[25],'49':[25],'63':[25],'75':[30],'86':[35],'110':[42],'130':[50],'150':[60],'185':[70],'210':[80],'250':[90]}
 };
 
 // SEW forma → Bonfiglioli forma BASE type (without diameter suffix)
@@ -698,11 +1143,11 @@ const SEW_FORMA_BASE = {
   // SEW F line → Bonfiglioli F: R=maciço padrão, H=vazado+diam, FA=flange
   'F': 'R', 'FA': 'H', 'FV': 'H', 'FH': 'S',
   'FF': 'FA', 'FAF': 'FA', 'FVF': 'FA', 'FHF': 'S',
-  'FT': 'FA', 'FAZ': 'H', 'FVZ': 'H', 'FHZ': 'S',
+  'FT': 'S',  'FAZ': 'H', 'FVZ': 'H', 'FHZ': 'S',
   // SEW K line → Bonfiglioli A: UR=maciço, UH=vazado+diam, F1A=flange
   'K': 'UR', 'KA': 'UH', 'KV': 'UH', 'KH': 'US',
   'KF': 'F1A', 'KAF': 'F1A', 'KVF': 'F1A', 'KHF': 'US',
-  'KT': 'F1A', 'KAZ': 'UH', 'KVZ': 'UH', 'KHZ': 'US',
+  'KT': 'US', 'KAZ': 'UH', 'KVZ': 'UH', 'KHZ': 'US',
   // SEW S line → Bonfiglioli S: P=pés, F=flange
   'S': 'P', 'SF': 'F', 'SAF': 'F', 'SHF': 'F',
   'SA': 'P', 'SH': 'P', 'ST': 'P', 'SAZ': 'P', 'SHZ': 'P'
@@ -1007,6 +1452,12 @@ function resolveBonfigForma(sewForma, bLine, bSize, sewShaftMM, sewSize) {
  * 4) Smallest adequate size
  */
 function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, sewMotorCode, sewForma, sewFS, bonfigPosMont, sewSize) {
+  // Formas com eixo estriado (spline DIN 5480) nao tem equivalente Bonfiglioli
+  const SPLINE_FORMAS = ['FV','FVF','FVZ','KV','KVF','KVZ'];
+  if (SPLINE_FORMAS.includes(sewForma)) {
+    return { splineUnsupported: true };
+  }
+
   const bType = SEW_TO_BONFIG[sewLine];
   if (!bType) return null;
   
@@ -1109,7 +1560,7 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     return Math.abs(a.eFS - targetFS) - Math.abs(b.eFS - targetFS);
   });
   
-  const best = scored_sorted[0];
+  const best = scored[0];
   const e = best.entry;
   const typeParts = e[1].split(/\s+/).filter(Boolean);
   const bLine = typeParts[0];
@@ -1145,7 +1596,7 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
   const modelStr = bLine + ' ' + bSize + ' ' + bStages + ' ' + bForma + ' ' + ratioStr + ' ' + inputFlange + (posStr ? ' ' + posStr : '');
   
   // Config entrada description
-  const entradaDesc = iec ? 'Flange de entrada para motor elétrico padrão IEC ' + iec : '—';
+  const entradaDesc = iec ? t('cfg_inputFlange') + iec : '—';
   
   // Config saída description
   // bForma pode ser composto:
@@ -1165,12 +1616,16 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
       const flangeD1 = BONFIG_C_OUTPUT_FLANGES[bLine + ' ' + bSize] && BONFIG_C_OUTPUT_FLANGES[bLine + ' ' + bSize][formaFlangeOut];
       saidaDesc = 'Com Eixo Maciço Ø' + shaftSpec + ' mm + Flange de Saída ' + formaFlangeOut + (flangeD1 ? ' (D1=' + flangeD1 + ' mm)' : '');
     } else {
-      saidaDesc = 'Com Eixo Maciço Chavetado Diâmetro ' + shaftSpec + ' mm';
+      saidaDesc = t('cfg_solidShaft') + ' ' + shaftSpec + ' mm';
     }
   } else if (formaShaftPart === 'F' || formaShaftPart.startsWith('FA') || formaShaftPart.startsWith('F1') || formaShaftPart.startsWith('F2')) {
     saidaDesc = 'Saída com Flange';
   } else if (formaShaftPart === 'U' || formaShaftPart.startsWith('UH') || formaShaftPart.startsWith('UF')) {
-    saidaDesc = 'Saída com Eixo Vazado Ø' + bShaftDiam + ' mm';
+    saidaDesc = t('cfg_hollow') + bShaftDiam + ' mm';
+  } else if (formaShaftPart === 'S' || formaShaftPart === 'US') {
+    // TorqLOC: disco de contração
+    const dcTipo = formaShaftPart === 'US' ? t('cfg_shrink') : t('cfg_shrinkTL');
+    saidaDesc = dcTipo + ' Ø' + bShaftDiam + ' mm';
   } else {
     saidaDesc = 'Eixo de saída Ø' + bShaftDiam + ' mm';
   }
@@ -1193,7 +1648,7 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     inputFlange,
     forma: bForma,
     posMont: bonfigPosMont || '',
-    description: BONFIG_DESC[bLine] || '',
+    description: (BONFIG_DESC[bLine] ? BONFIG_DESC[bLine]() : ''),
     entradaDesc,
     saidaDesc,
     n1Label: n1,
@@ -1277,7 +1732,7 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
   });
   const scored_sorted = pool;
   
-  const best = scored[0];
+  const best = scored_sorted[0];
   const e = best.entry;
   const eModelo = best.eModelo;
   const eSize = best.eSize;
@@ -1314,14 +1769,36 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
   
   // VF/W eixo de saída options (from Entrada VFW rows 87-104)
   const VFW_EIXOS = {
-    'VF 27':[14],'VF 30':[18],'VF 44':[25],'VF 49':[30],
+    'VF 27':[14],'VF 30':[18],'VF 44':[25],'VF 49':[25],
     'W 63':[25],'W 75':[30],'W 86':[35],'W 110':[42],
-    'VF 130':[50],'VF 150':[60],'VF 185':[70],'VF 210':[80],'VF 250':[90]
+    'VF 130':[50],'VF 150':[60],'VF 185':[70],'VF 210':[80],'VF 250':[90],
+    'VFR 49':[25],'WR 63':[25],'WR 75':[30],'WR 86':[35],'WR 110':[42],
+    'VFR 130':[50],'VFR 150':[60],'VFR 185':[70],'VFR 210':[80],'VFR 250':[90]
   };
   
   const validFormas = (VFW_FORMAS[eModelo]||{})[eSize] || ['A'];
-  // Pick forma: W types default to 'U', VF types default to 'A'
-  const bForma = eModelo.startsWith('W') ? 'U' : (validFormas.includes('A') ? 'A' : validFormas[0]);
+
+  // Map SEW S-line forma to Bonfiglioli VF/W forma construtiva
+  // W types: U=oco s/flange, UF1/UF2=oco c/flange B5, UFC1=oco c/disco+flange
+  // VF types: U=oco s/flange, FA1/FA2=oco chavetado c/flange, F1/F2=macico c/flange
+  let bForma;
+  const isW = eModelo.startsWith('W');
+  if (sewForma === 'SAF') {
+    bForma = isW
+      ? (validFormas.includes('UF1') ? 'UF1' : 'U')
+      : (validFormas.includes('FA1') ? 'FA1' : validFormas.includes('U') ? 'U' : 'A');
+  } else if (sewForma === 'SHF') {
+    bForma = isW
+      ? (validFormas.includes('UFC1') ? 'UFC1' : validFormas.includes('UF1') ? 'UF1' : 'U')
+      : (validFormas.includes('FA1') ? 'FA1' : 'A');
+  } else if (sewForma === 'SF') {
+    bForma = isW
+      ? (validFormas.includes('UF1') ? 'UF1' : 'U')
+      : (validFormas.includes('F1') ? 'F1' : 'A');
+  } else {
+    // S, SA, SH, SAZ, SHZ - sem flange de entrada
+    bForma = isW ? 'U' : (validFormas.includes('A') ? 'A' : validFormas[0]);
+  }
   
   // Shaft: pick from available eixos, closest to SEW
   const availEixos = VFW_EIXOS[best.typeStr] || [];
@@ -1330,19 +1807,36 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
     // Find closest to SEW shaft
     availEixos.sort((a,b) => Math.abs(a - targetShaft) - Math.abs(b - targetShaft));
     bShaftDiam = availEixos[0];
-    bShaftType = eModelo.startsWith('W') ? 'Ôco Chavetado' : 'Maciço Chavetado';
+    // Determine shaft type from resolved forma
+    if (bForma === 'U' || bForma.startsWith('UF') || bForma.startsWith('UFC')) {
+      bShaftType = 'Ôco Chavetado';
+    } else if (bForma === 'A' || bForma.startsWith('F1') || bForma.startsWith('F2')) {
+      bShaftType = 'Maciço Chavetado';
+    } else if (bForma.startsWith('FA')) {
+      bShaftType = 'Ôco Chavetado';
+    } else {
+      bShaftType = eModelo.startsWith('W') ? 'Ôco Chavetado' : 'Maciço Chavetado';
+    }
   } else {
     bShaftDiam = VFW_SHAFTS[best.typeStr] || 0;
-    bShaftType = 'Maciço Chavetado';
+    bShaftType = eModelo.startsWith('W') ? 'Ôco Chavetado' : 'Maciço Chavetado';
   }
   
   const posStr = bonfigPosMont || '';
   
   const ratioStr = Number.isInteger(bRatio) ? String(bRatio) : bRatio.toFixed(1).replace('.', ',');
-  const modelStr = eModelo + ' ' + eSize + ' ' + bForma + ' ' + ratioStr + ' ' + inputFlange + (posStr ? ' ' + posStr : '');
+  // ESL1 = adaptador de eixo macico; acrescentado quando SEW tem saida macica (S ou SF)
+  const hasSolidShaft = (sewForma === 'S' || sewForma === 'SF');
+  const eslSuffix = hasSolidShaft ? ' ESL1' : '';
+  // W 75 e WR 75 tem D30 entre a forma construtiva e a reducao
+  const d30Infix = (best.typeStr === 'W 75' || best.typeStr === 'WR 75') ? ' D30' : '';
+  const modelStr = eModelo + ' ' + eSize + ' ' + bForma + d30Infix + ' ' + ratioStr + ' ' + inputFlange + (posStr ? ' ' + posStr : '') + eslSuffix;
   
-  const entradaDesc = iec ? 'Flange de entrada para motor elétrico padrão IEC ' + iec : '\u2014';
-  const saidaDesc = 'Eixo de Saída ' + bShaftType + ' Ø' + bShaftDiam + ' mm';
+  const entradaDesc = iec ? t('cfg_inputFlange') + iec : '\u2014';
+  const hasInputFlange = ['SAF','SHF','SF'].includes(sewForma);
+  const shaftTypeLabel = bShaftType === 'Maciço Chavetado' ? t('vfw_solid') : t('vfw_hollow');
+  const saidaDesc = shaftTypeLabel + ' Ø' + bShaftDiam + ' mm'
+    + (hasInputFlange ? t('cfg_b5') : '');
   
   return {
     model: modelStr,
@@ -1364,7 +1858,7 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
     inputFlange,
     forma: bForma,
     posMont: bonfigPosMont || '',
-    description: eModelo.startsWith('W') ? 'Redutor Rosca Sem Fim' : 'Redutor Rosca Sem Fim',
+    description: t('bDesc_W'),
     entradaDesc,
     saidaDesc,
     n1Label: n1,
@@ -1374,21 +1868,21 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
 }
 
 const ALL_ACS = [
-  {v:'BR',    d:'Freio'},
-  {v:'BM(G)', d:'Freio'},
-  {v:'HF',    d:'Alívio manual, sem retorno automático'},
-  {v:'HR',    d:'Alívio manual, com retorno automático'},
-  {v:'MM',    d:'MOVIMOT (inversor integrado)'},
-  {v:'MSW',   d:'MOVI-SWITCH (comutação e proteção integrados)'},
-  {v:'RS',    d:'Contra-recuo'},
-  {v:'TF',    d:'Termistor (tipo PTC)'},
-  {v:'TH',    d:'Termostato (comando bimetálico)'},
-  {v:'U',     d:'Sem ventilação'},
-  {v:'VR',    d:'Ventilação forçada'},
-  {v:'VS',    d:'Ventilação forçada'},
-  {v:'V',     d:'Ventilação forçada'},
-  {v:'Z',     d:'Massa de inércia adicional'},
-  {v:'C',     d:'Calota do ventilador com chapéu de proteção'}
+  {v:'BR',    d:()=>currentLang==='en'?'Brake':currentLang==='it'?'Freno':currentLang==='es'?'Freno':currentLang==='fr'?'Frein':currentLang==='de'?'Bremse':'Freio'},
+  {v:'BM(G)', d:()=>currentLang==='en'?'Brake':currentLang==='it'?'Freno':currentLang==='es'?'Freno':currentLang==='fr'?'Frein':currentLang==='de'?'Bremse':'Freio'},
+  {v:'HF',    d:()=>currentLang==='en'?'Manual brake release, no auto-reset':currentLang==='it'?'Sblocco manuale freno, senza ritorno automatico':currentLang==='es'?'Liberación manual del freno, sin retorno automático':currentLang==='fr'?'Déverrouillage manuel frein, sans retour automatique':currentLang==='de'?'Manuelle Bremslüftung, ohne Rückstellung':'Alívio manual, sem retorno automático'},
+  {v:'HR',    d:()=>currentLang==='en'?'Manual brake release, with auto-reset':currentLang==='it'?'Sblocco manuale freno, con ritorno automatico':currentLang==='es'?'Liberación manual del freno, con retorno automático':currentLang==='fr'?'Déverrouillage manuel frein, avec retour automatique':currentLang==='de'?'Manuelle Bremslüftung, mit Rückstellung':'Alívio manual, com retorno automático'},
+  {v:'MM',    d:()=>currentLang==='en'?'MOVIMOT (integrated inverter)':currentLang==='it'?'MOVIMOT (inverter integrato)':currentLang==='es'?'MOVIMOT (inversor integrado)':currentLang==='fr'?'MOVIMOT (onduleur intégré)':currentLang==='de'?'MOVIMOT (integrierter Umrichter)':'MOVIMOT (inversor integrado)'},
+  {v:'MSW',   d:()=>currentLang==='en'?'MOVI-SWITCH (integrated switching and protection)':currentLang==='it'?'MOVI-SWITCH (commutazione e protezione integrati)':currentLang==='es'?'MOVI-SWITCH (conmutación y protección integrados)':currentLang==='fr'?'MOVI-SWITCH (commutation et protection intégrées)':currentLang==='de'?'MOVI-SWITCH (integrierte Schaltung und Schutz)':'MOVI-SWITCH (comutação e proteção integrados)'},
+  {v:'RS',    d:()=>currentLang==='en'?'Anti-reverse':currentLang==='it'?'Anti-ritorno':currentLang==='es'?'Antirretorno':currentLang==='fr'?'Antiretour':currentLang==='de'?'Rücklaufsperre':'Contra-recuo'},
+  {v:'TF',    d:()=>currentLang==='en'?'Thermistor (PTC type)':currentLang==='it'?'Termistore (tipo PTC)':currentLang==='es'?'Termistor (tipo PTC)':currentLang==='fr'?'Thermistance (type PTC)':currentLang==='de'?'Thermistor (PTC-Typ)':'Termistor (tipo PTC)'},
+  {v:'TH',    d:()=>currentLang==='en'?'Thermostat (bimetallic)':currentLang==='it'?'Termostato (bimetallico)':currentLang==='es'?'Termostato (bimetálico)':currentLang==='fr'?'Thermostat (bilame)':currentLang==='de'?'Thermostat (Bimetall)':'Termostato (comando bimetálico)'},
+  {v:'U',     d:()=>currentLang==='en'?'No fan':currentLang==='it'?'Senza ventilazione':currentLang==='es'?'Sin ventilación':currentLang==='fr'?'Sans ventilation':currentLang==='de'?'Ohne Lüfter':'Sem ventilação'},
+  {v:'VR',    d:()=>currentLang==='en'?'Forced ventilation':currentLang==='it'?'Ventilazione forzata':currentLang==='es'?'Ventilación forzada':currentLang==='fr'?'Ventilation forcée':currentLang==='de'?'Fremdbelüftung':'Ventilação forçada'},
+  {v:'VS',    d:()=>currentLang==='en'?'Forced ventilation':currentLang==='it'?'Ventilazione forzata':currentLang==='es'?'Ventilación forzada':currentLang==='fr'?'Ventilation forcée':currentLang==='de'?'Fremdbelüftung':'Ventilação forçada'},
+  {v:'V',     d:()=>currentLang==='en'?'Forced ventilation':currentLang==='it'?'Ventilazione forzata':currentLang==='es'?'Ventilación forzada':currentLang==='fr'?'Ventilation forcée':currentLang==='de'?'Fremdbelüftung':'Ventilação forçada'},
+  {v:'Z',     d:()=>currentLang==='en'?'Additional flywheel mass':currentLang==='it'?'Massa volano aggiuntiva':currentLang==='es'?'Masa de inercia adicional':currentLang==='fr'?'Masse d’inertie additionnelle':currentLang==='de'?'Zusatzschwungmasse':'Massa de inércia adicional'},
+  {v:'C',     d:()=>currentLang==='en'?'Fan cover with protective cap':currentLang==='it'?'Copertura ventilatore con cappello protettivo':currentLang==='es'?'Cubierta del ventilador con gorro protector':currentLang==='fr'?'Couvercle ventilateur avec chapeau de protection':currentLang==='de'?'Lüfterhaube mit Schutzkappe':'Calota do ventilador com chapéu de proteção'}
 ];
 
 /* ══════════════════════════════════════════
@@ -1398,16 +1892,17 @@ const $ = id => document.getElementById(id);
 const val = id => $(id).value;
 
 function setOpts(sel, items) {
-  sel.innerHTML = items.map(({v,d}) =>
-    `<option value="${v}">${v ? v + (d ? ' — ' + d : '') : d}</option>`
-  ).join('');
+  sel.innerHTML = items.map(({v,d}) => {
+    const label = typeof d === 'function' ? d() : d;
+    return `<option value="${v}">${v ? v + (label ? ' — ' + label : '') : label}</option>`;
+  }).join('');
 }
 
 function acOptions(excluded=[]) {
   return [{v:'',d:'— nenhum —'}, ...ALL_ACS.filter(a => !excluded.includes(a.v))];
 }
 
-function baseSize(t) { return t ? t.split(/(?=[A-Z])/)[0].replace(/\D/g,'') + (t.includes('R') ? t.substring(t.indexOf('R')) : '') : ''; }
+function baseSize(sz) { return sz ? sz.split(/(?=[A-Z])/)[0].replace(/\D/g,'') + (sz.includes('R') ? sz.substring(sz.indexOf('R')) : '') : ''; }
 
 /* ══════════════════════════════════════════
    EVENTS
@@ -1453,7 +1948,7 @@ function onForma() {
 function getEixoHint(l, s) {
   const e = (EIXO[l]||{})[s];
   const is2stage = /\d+R\d+/.test(s); // 27R17, 47R37 etc = 2 estágios
-  const stages = is2stage ? ' · 2 estágios' : '';
+  const stages = is2stage ? ' · ' + (currentLang==='en' ? '2 stages' : currentLang==='it' ? '2 stadi' : currentLang==='es' ? '2 etapas' : currentLang==='fr' ? '2 étages' : currentLang==='de' ? '2 Stufen' : '2 estágios') : '';
   return e ? `Ø${e}mm${stages}` : (is2stage ? '2 estágios' : '');
 }
 
@@ -1500,12 +1995,12 @@ function onAc2() {
    CODE BUILD + UPDATE
 ══════════════════════════════════════════ */
 function buildHTML() {
-  const f=val('selForma'), t=val('selTam'), c=val('selComp'), m=val('selMotor');
+  const f=val('selForma'), tam=val('selTam'), c=val('selComp'), m=val('selMotor');
   const acs=[val('selAc1'),val('selAc2'),val('selAc3')].filter(Boolean);
-  if(!f&&!t&&!m) return '';
+  if(!f&&!tam&&!m) return '';
   let h='';
   if(f) h+=`<span class="pf">${f}</span>`;
-  if(t) h+=`<span class="pt">${t}</span>`;
+  if(tam) h+=`<span class="pt">${tam}</span>`;
   if(c) h+=`<span class="pc">${c}</span>`;
   if(m) h+=`<span class="pm">${m}</span>`;
   acs.forEach(a=>{ h+=`<span class="ps">\\</span><span class="pa">${a}</span>`; });
@@ -1513,21 +2008,21 @@ function buildHTML() {
 }
 
 function buildPlain() {
-  const f=val('selForma'), t=val('selTam'), c=val('selComp'), m=val('selMotor');
+  const f=val('selForma'), tam=val('selTam'), c=val('selComp'), m=val('selMotor');
   const acs=[val('selAc1'),val('selAc2'),val('selAc3')].filter(Boolean);
-  return f+t+c+m+acs.map(a=>'\\'+a).join('');
+  return f+tam+c+m+acs.map(a=>'\\'+a).join('');
 }
 
 function updateRedHint() {
-  const l=val('selLinha'), t=val('selTam');
+  const l=val('selLinha'), tam=val('selTam');
   const rv=parseFloat(val('redInp'));
   const rc=$('redClosest');
-  if(l && t && !isNaN(rv) && rv>0) {
-    const reds = (REDUCOES[l]||{})[t];
+  if(l && tam && !isNaN(rv) && rv>0) {
+    const reds = (REDUCOES[l]||{})[tam];
     if(reds) {
       const cl = reds.reduce((a,b)=>Math.abs(b-rv)<Math.abs(a-rv)?b:a);
       const pct = ((Math.abs(cl-rv)/rv)*100).toFixed(1);
-      rc.innerHTML=`Redução disponível mais próxima: <span class="rc">${Number.isInteger(cl)?cl:cl.toFixed(2)}</span> (Δ ${pct}%)`;
+      rc.innerHTML=`${t('st_closestPre')}<span class="rc">${Number.isInteger(cl)?cl:cl.toFixed(2)}</span> (Δ ${pct}%)`;
       return;
     }
   }
@@ -1536,7 +2031,7 @@ function updateRedHint() {
 
 function updateCode() {
   const html=buildHTML(), plain=buildPlain();
-  $('codeBar').innerHTML = html || '<span class="ph">— selecione os campos —</span>';
+  $('codeBar').innerHTML = html || '<span class="ph">' + t('codebarPh') + '</span>';
   $('dsModel').textContent = plain || '—';
   updateRedHint();
   $('btnCalc').disabled = !(val('selForma') && val('selTam') && val('selMotor'));
@@ -1546,17 +2041,17 @@ function updateCode() {
    CALCULATE / DATASHEET
 ══════════════════════════════════════════ */
 function calc() {
-  const l=val('selLinha'), f=val('selForma'), t=val('selTam'), c=val('selComp'), mCode=val('selMotor');
+  const l=val('selLinha'), f=val('selForma'), tam=val('selTam'), c=val('selComp'), mCode=val('selMotor');
   const acs=[val('selAc1'),val('selAc2'),val('selAc3')].filter(Boolean);
   const sb=$('status');
 
-  if(!f||!t||!mCode){ sb.className='status er'; sb.textContent='✗ Selecione Forma, Tamanho e Motor.'; return; }
+  if(!f||!tam||!mCode){ sb.className='status er'; sb.textContent=t('st_selectFields'); return; }
 
   const motor = MOTORS[mCode];
-  const eixo  = (EIXO[l]||{})[t] || '—';
-  const baseT  = t.replace(/R\d+.*/, '');
-  const tMax   = (TMAX[l]||{})[baseT] || (TMAX[l]||{})[t] || '—';
-  const reds   = (REDUCOES[l]||{})[t];
+  const eixo  = (EIXO[l]||{})[tam] || '—';
+  const baseT  = tam.replace(/R\d+.*/, '');
+  const tMax   = (TMAX[l]||{})[baseT] || (TMAX[l]||{})[tam] || '—';
+  const reds   = (REDUCOES[l]||{})[tam];
   const rv     = parseFloat(val('redInp'));
 
   let redReal=null, n2=null, torque=null, fs=null;
@@ -1574,29 +2069,29 @@ function calc() {
   }
 
   const pc = motor.poles===4?'p4':motor.poles===6?'p6':'p8';
-  const stages = /\d+R\d+/.test(t)?'2 estágios':'1 estágio';
+  const stages = /\d+R\d+/.test(tam)?(currentLang==='en'?'2 stages':currentLang==='it'?'2 stadi':currentLang==='es'?'2 etapas':currentLang==='fr'?'2 étages':currentLang==='de'?'2 Stufen':'2 estágios'):(currentLang==='en'?'1 stage':currentLang==='it'?'1 stadio':currentLang==='es'?'1 etapa':currentLang==='fr'?'1 étage':currentLang==='de'?'1 Stufe':'1 estágio');
   const fsOk = fs!==null && parseFloat(fs)>=1;
-  const linhaDesc = {R:'Coaxial',F:'Eixos paralelos',K:'Angular ortogonal',S:'Ortogonal'}[l]||l;
-  const acDesc = Object.fromEntries(ALL_ACS.map(a=>[a.v,a.d]));
-  const compDesc = {F:'Flange adicional','/R':'Folga reduzida (Reduced Backlash)','/T':'TorqLOC®'};
+  const linhaDesc = currentLang==='en' ? {R:'Inline/Coaxial',F:'Parallel Shaft',K:'Bevel-Helical',S:'Worm'}[l]||l : currentLang==='it' ? {R:'Coassiale',F:'Assi Paralleli',K:'Elico-Conico',S:'Vite Senza Fine'}[l]||l : currentLang==='es' ? {R:'Coaxial',F:'Ejes Paralelos',K:'Helicoidal-Cónico',S:'Tornillo Sin Fin'}[l]||l : currentLang==='fr' ? {R:'Coaxial',F:'Arbres Parallèles',K:'Hélicoïdal-Conique',S:'Vis Sans Fin'}[l]||l : currentLang==='de' ? {R:'Koaxial',F:'Parallelwelle',K:'Kegelrad',S:'Schnecke'}[l]||l : {R:'Coaxial',F:'Eixos paralelos',K:'Angular ortogonal',S:'Ortogonal'}[l]||l;
+  const acDesc = Object.fromEntries(ALL_ACS.map(a=>[a.v, typeof a.d==='function'?a.d():a.d]));
+  const compDesc = currentLang==='en' ? {F:'Additional flange','/R':'Reduced Backlash','/T':'TorqLOC®'} : currentLang==='it' ? {F:'Flangia aggiuntiva','/R':'Gioco ridotto','/T':'TorqLOC®'} : currentLang==='es' ? {F:'Brida adicional','/R':'Juego reducido','/T':'TorqLOC®'} : currentLang==='fr' ? {F:'Bride additionnelle','/R':'Jeu réduit','/T':'TorqLOC®'} : currentLang==='de' ? {F:'Zusatzflansch','/R':'Reduziertes Spiel','/T':'TorqLOC®'} : {F:'Flange adicional','/R':'Folga reduzida (Reduced Backlash)','/T':'TorqLOC®'};
 
   let html = `
-    <div class="ds-row"><span class="ds-k">Redução (i)</span><span class="ds-v xl">${redReal!==null?(Number.isInteger(redReal)?redReal:redReal.toFixed(2)):'—'}</span></div>
-    <div class="ds-row"><span class="ds-k">Torque de saída</span><span class="ds-v">${torque!==null?torque:'—'}<span class="u">Nm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Torque nominal</span><span class="ds-v">${tMax}<span class="u">Nm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Ø Eixo de saída</span><span class="ds-v">${eixo}<span class="u">mm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Rotação saída (n₂)</span><span class="ds-v">${n2!==null?n2:'—'}<span class="u">rpm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Fator de serviço</span><span class="ds-v ${fs!==null?(fsOk?'ok':'ng'):''}">${fs!==null?fs:'—'}</span></div>
-    ${c?`<div class="ds-row"><span class="ds-k">Complemento</span><span class="ds-v">${c} <span style="font-size:12px;color:var(--dim)">${compDesc[c]||''}</span></span></div>`:''}
+    <div class="ds-row"><span class="ds-k">${t('ds_ratio')}</span><span class="ds-v xl">${redReal!==null?(Number.isInteger(redReal)?redReal:redReal.toFixed(2)):'—'}</span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_torqueOut')}</span><span class="ds-v">${torque!==null?torque:'—'}<span class="u">Nm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_torqueNom')}</span><span class="ds-v">${tMax}<span class="u">Nm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_shaft')}</span><span class="ds-v">${eixo}<span class="u">mm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_n2')}</span><span class="ds-v">${n2!==null?n2:'—'}<span class="u">rpm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_sf')}</span><span class="ds-v ${fs!==null?(fsOk?'ok':'ng'):''}">${fs!==null?fs:'—'}</span></div>
+    ${c?`<div class="ds-row"><span class="ds-k">${t('ds_complement')}</span><span class="ds-v">${c} <span style="font-size:12px;color:var(--dim)">${compDesc[c]||''}</span></span></div>`:''}
 
-    <div class="ds-sec">Motor</div>
-    <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v">${mCode}<span class="pb ${pc}">${motor.poles}p</span></span></div>
-    <div class="ds-row"><span class="ds-k">Potência</span><span class="ds-v">${motor.kw}<span class="u">kW</span></span></div>
-    <div class="ds-row"><span class="ds-k">Rotação nominal (n₁)</span><span class="ds-v">${motor.rpm}<span class="u">rpm</span></span></div>
-    <div class="ds-row"><span class="ds-k">Polos</span><span class="ds-v">${motor.poles}</span></div>
+    <div class="ds-sec">${t('ds_motorSec')}</div>
+    <div class="ds-row"><span class="ds-k">${t('ds_model')}</span><span class="ds-v">${mCode}<span class="pb ${pc}">${motor.poles}p</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_power')}</span><span class="ds-v">${motor.kw}<span class="u">kW</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_n1')}</span><span class="ds-v">${motor.rpm}<span class="u">rpm</span></span></div>
+    <div class="ds-row"><span class="ds-k">${t('ds_poles')}</span><span class="ds-v">${motor.poles}</span></div>
 
     ${acs.length?`
-    <div class="ds-sec">Acessórios</div>
+    <div class="ds-sec">${t('ds_accSec')}</div>
     <div class="ac-list">
       ${acs.map(a=>`<div class="ac-item"><span class="ac-code">${a}</span><span class="ac-desc">${acDesc[a]||a}</span></div>`).join('')}
     </div>`:''}
@@ -1610,35 +2105,41 @@ function calc() {
   if (redReal !== null && torque !== null) {
     const sewPosMont = val('selPosMont');
     const bonfigPosMont = convertPosMont(l, f, sewPosMont);
-    const equiv = findBonfiglioliEquiv(l, parseFloat(torque), redReal, motor.rpm, motor.kw, parseInt(eixo)||0, mCode, f, fs!==null?parseFloat(fs):1.0, bonfigPosMont, t);
-    if (equiv) {
+    const equiv = findBonfiglioliEquiv(l, parseFloat(torque), redReal, motor.rpm, motor.kw, parseInt(eixo)||0, mCode, f, fs!==null?parseFloat(fs):1.0, bonfigPosMont, tam);
+    if (equiv && equiv.splineUnsupported) {
+      bonfigHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+          gap:12px;padding:40px 16px;border:1px dashed var(--b);margin-top:8px;text-align:center;border-radius:6px;background:var(--s2)">
+          <div style="font-size:30px;opacity:.25">⚙</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dim);line-height:1.6">
+            ${t('noSpline')}
+          </div>
+        </div>
+      `;
+    } else if (equiv) {
       const bFS = equiv.fs;
       const bFSOk = bFS !== '—' && parseFloat(bFS) >= 1;
       bonfigHTML = `
         <span class="bf-model-code" style="display:none">${equiv.model}</span>
-        <div class="ds-row"><span class="ds-k">Descrição</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.description}</span></div>
-        <div class="ds-row"><span class="ds-k">Modelo</span><span class="ds-v" style="font-size:13px;white-space:nowrap">${equiv.model}</span></div>
-        <div class="ds-row"><span class="ds-k">Torque nominal</span><span class="ds-v">${equiv.torqueNom}<span class="u">Nm</span></span></div>
-        <div class="ds-row"><span class="ds-k">Torque de saída</span><span class="ds-v">${equiv.torqueSaida}<span class="u">Nm</span></span></div>
-        <div class="ds-row"><span class="ds-k">Rotação entrada / saída</span><span class="ds-v">${equiv.rpmEntrada} / ${equiv.rpmSaida}<span class="u">rpm</span></span></div>
-        <div class="ds-row"><span class="ds-k">Redução</span><span class="ds-v xl">${equiv.ratioStr}</span></div>
-        <div class="ds-row"><span class="ds-k">Fator de serviço</span><span class="ds-v ${bFSOk?'ok':'ng'}">${bFS}</span></div>
-        <div class="ds-row"><span class="ds-k">Config. de entrada</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.entradaDesc}</span></div>
-        <div class="ds-row"><span class="ds-k">Config. de saída</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.saidaDesc}</span></div>
-        <div class="ds-row"><span class="ds-k">Posição de montagem</span><span class="ds-v">${equiv.posMont || '—'}</span></div>
-        <div class="ds-row"><span class="ds-k">Ø Eixo de saída</span><span class="ds-v">${equiv.shaftDiam}<span class="u">mm</span></span></div>
-        <div class="ds-row"><span class="ds-k">Carcaça</span><span class="ds-v">Ferro Fundido</span></div>
-        <div class="ds-row"><span class="ds-k">Peso</span><span class="ds-v">${equiv.weight}<span class="u">kg</span></span></div>
-        <div class="ds-row"><span class="ds-k">Lubrificação</span><span class="ds-v" style="font-size:13px">Banho de Óleo</span></div>
-        <div class="ds-row"><span class="ds-k">Refrigeração</span><span class="ds-v" style="font-size:13px">Natural</span></div>
-        <div class="ds-row"><span class="ds-k">Vedação</span><span class="ds-v" style="font-size:13px">Borracha Nitrílica</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_desc')}</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.description}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_model')}</span><span class="ds-v" style="font-size:13px;white-space:nowrap">${equiv.model}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_torqueNomB')}</span><span class="ds-v">${equiv.torqueNom}<span class="u">Nm</span></span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_torqueOutB')}</span><span class="ds-v">${equiv.torqueSaida}<span class="u">Nm</span></span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_n1n2')}</span><span class="ds-v">${equiv.rpmEntrada} / ${equiv.rpmSaida}<span class="u">rpm</span></span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_reduction')}</span><span class="ds-v xl">${equiv.ratioStr}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_sfB')}</span><span class="ds-v ${bFSOk?'ok':'ng'}">${bFS}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_inputCfg')}</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.entradaDesc}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_outputCfg')}</span><span class="ds-v" style="font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:400;text-align:right;white-space:nowrap">${equiv.saidaDesc}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_mountPos')}</span><span class="ds-v">${equiv.posMont || '—'}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_shaftB')}</span><span class="ds-v">${equiv.shaftDiam}<span class="u">mm</span></span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_housing')}</span><span class="ds-v">${t('ds_housingVal')}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_weight')}</span><span class="ds-v">${equiv.weight}<span class="u">kg</span></span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_lub')}</span><span class="ds-v" style="font-size:13px">${t('ds_lubVal')}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_cool')}</span><span class="ds-v" style="font-size:13px">${t('ds_coolVal')}</span></div>
+        <div class="ds-row"><span class="ds-k">${t('ds_seal')}</span><span class="ds-v" style="font-size:13px">${t('ds_sealVal')}</span></div>
       `;
     } else {
-      bonfigHTML = `
-        <div style="padding:16px 0;color:var(--dim);font-size:14px;text-align:center">
-          Nenhum modelo equivalente encontrado para esta configuração.
-        </div>
-      `;
+      bonfigHTML = `<div style="padding:16px 0;color:var(--dim);font-size:14px;text-align:center">${t('noEquiv')}</div>`;
     }
   }
   
@@ -1669,11 +2170,11 @@ function calc() {
 
   if(redReal!==null && !isNaN(rv)) {
     const diff=Math.abs(redReal-rv), pct=((diff/rv)*100).toFixed(1);
-    if(!reds) { sb.className='status ok'; sb.textContent=`✓ Redução informada: i = ${rv} (sem tabela de reduções para este tamanho)`; }
-    else if(diff<0.01){ sb.className='status ok'; sb.textContent=`✓ Redução exata: i = ${redReal}`; }
+    if(!reds) { sb.className='status ok'; sb.textContent=t('st_noTable')+rv+t('st_noTableSuffix'); }
+    else if(diff<0.01){ sb.className='status ok'; sb.textContent=t('st_exact')+redReal; }
     else{ sb.className=''; sb.textContent=''; sb.style.display='none'; }
   } else {
-    sb.className='status wn'; sb.textContent='⚠ Informe uma redução para calcular torque e n₂.';
+    sb.className='status wn'; sb.textContent=t('st_noReduction');
   }
 }
 
@@ -1842,7 +2343,7 @@ function gerarPDF() {
   doc.rect(ML, y, CW, 10, 'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(11);
   doc.setTextColor(255,255,255);
-  doc.text('CONVERSOR INTELIGENTE — Gerador de Código de Produto Bonfiglioli', ML + 3, y + 6.8);
+  doc.text(t('pdfHeader'), ML + 3, y + 6.8);
   doc.setFont('helvetica','normal'); doc.setFontSize(8);
   doc.text(dateStr, PW - MR - doc.getTextWidth(dateStr) - 2, y + 6.8);
   y += 12;
@@ -1901,11 +2402,11 @@ function gerarPDF() {
 
   // ORDEM CORRIGIDA: Bonfiglioli primeiro, SEW como equivalente
   if (bfVisible) {
-    renderBlock('Bonfiglioli — Produto Principal', bfModel, document.getElementById('bfContent'));
+    renderBlock(t('pdfBonfig'), bfModel, document.getElementById('bfContent'));
   }
   if (sewVisible) {
     if (bfVisible) checkPage(14);
-    renderBlock('SEW — Equivalente', sewModel, document.getElementById('dsContent'));
+    renderBlock(t('pdfSEW'), sewModel, document.getElementById('dsContent'));
   }
 
   /* footer on every page */
@@ -1914,7 +2415,7 @@ function gerarPDF() {
     doc.setPage(p);
     doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
     doc.setTextColor(171,181,196);
-    const footer = `Página ${p} de ${totalPages}  •  Conversor Inteligente REV 2026  •  por Glauber Sanches`;
+    const footer = `${currentLang==='pt'?'Página':currentLang==='it'?'Pagina':currentLang==='es'?'Página':currentLang==='fr'?'Page':currentLang==='de'?'Seite':'Page'} ${p} ${currentLang==='pt'?'de':currentLang==='it'?'di':currentLang==='es'?'de':currentLang==='fr'?'de':currentLang==='de'?'von':'of'} ${totalPages}  •  ${t('pdfFooter')}`;
     doc.text(footer, PW/2, PH - 6, { align:'center' });
   }
 
@@ -1927,13 +2428,186 @@ function gerarPDF() {
   } else if (sewVisible) {
     fname = sewModel;
   }
-  doc.save(`${fname.replace(/[/\\:*?"<>|]/g,'_')}.pdf`);
+  // Cross-platform PDF download (Windows + Mac + Safari compatible)
+  const safeName = fname.replace(/[/\\:*?"<>|]/g,'_') + '.pdf';
+  try {
+    // Primary method: blob URL with forced download
+    const pdfBlob = doc.output('blob');
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = safeName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    // Cleanup after short delay (needed for Safari/Mac)
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    }, 300);
+  } catch(e) {
+    // Fallback for restrictive browsers: open in new tab
+    try {
+      const pdfDataUri = doc.output('datauristring');
+      const win = window.open('', '_blank');
+      if (win) {
+        win.document.write(
+          '<html><head><title>' + safeName + '</title></head>' +
+          '<body style="margin:0"><iframe width="100%" height="100%" ' +
+          'style="border:none;position:fixed;top:0;left:0;width:100%;height:100%;" ' +
+          'src="' + pdfDataUri + '"></iframe></body></html>'
+        );
+      } else {
+        // Last resort: direct data URI navigation
+        window.location.href = doc.output('datauristring');
+      }
+    } catch(e2) {
+      alert('Não foi possível baixar o PDF. Tente usar o Google Chrome ou Firefox.');
+    }
+  }
+}
+
+
+function changeLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  resetForm();
+  applyLang();
+}
+
+function resetForm() {
+  // Reset all selects to default
+  ['selLinha','selForma','selTam','selPosMont','selComp','selMotor','selAc1','selAc2','selAc3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  // Reset reduction input
+  const redInp = document.getElementById('redInp');
+  if (redInp) redInp.value = '';
+  // Disable cascading dropdowns
+  ['selForma','selTam','selComp','selAc2','selAc3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = true;
+  });
+  // Hide datasheets, show empty states
+  document.getElementById('dsContent').style.display = 'none';
+  document.getElementById('dsEmpty').style.display = 'flex';
+  document.getElementById('bfContent').style.display = 'none';
+  document.getElementById('bfEmpty').style.display = 'flex';
+  // Reset code bar
+  document.getElementById('codeBar').innerHTML = '<span class="ph">' + t('codebarPh') + '</span>';
+  document.getElementById('dsModel').textContent = '—';
+  document.getElementById('bfModel').textContent = '—';
+  // Disable buttons
+  document.getElementById('btnCalc').disabled = true;
+  document.getElementById('btnPDF').disabled = true;
+  document.getElementById('btnPDF').style.opacity = '';
+  document.getElementById('btnPDF').style.cursor = '';
+  // Hide status
+  const sb = document.getElementById('status');
+  if (sb) { sb.className = 'status'; sb.textContent = ''; }
+  // Reset redClosest hint
+  const rc = document.getElementById('redClosest');
+  if (rc) rc.textContent = '';
+}
+
+function applyLang() {
+  const langSel = document.getElementById('selLang');
+  if (langSel) langSel.value = currentLang;
+
+  // Static elements with data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (key === 'emptyMsg') {
+      el.innerHTML = t('emptyMsg') + '<br><strong style="color:var(--acc)">' + t('btnCalcShort') + '</strong>';
+    } else {
+      el.textContent = t(key);
+    }
+  });
+
+  // Code bar placeholder
+  const cb = document.getElementById('codeBar');
+  if (cb && cb.querySelector('.ph')) {
+    cb.querySelector('.ph').textContent = t('codebarPh');
+  }
+
+  // Mounting position dropdown first option
+  const pm = document.getElementById('selPosMont');
+  if (pm && pm.options[0]) pm.options[0].text = t('posMont');
+
+  // Motor optgroups
+  const motorSel = document.getElementById('selMotor');
+  if (motorSel) {
+    const groups = motorSel.querySelectorAll('optgroup');
+    if (groups[0]) groups[0].label = t('mg4');
+    if (groups[1]) groups[1].label = t('mg6');
+    if (groups[2]) groups[2].label = t('mg8');
+    // First placeholder option
+    if (motorSel.options[0] && motorSel.options[0].value === '') {
+      motorSel.options[0].text = t('selecioneMotor');
+    }
+  }
+
+  // Product line dropdown
+  const linhaSel = document.getElementById('selLinha');
+  if (linhaSel) {
+    if (linhaSel.options[0]) linhaSel.options[0].text = t('selecioneLinha');
+    // Find options by value and update labels
+    Array.from(linhaSel.options).forEach(o => {
+      if (o.value === 'R') o.text = t('linhaR');
+      if (o.value === 'F') o.text = t('linhaF');
+      if (o.value === 'K') o.text = t('linhaK');
+      if (o.value === 'S') o.text = t('linhaS');
+    });
+  }
+
+  // Forma dropdown placeholder
+  const formaSel = document.getElementById('selForma');
+  if (formaSel && formaSel.options[0] && formaSel.options[0].value === '') {
+    formaSel.options[0].text = formaSel.disabled ? t('selecioneForma') : t('selecionePrimeiro');
+  }
+
+  // Tamanho dropdown placeholder
+  const tamSel = document.getElementById('selTam');
+  if (tamSel && tamSel.options[0] && tamSel.options[0].value === '') {
+    tamSel.options[0].text = tamSel.disabled ? t('selecioneForma') : t('selecioneTamanho');
+  }
+
+  // AC dropdowns
+  ['selAc1','selAc2','selAc3','selComp'].forEach(id => {
+    const s = document.getElementById(id);
+    if (s && s.options[0] && s.options[0].value === '') {
+      s.options[0].text = t('nenhum');
+    }
+  });
+
+  // Install button
+  const instBtn = document.getElementById('btnInstalar');
+  if (instBtn) instBtn.textContent = t('installApp');
+
+  // Re-render datasheet if visible (to translate dynamic content)
+  const dsContent = document.getElementById('dsContent');
+  const bfContent = document.getElementById('bfContent');
+  if (dsContent && dsContent.style.display !== 'none') {
+    // Translate datasheet rows by data-i18n-ds attribute
+    dsContent.querySelectorAll('[data-i18n-ds]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n-ds'));
+    });
+    bfContent.querySelectorAll('[data-i18n-ds]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n-ds'));
+    });
+  }
+
+  // Update page title
+  document.title = t('appTitle') + ' — ' + t('appSub');
+  // Re-initialise AC1 dropdown with translated options (form was reset)
+  setOpts(document.getElementById('selAc1'), acOptions());
 }
 
 </script>
 
 <footer style="position:fixed;bottom:0;right:0;padding:4px 12px;font-size:12px;font-style:italic;color:var(--dim);pointer-events:none;">
-  por Glauber Sanches
+  <span data-i18n="footerBy">por</span> Glauber Sanches
 </footer>
 </body>
 </html>
