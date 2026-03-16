@@ -2165,8 +2165,7 @@ function calc() {
     // Complemento G (Linha F) = travamento sem chaveta → acrescenta AVK ao modelo Bonfiglioli
     if (equiv && !equiv.splineUnsupported && c === 'G') {
       equiv.model = equiv.model + ' AVK';
-      const avkLabel = currentLang==='en'?'Keyless locking assembly (AVK)':currentLang==='it'?'Bloccaggio senza chiavetta (AVK)':currentLang==='es'?'Montaje sin chaveta (AVK)':currentLang==='fr'?'Assemblage sans clavette (AVK)':currentLang==='de'?'Klemmnabe (AVK)':'Travamento sem chaveta (AVK)';
-      equiv.saidaDesc = equiv.saidaDesc + ' + ' + avkLabel;
+
     }
     // Complemento /T (Linha K) = TorqLOC® → acrescenta TA ao modelo Bonfiglioli
     if (equiv && !equiv.splineUnsupported && l === 'K' && c === '/T') {
