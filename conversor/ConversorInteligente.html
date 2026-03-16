@@ -939,12 +939,15 @@ function getComplementos(linha, forma) {
     return opts;
   }
   if (linha === 'F') {
-    return [{v:'', d:t('nenhum')}];
+    const fFormasG = ['FA','FV','FH','FT','FAF','FVF','FHF','FAZ','FVZ','FHZ'];
+    const opts = [{v:'', d:t('nenhum')}];
+    if (fFormasG.includes(forma)) opts.push({v:'G', d:''});
+    return opts;
   }
   if (linha === 'K') {
     const kFormasT = ['KA','KV','KH'];
     const opts = [{v:'', d:t('nenhum')}];
-    if (kFormasT.includes(forma)) opts.push({v:'/T', d:'/T — TorqLOC®'});
+    if (kFormasT.includes(forma)) opts.push({v:'/T', d:''});
     return opts;
   }
   if (linha === 'S') {
@@ -969,8 +972,8 @@ const EIXO = {
     '27R17':25,'37R17':30,'47R17':35,'57R37':40,'67R37':40,'77R37':50,'87R57':60,'97R57':70,'107R77':80,'127R77':90,'127R87':90,'157R97':110
   },
   K:{
-    '37':25,'47':30,'57':35,'67':35,'77':40,'87':50,'97':60,'107':70,'127':80,'157':100,'167':120,'187':140,
-    '37R17':25,'47R37':30,'57R37':35,'67R37':35,'77R37':40,'87R57':50,'97R57':60,'107R77':70,'127R77':80,'127R87':80,'157R97':100,'157R107':100,'167R97':120,'167R107':120,'187R97':140,'187R107':140
+    '37':25,'47':30,'57':35,'67':40,'77':50,'87':60,'97':70,'107':90,'127':100,'157':120,'167':160,'187':190,
+    '37R17':25,'47R37':30,'57R37':35,'67R37':40,'77R37':50,'87R57':60,'97R57':70,'107R77':90,'127R77':100,'127R87':100,'157R97':120,'157R107':120,'167R97':160,'167R107':160,'187R97':190,'187R107':190
   },
   S:{
     '37':25,'47':30,'57':35,'67':40,'77':50,'87':60,'97':70,
@@ -2126,7 +2129,7 @@ function calc() {
   const fsOk = fs!==null && parseFloat(fs)>=1;
   const linhaDesc = currentLang==='en' ? {R:'Inline/Coaxial',F:'Parallel Shaft',K:'Bevel-Helical',S:'Worm'}[l]||l : currentLang==='it' ? {R:'Coassiale',F:'Assi Paralleli',K:'Elico-Conico',S:'Vite Senza Fine'}[l]||l : currentLang==='es' ? {R:'Coaxial',F:'Ejes Paralelos',K:'Helicoidal-Cónico',S:'Tornillo Sin Fin'}[l]||l : currentLang==='fr' ? {R:'Coaxial',F:'Arbres Parallèles',K:'Hélicoïdal-Conique',S:'Vis Sans Fin'}[l]||l : currentLang==='de' ? {R:'Koaxial',F:'Parallelwelle',K:'Kegelrad',S:'Schnecke'}[l]||l : {R:'Coaxial',F:'Eixos paralelos',K:'Angular ortogonal',S:'Ortogonal'}[l]||l;
   const acDesc = Object.fromEntries(ALL_ACS.map(a=>[a.v, typeof a.d==='function'?a.d():a.d]));
-  const compDesc = currentLang==='en' ? {F:'Additional flange','/R':'Reduced Backlash','/T':'TorqLOC®'} : currentLang==='it' ? {F:'Flangia aggiuntiva','/R':'Gioco ridotto','/T':'TorqLOC®'} : currentLang==='es' ? {F:'Brida adicional','/R':'Juego reducido','/T':'TorqLOC®'} : currentLang==='fr' ? {F:'Bride additionnelle','/R':'Jeu réduit','/T':'TorqLOC®'} : currentLang==='de' ? {F:'Zusatzflansch','/R':'Reduziertes Spiel','/T':'TorqLOC®'} : {F:'Flange adicional','/R':'Folga reduzida (Reduced Backlash)','/T':'TorqLOC®'};
+  const compDesc = currentLang==='en' ? {F:'Additional flange','/R':'Reduced Backlash','/T':'TorqLOC®',G:'Keyless locking assembly (AVK)'} : currentLang==='it' ? {F:'Flangia aggiuntiva','/R':'Gioco ridotto','/T':'TorqLOC®',G:'Bloccaggio senza chiavetta (AVK)'} : currentLang==='es' ? {F:'Brida adicional','/R':'Juego reducido','/T':'TorqLOC®',G:'Montaje sin chaveta (AVK)'} : currentLang==='fr' ? {F:'Bride additionnelle','/R':'Jeu réduit','/T':'TorqLOC®',G:'Assemblage sans clavette (AVK)'} : currentLang==='de' ? {F:'Zusatzflansch','/R':'Reduziertes Spiel','/T':'TorqLOC®',G:'Klemmnabe (AVK)'} : {F:'Flange adicional','/R':'Folga reduzida (Reduced Backlash)','/T':'TorqLOC®',G:'Travamento sem chaveta (AVK)'};
 
   let html = `
     <div class="ds-row"><span class="ds-k">${t('ds_ratio')}</span><span class="ds-v xl">${redReal!==null?(Number.isInteger(redReal)?redReal:redReal.toFixed(2)):'—'}</span></div>
@@ -2159,6 +2162,16 @@ function calc() {
     const sewPosMont = val('selPosMont');
     const bonfigPosMont = convertPosMont(l, f, sewPosMont);
     const equiv = findBonfiglioliEquiv(l, parseFloat(torque), redReal, n1, motor.kw, parseInt(eixo)||0, mCode, f, fs!==null?parseFloat(fs):1.0, bonfigPosMont, tam);
+    // Complemento G (Linha F) = travamento sem chaveta → acrescenta AVK ao modelo Bonfiglioli
+    if (equiv && !equiv.splineUnsupported && c === 'G') {
+      equiv.model = equiv.model + ' AVK';
+      const avkLabel = currentLang==='en'?'Keyless locking assembly (AVK)':currentLang==='it'?'Bloccaggio senza chiavetta (AVK)':currentLang==='es'?'Montaje sin chaveta (AVK)':currentLang==='fr'?'Assemblage sans clavette (AVK)':currentLang==='de'?'Klemmnabe (AVK)':'Travamento sem chaveta (AVK)';
+      equiv.saidaDesc = equiv.saidaDesc + ' + ' + avkLabel;
+    }
+    // Complemento /T (Linha K) = TorqLOC® → acrescenta TA ao modelo Bonfiglioli
+    if (equiv && !equiv.splineUnsupported && l === 'K' && c === '/T') {
+      equiv.model = equiv.model + ' TA';
+    }
     if (equiv && equiv.splineUnsupported) {
       bonfigHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
