@@ -2388,6 +2388,13 @@ function gerarPDF() {
       if (!n.classList) return;
       if (n.classList.contains('ds-sec'))  result.push({ type:'sec',  text: n.textContent.trim() });
       if (n.classList.contains('ds-row'))  result.push({ type:'row',  k: n.querySelector('.ds-k')?.textContent.trim(), v: n.querySelector('.ds-v')?.textContent.trim() });
+      if (n.classList.contains('ac-list')) {
+        n.querySelectorAll('.ac-item').forEach(item => {
+          const code = item.querySelector('.ac-code')?.textContent.trim() || '';
+          const desc = item.querySelector('.ac-desc')?.textContent.trim() || '';
+          result.push({ type:'row', k: code, v: desc });
+        });
+      }
     });
     return result.length ? result : rows;
   }
