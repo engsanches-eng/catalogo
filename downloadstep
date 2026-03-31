@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download STEP 3D — Bonfiglioli</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0e14;
+      --surface: #111720;
+      --border: #1e2a38;
+      --accent: #00aaff;
+      --accent2: #0066cc;
+      --text: #e8edf2;
+      --muted: #5a7080;
+      --success: #00d084;
+      --error: #ff4560;
+      --warn: #ffb800;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Glow top */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(0,170,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem 3.5rem;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,170,255,0.05);
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; }
+
+    .logo-text {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      line-height: 1.5;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,170,255,0.1);
+    }
+
+    input[type="text"]::placeholder { color: var(--muted); }
+
+    button#buscar {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1.4rem;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button#buscar:hover { opacity: 0.88; }
+    button#buscar:active { transform: scale(0.97); }
+    button#buscar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Status area */
+    .status {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 0.9rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid transparent;
+    }
+
+    .status.loading {
+      display: flex;
+      background: rgba(0,170,255,0.07);
+      border-color: rgba(0,170,255,0.2);
+      color: var(--accent);
+    }
+
+    .status.success {
+      display: flex;
+      background: rgba(0,208,132,0.07);
+      border-color: rgba(0,208,132,0.2);
+      color: var(--success);
+    }
+
+    .status.error {
+      display: flex;
+      background: rgba(255,69,96,0.07);
+      border-color: rgba(255,69,96,0.2);
+      color: var(--error);
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,170,255,0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Download button */
+    #download-btn {
+      display: none;
+      width: 100%;
+      background: var(--success);
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #021a0e;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity 0.2s, transform 0.1s;
+      text-decoration: none;
+      margin-top: 0.25rem;
+    }
+
+    #download-btn:hover { opacity: 0.88; }
+    #download-btn:active { transform: scale(0.98); }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .hint span {
+      color: var(--accent);
+    }
+
+    /* Tag badge */
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(0,170,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,170,255,0.2);
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="logo-row">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+    </div>
+    <span class="logo-text">Bonfiglioli · STEP Downloader</span>
+  </div>
+
+  <div class="badge">3D Model · STEP203</div>
+
+  <h1>Download<br>Modelo 3D</h1>
+  <p class="subtitle">Insira o código do redutor para baixar o arquivo STEP diretamente.</p>
+
+  <label class="field-label" for="codigo">Código do produto</label>
+  <div class="input-row">
+    <input type="text" id="codigo" placeholder="ex: 2T316L2017001I" autocomplete="off" spellcheck="false" />
+    <button id="buscar" onclick="buscarStep()">Buscar</button>
+  </div>
+
+  <div class="status" id="status">
+    <div class="spinner" id="spinner"></div>
+    <span id="status-msg">Buscando modelo 3D...</span>
+  </div>
+
+  <a id="download-btn" href="#" download>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    Baixar arquivo .STP
+  </a>
+
+  <hr class="divider" />
+
+  <p class="hint">
+    Formato aceito: <span>2T316L2017001I</span><br>
+    O arquivo será gerado diretamente da Bonfiglioli.
+  </p>
+
+</div>
+
+<script>
+  // ⚠️ Substitua pela URL do seu Cloudflare Worker após o deploy
+  const WORKER_URL = 'https://SEU-WORKER.SEU-USUARIO.workers.dev';
+
+  const input = document.getElementById('codigo');
+
+  // Enter para buscar
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') buscarStep();
+  });
+
+  function setStatus(type, msg) {
+    const el = document.getElementById('status');
+    const msgEl = document.getElementById('status-msg');
+    const spinner = document.getElementById('spinner');
+    el.className = 'status ' + type;
+    msgEl.textContent = msg;
+    spinner.style.display = type === 'loading' ? 'block' : 'none';
+  }
+
+  function hideStatus() {
+    document.getElementById('status').className = 'status';
+  }
+
+  async function buscarStep() {
+    const codigo = input.value.trim().toUpperCase();
+    if (!codigo) {
+      setStatus('error', 'Digite o código do produto.');
+      return;
+    }
+
+    const btn = document.getElementById('buscar');
+    const downloadBtn = document.getElementById('download-btn');
+
+    btn.disabled = true;
+    downloadBtn.style.display = 'none';
+    setStatus('loading', 'Abrindo página do produto na Bonfiglioli...');
+
+    try {
+      const resp = await fetch(`${WORKER_URL}?codigo=${encodeURIComponent(codigo)}`);
+      const data = await resp.json();
+
+      if (!resp.ok || !data.url) {
+        setStatus('error', data.error || 'Modelo STEP não encontrado para este código.');
+        return;
+      }
+
+      setStatus('success', 'Modelo 3D encontrado! Clique para baixar.');
+      downloadBtn.href = data.url;
+      downloadBtn.setAttribute('download', `${codigo}.stp`);
+      downloadBtn.style.display = 'flex';
+
+    } catch (err) {
+      setStatus('error', 'Erro de conexão. Verifique sua internet e tente novamente.');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
