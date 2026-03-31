@@ -11,6 +11,7 @@
     :root {
       --bg: #0a0e14;
       --surface: #111720;
+      --surface2: #162030;
       --border: #1e2a38;
       --accent: #00aaff;
       --accent2: #0066cc;
@@ -18,7 +19,6 @@
       --muted: #5a7080;
       --success: #00d084;
       --error: #ff4560;
-      --warn: #ffb800;
     }
 
     body {
@@ -31,10 +31,8 @@
       align-items: center;
       justify-content: center;
       padding: 2rem;
-      overflow-x: hidden;
     }
 
-    /* Grid background */
     body::before {
       content: '';
       position: fixed;
@@ -47,7 +45,6 @@
       pointer-events: none;
     }
 
-    /* Glow top */
     body::after {
       content: '';
       position: fixed;
@@ -67,8 +64,8 @@
       border-radius: 16px;
       padding: 3rem 3.5rem;
       width: 100%;
-      max-width: 560px;
-      box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,170,255,0.05);
+      max-width: 580px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.5);
     }
 
     .logo-row {
@@ -79,13 +76,10 @@
     }
 
     .logo-icon {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
 
     .logo-icon svg { width: 20px; height: 20px; }
@@ -112,8 +106,22 @@
     .subtitle {
       font-size: 0.875rem;
       color: var(--muted);
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(0,170,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,170,255,0.2);
+      margin-bottom: 1.5rem;
     }
 
     .field-label {
@@ -126,53 +134,158 @@
       margin-bottom: 0.6rem;
     }
 
-    .input-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1.5rem;
+    /* Autocomplete wrapper */
+    .autocomplete-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
     }
 
-    input[type="text"] {
-      flex: 1;
+    .search-input {
+      width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0.85rem 1rem;
       color: var(--text);
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Syne', sans-serif;
       font-size: 0.95rem;
-      letter-spacing: 0.05em;
       outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input[type="text"]:focus {
+    .search-input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(0,170,255,0.1);
     }
 
-    input[type="text"]::placeholder { color: var(--muted); }
+    .search-input::placeholder { color: var(--muted); }
 
+    /* Dropdown de resultados */
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .dropdown.open { display: block; }
+
+    .dropdown-item {
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover, .dropdown-item.active {
+      background: rgba(0,170,255,0.08);
+    }
+
+    .dropdown-item .item-desc {
+      font-size: 0.875rem;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .dropdown-item .item-desc mark {
+      background: rgba(0,170,255,0.25);
+      color: var(--accent);
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    .dropdown-item .item-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .dropdown-empty {
+      padding: 1rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .dropdown-loading {
+      padding: 1rem;
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.875rem;
+    }
+
+    /* Campo selecionado */
+    .selected-box {
+      display: none;
+      background: rgba(0,170,255,0.06);
+      border: 1px solid rgba(0,170,255,0.2);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .selected-box.show { display: flex; }
+
+    .selected-box .sel-desc {
+      font-size: 0.875rem;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .selected-box .sel-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .btn-clear {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .btn-clear:hover { color: var(--error); }
+
+    /* Botão buscar */
     button#buscar {
+      width: 100%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       border: none;
       border-radius: 8px;
-      padding: 0.85rem 1.4rem;
+      padding: 0.9rem;
       color: #fff;
       font-family: 'Syne', sans-serif;
-      font-size: 0.875rem;
+      font-size: 0.95rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       cursor: pointer;
-      white-space: nowrap;
       transition: opacity 0.2s, transform 0.1s;
+      margin-bottom: 1.25rem;
     }
 
     button#buscar:hover { opacity: 0.88; }
-    button#buscar:active { transform: scale(0.97); }
-    button#buscar:disabled { opacity: 0.4; cursor: not-allowed; }
+    button#buscar:active { transform: scale(0.98); }
+    button#buscar:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    /* Status area */
+    /* Status */
     .status {
       display: none;
       align-items: center;
@@ -184,28 +297,10 @@
       border: 1px solid transparent;
     }
 
-    .status.loading {
-      display: flex;
-      background: rgba(0,170,255,0.07);
-      border-color: rgba(0,170,255,0.2);
-      color: var(--accent);
-    }
+    .status.loading { display: flex; background: rgba(0,170,255,0.07); border-color: rgba(0,170,255,0.2); color: var(--accent); }
+    .status.success { display: flex; background: rgba(0,208,132,0.07); border-color: rgba(0,208,132,0.2); color: var(--success); }
+    .status.error   { display: flex; background: rgba(255,69,96,0.07);  border-color: rgba(255,69,96,0.2);  color: var(--error); }
 
-    .status.success {
-      display: flex;
-      background: rgba(0,208,132,0.07);
-      border-color: rgba(0,208,132,0.2);
-      color: var(--success);
-    }
-
-    .status.error {
-      display: flex;
-      background: rgba(255,69,96,0.07);
-      border-color: rgba(255,69,96,0.2);
-      color: var(--error);
-    }
-
-    /* Spinner */
     .spinner {
       width: 16px; height: 16px;
       border: 2px solid rgba(0,170,255,0.3);
@@ -216,7 +311,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Download button */
+    /* Botão download */
     #download-btn {
       display: none;
       width: 100%;
@@ -233,20 +328,13 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: opacity 0.2s, transform 0.1s;
+      transition: opacity 0.2s;
       text-decoration: none;
-      margin-top: 0.25rem;
+      margin-bottom: 1rem;
     }
-
     #download-btn:hover { opacity: 0.88; }
-    #download-btn:active { transform: scale(0.98); }
 
-    /* Divider */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 2rem 0;
-    }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.75rem 0; }
 
     .hint {
       font-size: 0.75rem;
@@ -255,23 +343,28 @@
       font-family: 'IBM Plex Mono', monospace;
     }
 
-    .hint span {
-      color: var(--accent);
+    .hint span { color: var(--accent); }
+
+    /* Scrollbar */
+    .dropdown::-webkit-scrollbar { width: 4px; }
+    .dropdown::-webkit-scrollbar-track { background: transparent; }
+    .dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* Loading overlay inicial */
+    #init-loading {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
 
-    /* Tag badge */
-    .badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(0,170,255,0.12);
-      color: var(--accent);
-      border: 1px solid rgba(0,170,255,0.2);
-      margin-bottom: 1.5rem;
+    .init-spinner {
+      width: 24px; height: 24px;
+      border: 2px solid rgba(0,170,255,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 0.75rem;
     }
   </style>
 </head>
@@ -293,46 +386,207 @@
   <div class="badge">3D Model · STEP203</div>
 
   <h1>Download<br>Modelo 3D</h1>
-  <p class="subtitle">Insira o código do redutor para baixar o arquivo STEP diretamente.</p>
+  <p class="subtitle">Busque pelo nome do produto e baixe o arquivo STEP diretamente.</p>
 
-  <label class="field-label" for="codigo">Código do produto</label>
-  <div class="input-row">
-    <input type="text" id="codigo" placeholder="ex: 2T316L2017001I" autocomplete="off" spellcheck="false" />
-    <button id="buscar" onclick="buscarStep()">Buscar</button>
+  <!-- Loading inicial da lista -->
+  <div id="init-loading">
+    <div class="init-spinner"></div>
+    Carregando lista de produtos...
   </div>
 
-  <div class="status" id="status">
-    <div class="spinner" id="spinner"></div>
-    <span id="status-msg">Buscando modelo 3D...</span>
+  <!-- Área principal (fica oculta até lista carregar) -->
+  <div id="main-area" style="display:none">
+
+    <label class="field-label" for="search-input">Buscar produto</label>
+    <div class="autocomplete-wrapper">
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Digite o nome do produto..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="dropdown" id="dropdown"></div>
+    </div>
+
+    <!-- Produto selecionado -->
+    <div class="selected-box" id="selected-box">
+      <div style="flex:1">
+        <div class="sel-desc" id="sel-desc"></div>
+        <div class="sel-code" id="sel-code"></div>
+      </div>
+      <button class="btn-clear" onclick="clearSelection()" title="Limpar">✕</button>
+    </div>
+
+    <div class="status" id="status">
+      <div class="spinner" id="spinner"></div>
+      <span id="status-msg"></span>
+    </div>
+
+    <a id="download-btn" href="#" download>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Baixar arquivo .STP
+    </a>
+
+    <button id="buscar" onclick="buscarStep()" disabled>Selecione um produto acima</button>
+
+    <hr class="divider" />
+
+    <p class="hint">
+      Lista com <span id="total-count">—</span> produtos · busca instantânea<br>
+      O arquivo será gerado diretamente da Bonfiglioli.
+    </p>
+
   </div>
-
-  <a id="download-btn" href="#" download>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-      <polyline points="7 10 12 15 17 10"/>
-      <line x1="12" y1="15" x2="12" y2="3"/>
-    </svg>
-    Baixar arquivo .STP
-  </a>
-
-  <hr class="divider" />
-
-  <p class="hint">
-    Formato aceito: <span>2T316L2017001I</span><br>
-    O arquivo será gerado diretamente da Bonfiglioli.
-  </p>
-
 </div>
 
 <script>
-  // ⚠️ Substitua pela URL do seu Cloudflare Worker após o deploy
-const WORKER_URL = 'https://bonfiglioli-step.eng-sanches.workers.dev';
+  const WORKER_URL = 'https://bonfiglioli-step.eng-sanches.workers.dev';
+  // Arquivo lista.json deve estar na mesma pasta que este HTML no GitHub
+  const LISTA_URL = './lista.json';
 
-  const input = document.getElementById('codigo');
+  let allData = [];
+  let selectedCode = null;
+  let selectedDesc = null;
+  let debounceTimer = null;
+  let activeIndex = -1;
 
-  // Enter para buscar
+  // Carrega a lista JSON ao iniciar
+  async function loadLista() {
+    try {
+      const resp = await fetch(LISTA_URL);
+      allData = await resp.json();
+      document.getElementById('init-loading').style.display = 'none';
+      document.getElementById('main-area').style.display = 'block';
+      document.getElementById('total-count').textContent = allData.length.toLocaleString('pt-BR');
+    } catch (e) {
+      document.getElementById('init-loading').innerHTML =
+        '<span style="color:var(--error)">Erro ao carregar lista de produtos.</span>';
+    }
+  }
+
+  // Busca com debounce
+  const input = document.getElementById('search-input');
+  const dropdown = document.getElementById('dropdown');
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => buscarNaLista(input.value), 150);
+  });
+
   input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') buscarStep();
+    const items = dropdown.querySelectorAll('.dropdown-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, items.length - 1);
+      updateActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      updateActive(items);
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && items[activeIndex]) items[activeIndex].click();
+    } else if (e.key === 'Escape') {
+      closeDropdown();
+    }
+  });
+
+  function updateActive(items) {
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+    if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function buscarNaLista(query) {
+    query = query.trim();
+    if (query.length < 2) { closeDropdown(); return; }
+
+    const q = query.toUpperCase();
+    // Filtra os primeiros 50 resultados que contenham o texto
+    const results = [];
+    for (let i = 0; i < allData.length && results.length < 50; i++) {
+      if (allData[i][0].toUpperCase().includes(q)) {
+        results.push(allData[i]);
+      }
+    }
+
+    activeIndex = -1;
+    renderDropdown(results, query);
+  }
+
+  function highlight(text, query) {
+    const idx = text.toUpperCase().indexOf(query.toUpperCase());
+    if (idx === -1) return escHtml(text);
+    return escHtml(text.slice(0, idx))
+      + '<mark>' + escHtml(text.slice(idx, idx + query.length)) + '</mark>'
+      + escHtml(text.slice(idx + query.length));
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function renderDropdown(results, query) {
+    dropdown.innerHTML = '';
+    if (results.length === 0) {
+      dropdown.innerHTML = '<div class="dropdown-empty">Nenhum produto encontrado.</div>';
+    } else {
+      results.forEach(([desc, code]) => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.innerHTML = `
+          <span class="item-desc">${highlight(desc, query)}</span>
+          <span class="item-code">${escHtml(code)}</span>
+        `;
+        item.addEventListener('click', () => selectItem(desc, code));
+        dropdown.appendChild(item);
+      });
+    }
+    dropdown.classList.add('open');
+  }
+
+  function closeDropdown() {
+    dropdown.classList.remove('open');
+    dropdown.innerHTML = '';
+    activeIndex = -1;
+  }
+
+  function selectItem(desc, code) {
+    selectedDesc = desc;
+    selectedCode = code;
+    input.value = '';
+    closeDropdown();
+
+    document.getElementById('sel-desc').textContent = desc;
+    document.getElementById('sel-code').textContent = code;
+    document.getElementById('selected-box').classList.add('show');
+
+    const btn = document.getElementById('buscar');
+    btn.disabled = false;
+    btn.textContent = 'Buscar modelo 3D';
+
+    document.getElementById('download-btn').style.display = 'none';
+    hideStatus();
+  }
+
+  function clearSelection() {
+    selectedCode = null;
+    selectedDesc = null;
+    document.getElementById('selected-box').classList.remove('show');
+    document.getElementById('buscar').disabled = true;
+    document.getElementById('buscar').textContent = 'Selecione um produto acima';
+    document.getElementById('download-btn').style.display = 'none';
+    hideStatus();
+    input.focus();
+  }
+
+  // Fecha dropdown ao clicar fora
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.autocomplete-wrapper')) closeDropdown();
   });
 
   function setStatus(type, msg) {
@@ -349,11 +603,7 @@ const WORKER_URL = 'https://bonfiglioli-step.eng-sanches.workers.dev';
   }
 
   async function buscarStep() {
-    const codigo = input.value.trim().toUpperCase();
-    if (!codigo) {
-      setStatus('error', 'Digite o código do produto.');
-      return;
-    }
+    if (!selectedCode) return;
 
     const btn = document.getElementById('buscar');
     const downloadBtn = document.getElementById('download-btn');
@@ -363,17 +613,17 @@ const WORKER_URL = 'https://bonfiglioli-step.eng-sanches.workers.dev';
     setStatus('loading', 'Abrindo página do produto na Bonfiglioli...');
 
     try {
-      const resp = await fetch(`${WORKER_URL}?codigo=${encodeURIComponent(codigo)}`);
+      const resp = await fetch(`${WORKER_URL}?codigo=${encodeURIComponent(selectedCode)}`);
       const data = await resp.json();
 
       if (!resp.ok || !data.url) {
-        setStatus('error', data.error || 'Modelo STEP não encontrado para este código.');
+        setStatus('error', data.error || 'Modelo STEP não encontrado para este produto.');
         return;
       }
 
       setStatus('success', 'Modelo 3D encontrado! Clique para baixar.');
       downloadBtn.href = data.url;
-      downloadBtn.setAttribute('download', `${codigo}.stp`);
+      downloadBtn.setAttribute('download', `${selectedCode}.stp`);
       downloadBtn.style.display = 'flex';
 
     } catch (err) {
@@ -382,6 +632,8 @@ const WORKER_URL = 'https://bonfiglioli-step.eng-sanches.workers.dev';
       btn.disabled = false;
     }
   }
+
+  loadLista();
 </script>
 
 </body>
