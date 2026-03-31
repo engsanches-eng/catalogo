@@ -500,17 +500,45 @@
     if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
   }
 
+  function buildMatcher(query) {
+    const q = query.trim().toUpperCase();
+    if (!q.includes('*')) {
+      return text => text.toUpperCase().includes(q);
+    }
+    const parts = q.split('*').filter(p => p.length > 0);
+    if (parts.length === 0) return () => true;
+    const startsWild = q.startsWith('*');
+    const endsWild = q.endsWith('*');
+    return text => {
+      const t = text.toUpperCase();
+      let cursor = 0;
+      for (let i = 0; i < parts.length; i++) {
+        if (i === 0 && !startsWild) {
+          // Primeira parte deve estar no início
+          if (!t.startsWith(parts[0])) return false;
+          cursor = parts[0].length;
+        } else {
+          const idx = t.indexOf(parts[i], cursor);
+          if (idx === -1) return false;
+          cursor = idx + parts[i].length;
+        }
+      }
+      // Última parte deve estar no fim se não termina com *
+      if (!endsWild && parts.length > 0) {
+        if (!t.endsWith(parts[parts.length - 1])) return false;
+      }
+      return true;
+    };
+  }
+
   function buscarNaLista(query) {
     query = query.trim();
     if (query.length < 2) { closeDropdown(); return; }
 
-    const q = query.toUpperCase();
-    // Filtra os primeiros 50 resultados que contenham o texto
+    const matcher = buildMatcher(query);
     const results = [];
     for (let i = 0; i < allData.length && results.length < 50; i++) {
-      if (allData[i][0].toUpperCase().includes(q)) {
-        results.push(allData[i]);
-      }
+      if (matcher(allData[i][0])) results.push(allData[i]);
     }
 
     activeIndex = -1;
