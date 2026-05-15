@@ -2292,6 +2292,15 @@ function renderEqTable() {
     const rossiByBonf = {};
     EQUIVALENCE_ROSSI.forEach(eqr => { rossiByBonf[eqr.bonf] = eqr; });
 
+    // Constantes compartilhadas entre o loop principal e a linha extra do 3000A
+    const noEquivLabel = currentLang === 'pt' ? '⚠ sem equivalente' : '⚠ no equivalent';
+    const noEquivTitle = currentLang === 'pt' ? 'Sem equivalente direto na faixa de T₂max' : 'No direct equivalent in T₂max range';
+    const ebSuffix = currentLang === 'pt' ? ' (EB)' : ' (EB)';
+    const ebTitle = currentLang === 'pt' ? 'Série EB (ortogonal/bevel-helical)' : 'EB Series (right-angle/bevel-helical)';
+    const kingSizes = new Set(['1060A', '1500A', '2120A', '3000A']);
+    const kingSuffix = ' (King)';
+    const kingTitle = currentLang === 'pt' ? 'Série EP King (in-line, alta capacidade)' : 'EP King series (in-line, high capacity)';
+
     EQUIVALENCE.forEach(eq => {
       const bf = BONFIGLIOLI[eq.bonf];
       const primaryBr = eq.primary && BREVINI[eq.primary] ? eq.primary : (eq.e[0] || (eq.s ? eq.s[0] : null));
@@ -2303,8 +2312,6 @@ function renderEqTable() {
       const rData = primaryRossi ? (ROSSI[primaryRossi] || ROSSI_EB[primaryRossi]) : null;
       const isRossiEB = primaryRossi && !ROSSI[primaryRossi] && ROSSI_EB[primaryRossi];
 
-      const noEquivLabel = currentLang === 'pt' ? '⚠ sem equivalente' : '⚠ no equivalent';
-      const noEquivTitle = currentLang === 'pt' ? 'Sem equivalente direto na faixa de T₂max' : 'No direct equivalent in T₂max range';
       const formatList = (list, primary) => {
         if (!list || !list.length) return `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
         return list.map(m => {
@@ -2318,12 +2325,7 @@ function renderEqTable() {
       const hasAnyBrev = (eq.e && eq.e.length) || (eq.s && eq.s.length);
       const eSerie = (eq.e && eq.e.length) ? formatList(eq.e, eq.primary) : (hasAnyBrev ? '<span class="na">—</span>' : `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`);
       const sSerie = (eq.s && eq.s.length) ? formatList(eq.s, eq.primary) : (hasAnyBrev ? '<span class="na">—</span>' : `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`);
-      // Rossi: mesmo formato, mas adicionar "(EB)" para tamanhos que só existem em ROSSI_EB (ortogonais)
-      const ebSuffix = currentLang === 'pt' ? ' (EB)' : ' (EB)';
-      const ebTitle = currentLang === 'pt' ? 'Série EB (ortogonal/bevel-helical)' : 'EB Series (right-angle/bevel-helical)';
-      const kingSizes = new Set(['1060A', '1500A', '2120A', '3000A']);
-      const kingSuffix = ' (King)';
-      const kingTitle = currentLang === 'pt' ? 'Série EP King (in-line, alta capacidade)' : 'EP King series (in-line, high capacity)';
+      // Rossi: mesmo formato, mas adicionar "(EB)" para EB e "(King)" para King
       const formatRossiList = (list, primary) => {
         if (!list || !list.length) return `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
         return list.map(m => {
@@ -3142,4 +3144,3 @@ try { populateSrcModels(); } catch(e) { console.error('Erro ao popular modelos:'
 </script>
 </body>
 </html>
-
