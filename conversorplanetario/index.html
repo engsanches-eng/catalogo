@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d0e0f">
-<title>Conversor Planetários</title>
+<title>Conversor Brevini ↔ Bonfiglioli Série 300 · Redutores Planetários</title>
 
 <!-- Ícone — engrenagem planetária estilizada (sol + 3 planetas + ring gear) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='50%25'><stop offset='0%25' stop-color='%23ff7a3f'/><stop offset='100%25' stop-color='%23ff5b1f'/></radialGradient></defs><rect width='64' height='64' rx='12' fill='%230d0e0f'/><g stroke='%23ff5b1f' stroke-width='2.2' fill='none' stroke-linecap='round'><circle cx='32' cy='32' r='25'/><g stroke-width='3'><path d='M32 6 L32 11 M32 53 L32 58 M6 32 L11 32 M53 32 L58 32 M13.6 13.6 L17.2 17.2 M46.8 46.8 L50.4 50.4 M50.4 13.6 L46.8 17.2 M17.2 46.8 L13.6 50.4'/></g></g><circle cx='32' cy='32' r='6' fill='url(%23g)'/><g fill='%236eb95a'><circle cx='32' cy='15' r='4'/><circle cx='17.2' cy='40.5' r='4'/><circle cx='46.8' cy='40.5' r='4'/></g><g fill='none' stroke='%230d0e0f' stroke-width='0.8'><circle cx='32' cy='15' r='4'/><circle cx='17.2' cy='40.5' r='4'/><circle cx='46.8' cy='40.5' r='4'/></g></svg>">
@@ -721,8 +721,7 @@ footer a:hover { color: var(--accent); }
           <thead>
             <tr>
               <th>Bonfiglioli 300M</th>
-              <th>Brevini Série E</th>
-              <th>Brevini Série S</th>
+              <th>Brevini E/S</th>
               <th>Rossi EP</th>
               <th class="num">T₂max Bonf. (Nm)</th>
               <th class="num">T₂max Brev. (Nm)</th>
@@ -812,8 +811,7 @@ const translations = {
     howToReadText: 'In orange: primary equivalent (smallest T₂max difference). Other listed models are related Brevini sizes that may also work depending on the application. The column shows only the size family — the number of stages (1/2/3/4) defines whether it\'s EM/ED/ET/EQ in Brevini or L1/L2/L3/L4 in Bonfiglioli.',
     // Table
     tableColBonf: 'Bonfiglioli 300M',
-    tableColBrevE: 'Brevini Série E',
-    tableColBrevS: 'Brevini Série S',
+    tableColBrev: 'Brevini E/S',
     tableColRossi: 'Rossi EP',
     tableColT2Bonf: 'T₂max Bonf. (Nm)',
     tableColT2Brev: 'T₂max Brev. (Nm)',
@@ -879,8 +877,7 @@ const translations = {
     howToReadText: 'In <b style="color:var(--accent)">orange</b>: primary equivalent (smallest T₂max difference). Other listed models are related Brevini sizes that may also work depending on the application. The column shows only the size family — the number of stages (1/2/3/4) defines whether it\'s EM/ED/ET/EQ in Brevini or L1/L2/L3/L4 in Bonfiglioli.',
     // Table
     tableColBonf: 'Bonfiglioli 300M',
-    tableColBrevE: 'Brevini E Series',
-    tableColBrevS: 'Brevini S Series',
+    tableColBrev: 'Brevini E/S',
     tableColRossi: 'Rossi EP',
     tableColT2Bonf: 'T₂max Bonf. (Nm)',
     tableColT2Brev: 'T₂max Brev. (Nm)',
@@ -1003,8 +1000,8 @@ function toggleLanguage() {
   const ths = document.querySelectorAll('#eq-table th');
   if (ths.length >= 13) {
     ths[0].textContent = t.tableColBonf;
-    ths[1].textContent = t.tableColBrevE;
-    ths[2].textContent = t.tableColBrevS;
+    ths[1].textContent = t.tableColBrev;
+    ths[2].textContent = t.tableColRossi;
     ths[3].textContent = t.tableColRossi;
     ths[4].textContent = t.tableColT2Bonf;
     ths[5].textContent = t.tableColT2Brev;
@@ -2196,14 +2193,15 @@ function renderEqTable() {
         return list.map(m => {
           const isPrimary = m === primary;
           return isPrimary
-            ? `<b style="color:var(--accent)">${m}</b>`
-            : `<span style="color:var(--ink-dim)">${m}</span>`;
-        }).join(' · ');
+            ? `<div style="line-height:1.5"><b style="color:var(--accent)">${m}</b></div>`
+            : `<div style="line-height:1.5;color:var(--ink-dim)">${m}</div>`;
+        }).join('');
       };
-      // Para Brevini: combinar série E e série S em colunas, mas se ambas vazias mostrar aviso só uma vez
-      const hasAnyBrev = (eq.e && eq.e.length) || (eq.s && eq.s.length);
-      const eSerie = (eq.e && eq.e.length) ? formatList(eq.e, eq.primary) : (hasAnyBrev ? '<span class="na">—</span>' : `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`);
-      const sSerie = (eq.s && eq.s.length) ? formatList(eq.s, eq.primary) : (hasAnyBrev ? '<span class="na">—</span>' : `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`);
+      // Para Brevini: juntar série E e série S em uma coluna única
+      const allBrev = [...(eq.e || []), ...(eq.s || [])];
+      const brevList = allBrev.length
+        ? formatList(allBrev, eq.primary)
+        : `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
       // Rossi: mesmo formato, mas adicionar "(EB)" para EB e "(King)" para King
       const formatRossiList = (list, primary) => {
         if (!list || !list.length) return `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
@@ -2215,27 +2213,65 @@ function renderEqTable() {
           if (isKing) mark = `<span style="font-size:9px;opacity:0.7;color:var(--rossi)" title="${kingTitle}">${kingSuffix}</span>`;
           else if (isEBOnly) mark = `<span style="font-size:9px;opacity:0.7;color:var(--ink-faint)" title="${ebTitle}">${ebSuffix}</span>`;
           return isPrimary
-            ? `<b style="color:var(--accent)">${m}</b>${mark}`
-            : `<span style="color:var(--ink-dim)">${m}</span>${mark}`;
-        }).join(' · ');
+            ? `<div style="line-height:1.5"><b style="color:var(--accent)">${m}</b>${mark}</div>`
+            : `<div style="line-height:1.5;color:var(--ink-dim)">${m}${mark}</div>`;
+        }).join('');
       };
       const rossiList = formatRossiList(eqr ? eqr.rossi : [], eqr ? eqr.primary : null);
 
       const bonfFullName = `<b>3 ${bonfSizeToCode(eq.bonf)}</b>`;
+
+      // Helper: monta célula multi-modelo (primary em laranja, demais na cor da marca)
+      function multiSpecCell(models, primaryModel, dataLookup, fieldName, brandColor, prefix) {
+        if (!models || !models.length) return '—';
+        const parts = [];
+        for (const m of models) {
+          const d = dataLookup(m);
+          if (!d) continue;
+          let val = d[fieldName];
+          if (val === undefined || val === null) continue;
+          // Formatação por tipo de campo
+          if (fieldName === 'm2max') {
+            val = fmtNum(val);
+          } else if (fieldName === 'corona') {
+            if (val === 'n.d.') {
+              val = '<span style="opacity:0.5">n.d.</span>';
+            } else {
+              val = 'Ø' + val;
+            }
+          }
+          const isPrimary = m === primaryModel;
+          const color = isPrimary ? 'var(--accent)' : 'var(--ink-dim)';
+          const weight = isPrimary ? '700' : '400';
+          const label = models.length > 1 ? `<span style="font-size:9px;opacity:0.55">${m}</span> ` : '';
+          parts.push(`<div style="color:${color};font-weight:${weight};line-height:1.5">${label}${val}</div>`);
+        }
+        return parts.length ? parts.join('') : '—';
+      }
+
+      // Brevini: lookup em BREVINI
+      const brevModels = [...(eq.e || []), ...(eq.s || [])];
+      const brevPrimary = eq.primary;
+      const brevLookup = (m) => BREVINI[m] || null;
+
+      // Rossi: lookup em ROSSI + ROSSI_EB
+      const rossiModels = eqr ? (eqr.rossi || []) : [];
+      const rossiPrimary = eqr ? eqr.primary : null;
+      const rossiLookup = (m) => ROSSI[m] || ROSSI_EB[m] || null;
+
       html += `<tr>
         <td class="bonf">${bonfFullName}<div style="font-size:10px;color:var(--ink-faint);font-weight:400;margin-top:2px">${eq.bonf}</div></td>
-        <td class="brev" style="font-family:var(--mono);font-size:11px">${eSerie}</td>
-        <td class="brev" style="font-family:var(--mono);font-size:11px">${sSerie}</td>
+        <td class="brev" style="font-family:var(--mono);font-size:11px">${brevList}</td>
         <td class="rossi" style="font-family:var(--mono);font-size:11px">${rossiList}</td>
         <td class="num">${fmtNum(bf?.m2max)}</td>
-        <td class="num">${fmtNum(br?.m2max)}</td>
-        <td class="num">${fmtNum(rData?.m2max)}</td>
+        <td class="num">${multiSpecCell(brevModels, brevPrimary, brevLookup, 'm2max', 'var(--brev)', '')}</td>
+        <td class="num">${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'm2max', 'var(--rossi)', '')}</td>
         <td>${bf?.shaft || '—'}</td>
-        <td>${br?.shaft || '—'}</td>
-        <td>${rData?.shaft || '—'}</td>
+        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'shaft', 'var(--brev)', '')}</td>
+        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'shaft', 'var(--rossi)', '')}</td>
         <td>${bf?.corona ? 'Ø'+bf.corona : '—'}</td>
-        <td>${br?.corona ? 'Ø'+br.corona : '—'}</td>
-        <td>${rData?.corona ? (rData.corona === 'n.d.' ? '<span class="na" title="' + (currentLang === 'pt' ? 'Dado não publicado no catálogo Rossi EP' : 'Not published in Rossi EP catalog') + '">n.d.</span>' : 'Ø'+rData.corona) : '—'}</td>
+        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'corona', 'var(--brev)', 'Ø')}</td>
+        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'corona', 'var(--rossi)', 'Ø')}</td>
       </tr>`;
     });
 
@@ -2247,7 +2283,6 @@ function renderEqTable() {
       const aboveRangeTitle = currentLang === 'pt' ? 'T₂max excede o maior Bonfiglioli (325 = 2.000.000 Nm) e o maior Brevini (S 5000 = 1.100.000 Nm)' : 'T₂max exceeds the largest Bonfiglioli (325 = 2,000,000 Nm) and Brevini (S 5000 = 1,100,000 Nm)';
       html += `<tr style="background:rgba(110,185,90,0.04)">
         <td style="font-style:italic;color:var(--ink-dim)">${aboveRangeLabel}<div style="font-size:10px;color:var(--ink-faint);font-weight:400;margin-top:2px" title="${aboveRangeTitle}">— sem Bonf. equivalente —</div></td>
-        <td class="brev" style="font-family:var(--mono);font-size:11px"><span class="na" title="${aboveRangeTitle}">${aboveRangeLabel}</span></td>
         <td class="brev" style="font-family:var(--mono);font-size:11px"><span class="na" title="${aboveRangeTitle}">${aboveRangeLabel}</span></td>
         <td class="rossi" style="font-family:var(--mono);font-size:11px"><b style="color:var(--accent)">3000A</b><span style="font-size:9px;opacity:0.7;color:var(--rossi)" title="${kingTitle}">${kingSuffix}</span></td>
         <td class="num">—</td>
