@@ -3,35 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d0e0f">
+<meta name="theme-color" content="#FAFBFC">
 <title>Conversor Planetários</title>
 
 <!-- Ícone — engrenagem planetária estilizada (sol + 3 planetas + ring gear) -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='50%25'><stop offset='0%25' stop-color='%23ff7a3f'/><stop offset='100%25' stop-color='%23ff5b1f'/></radialGradient></defs><rect width='64' height='64' rx='12' fill='%230d0e0f'/><g stroke='%23ff5b1f' stroke-width='2.2' fill='none' stroke-linecap='round'><circle cx='32' cy='32' r='25'/><g stroke-width='3'><path d='M32 6 L32 11 M32 53 L32 58 M6 32 L11 32 M53 32 L58 32 M13.6 13.6 L17.2 17.2 M46.8 46.8 L50.4 50.4 M50.4 13.6 L46.8 17.2 M17.2 46.8 L13.6 50.4'/></g></g><circle cx='32' cy='32' r='6' fill='url(%23g)'/><g fill='%236eb95a'><circle cx='32' cy='15' r='4'/><circle cx='17.2' cy='40.5' r='4'/><circle cx='46.8' cy='40.5' r='4'/></g><g fill='none' stroke='%230d0e0f' stroke-width='0.8'><circle cx='32' cy='15' r='4'/><circle cx='17.2' cy='40.5' r='4'/><circle cx='46.8' cy='40.5' r='4'/></g></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g' cx='50%25' cy='50%25' r='50%25'><stop offset='0%25' stop-color='%230079C1'/><stop offset='100%25' stop-color='%23004B87'/></radialGradient></defs><rect width='64' height='64' rx='12' fill='%23004B87'/><g stroke='%23fff' stroke-width='2.2' fill='none' stroke-linecap='round'><circle cx='32' cy='32' r='25'/><g stroke-width='3'><path d='M32 6 L32 11 M32 53 L32 58 M6 32 L11 32 M53 32 L58 32 M13.6 13.6 L17.2 17.2 M46.8 46.8 L50.4 50.4 M50.4 13.6 L46.8 17.2 M17.2 46.8 L13.6 50.4'/></g></g><circle cx='32' cy='32' r='6' fill='url(%23g)'/><g fill='%231A7F42'><circle cx='32' cy='15' r='4'/><circle cx='17.2' cy='40.5' r='4'/><circle cx='46.8' cy='40.5' r='4'/></g></svg>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0d0e0f;
-  --bg-elev: #17191b;
-  --bg-elev-2: #1f2124;
-  --border: #2a2d31;
-  --border-strong: #3a3f45;
-  --ink: #e8e6e1;
-  --ink-dim: #9a9993;
-  --ink-faint: #65645e;
-  --accent: #ff5b1f;
-  --accent-dim: #c64717;
-  --yellow: #f5c518;
-  --green: #6eb95a;
-  --red: #e05252;
-  --brev: #4a9eff;
-  --bonf: #ff5b1f;
-  --rossi: #6eb95a;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
-  --sans: 'Archivo', system-ui, sans-serif;
+  --bg: #FAFBFC;
+  --bg-elev: #FFFFFF;
+  --bg-elev-2: #F2F4F7;
+  --border: #DCE1E8;
+  --border-strong: #C8CFD9;
+  --ink: #1B2A4A;
+  --ink-dim: #6B7A94;
+  --ink-faint: #9AACBF;
+  --accent: #004B87;
+  --accent-dim: #003A6B;
+  --yellow: #D4A017;
+  --green: #1A7F42;
+  --red: #C62828;
+  --brev: #7B3FAF;
+  --brev-dim: #A882CC;
+  --bonf: #004B87;
+  --bonf-dim: #5A8DB8;
+  --rossi: #1A7F42;
+  --rossi-dim: #6BAE82;
+  --cyan: #0079C1;
+  --surface: #FFFFFF;
+  --surface-hover: #EBF0F5;
+  --mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --sans: 'IBM Plex Sans', 'Archivo', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
@@ -76,22 +82,23 @@ header {
   display: grid;
   place-items: center;
   background: var(--accent);
-  color: #0d0e0f;
-  font-family: var(--mono);
-  font-weight: 700;
+  color: #fff;
+  font-family: 'Rajdhani', var(--sans);
+  font-weight: 800;
   font-size: 22px;
   letter-spacing: -0.02em;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(255,91,31,0.4), 0 8px 28px -8px rgba(255,91,31,0.6);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,75,135,0.18);
 }
 .brand-text h1 {
-  font-family: var(--sans);
-  font-weight: 900;
+  font-family: 'Rajdhani', var(--sans);
+  font-weight: 700;
   font-size: 26px;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.05em;
   line-height: 1;
   margin-bottom: 6px;
   text-transform: uppercase;
+  color: var(--ink);
 }
 .brand-text h1 em {
   font-style: normal;
@@ -188,10 +195,11 @@ header {
 
 /* ---------- CARDS ---------- */
 .card {
-  background: var(--bg-elev);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,40,80,0.05);
 }
 .card-header {
   padding: 14px 18px;
@@ -218,9 +226,9 @@ header {
   letter-spacing: 0.1em;
   font-weight: 600;
 }
-.tag-brev { background: rgba(74,158,255,0.15); color: var(--brev); border: 1px solid rgba(74,158,255,0.3); }
-.tag-bonf { background: rgba(255,91,31,0.15); color: var(--bonf); border: 1px solid rgba(255,91,31,0.3); }
-.tag-rossi { background: rgba(110,185,90,0.15); color: var(--rossi); border: 1px solid rgba(110,185,90,0.3); }
+.tag-brev { background: rgba(74,45,135,0.08); color: var(--brev); border: 1px solid rgba(74,45,135,0.2); }
+.tag-bonf { background: rgba(0,75,135,0.08); color: var(--bonf); border: 1px solid rgba(0,75,135,0.2); }
+.tag-rossi { background: rgba(26,127,66,0.08); color: var(--rossi); border: 1px solid rgba(26,127,66,0.2); }
 .card-body { padding: 22px; }
 
 /* ---------- FORM ---------- */
@@ -259,7 +267,7 @@ select:focus, input:focus {
 }
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%239a9993' d='M2 4l4 4 4-4z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%236B7A94' d='M2 4l4 4 4-4z'/></svg>");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 34px;
@@ -563,10 +571,12 @@ footer a:hover { color: var(--accent); }
   transition: all 0.2s;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,40,80,0.05);
 }
 .lang-btn:hover {
   background: var(--surface-hover);
-  border-color: var(--accent);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0,121,193,0.12);
 }
 .lang-btn .flag {
   font-size: 16px;
@@ -634,14 +644,14 @@ footer a:hover { color: var(--accent); }
     <div>Catálogo CT-0606 · CT-3206 · 300M</div>
   </div>
   <div id="btnInstalarWrap" style="flex-shrink:0">
-    <button onclick="instalarApp()" id="btnInstalar" title="Instala o Conversor Planetário no seu computador (Windows) e cria atalhos na Área de Trabalho e Menu Iniciar." style="background:linear-gradient(135deg,#ff5b1f,#ff7a3f);color:#fff;border:none;padding:8px 14px;font-family:inherit;font-weight:700;font-size:11px;letter-spacing:1.2px;cursor:pointer;border-radius:4px;text-transform:uppercase;box-shadow:0 2px 6px rgba(255,91,31,0.3);transition:transform 0.15s, box-shadow 0.15s;white-space:nowrap" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 10px rgba(255,91,31,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 6px rgba(255,91,31,0.3)'">⬇ <span id="btnInstalarText">Instalar como App</span></button>
+    <button onclick="instalarApp()" id="btnInstalar" title="Instala o Conversor Planetário no seu computador (Windows) e cria atalhos na Área de Trabalho e Menu Iniciar." style="background:linear-gradient(135deg,#004B87,#0079C1);color:#fff;border:none;padding:8px 14px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;cursor:pointer;border-radius:4px;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,75,135,0.18);transition:transform 0.15s, box-shadow 0.15s;white-space:nowrap" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 14px rgba(0,75,135,0.25)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,75,135,0.18)'">⬇ <span id="btnInstalarText">Instalar como App</span></button>
   </div>
   <script>
     // Detecta se está rodando da versão instalada (file://) e troca o botão por badge
     (function(){
       if (window.location.protocol === 'file:') {
         var w = document.getElementById('btnInstalarWrap');
-        if (w) w.innerHTML = '<div style="background:linear-gradient(135deg,#6eb95a,#8fd278);color:#0d0e0f;padding:8px 14px;font-family:inherit;font-weight:700;font-size:11px;letter-spacing:1.2px;border-radius:4px;text-transform:uppercase;user-select:none;box-shadow:0 2px 6px rgba(110,185,90,0.3);white-space:nowrap;flex-shrink:0" id="badgeDesktop">✔ <span id="badgeDesktopText">Versão Desktop</span></div>';
+        if (w) w.innerHTML = '<div style="background:linear-gradient(135deg,#1A7F42,#2DA85B);color:#fff;padding:8px 14px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;letter-spacing:1.5px;border-radius:4px;text-transform:uppercase;user-select:none;box-shadow:0 2px 8px rgba(26,127,66,0.18);white-space:nowrap;flex-shrink:0" id="badgeDesktop">✔ <span id="badgeDesktopText">Versão Desktop</span></div>';
       }
     })();
   </script>
@@ -720,18 +730,18 @@ footer a:hover { color: var(--accent); }
         <table id="eq-table">
           <thead>
             <tr>
-              <th>Bonfiglioli 300M</th>
-              <th>Brevini E/S</th>
-              <th>Rossi EP</th>
-              <th class="num">T₂max Bonf. (Nm)</th>
-              <th class="num">T₂max Brev. (Nm)</th>
-              <th class="num">T₂max Rossi (Nm)</th>
-              <th>Eixo Saída Bonf.<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">D × L (mm) · MC/HC</span></th>
-              <th>Eixo Saída Brev.<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">D × L (mm) · MR/MR1</span></th>
-              <th>Eixo Saída Rossi<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">D × L (mm)</span></th>
-              <th>Anel Dent. Bonf.<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
-              <th>Anel Dent. Brev.<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
-              <th>Anel Dent. Rossi<br><span style="font-size:9px;color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
+              <th style="color:var(--bonf)">Bonfiglioli 300M</th>
+              <th style="color:var(--brev)">Brevini E/S</th>
+              <th style="color:var(--rossi)">Rossi EP</th>
+              <th class="num" style="color:var(--bonf)">T₂max Bonf.<br><span style="font-size:9px;color:var(--bonf-dim);font-weight:400;text-transform:none;letter-spacing:normal">(Nm)</span></th>
+              <th class="num" style="color:var(--brev)">T₂max Brev.<br><span style="font-size:9px;color:var(--brev-dim);font-weight:400;text-transform:none;letter-spacing:normal">(Nm)</span></th>
+              <th class="num" style="color:var(--rossi)">T₂max Rossi<br><span style="font-size:9px;color:var(--rossi-dim);font-weight:400;text-transform:none;letter-spacing:normal">(Nm)</span></th>
+              <th style="color:var(--bonf)">Eixo Bonf.<br><span style="font-size:9px;color:var(--bonf-dim);font-weight:400;text-transform:none;letter-spacing:normal">D×L · MC/HC</span></th>
+              <th style="color:var(--brev)">Eixo Brev.<br><span style="font-size:9px;color:var(--brev-dim);font-weight:400;text-transform:none;letter-spacing:normal">D×L · MR/MR1</span></th>
+              <th style="color:var(--rossi)">Eixo Rossi<br><span style="font-size:9px;color:var(--rossi-dim);font-weight:400;text-transform:none;letter-spacing:normal">D×L (mm)</span></th>
+              <th style="color:var(--bonf)">Anel Bonf.<br><span style="font-size:9px;color:var(--bonf-dim);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
+              <th style="color:var(--brev)">Anel Brev.<br><span style="font-size:9px;color:var(--brev-dim);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
+              <th style="color:var(--rossi)">Anel Rossi<br><span style="font-size:9px;color:var(--rossi-dim);font-weight:400;text-transform:none;letter-spacing:normal">Ø (mm)</span></th>
             </tr>
           </thead>
           <tbody id="eq-tbody"></tbody>
@@ -2298,13 +2308,20 @@ function renderEqTable() {
       const rData = primaryRossi ? (ROSSI[primaryRossi] || ROSSI_EB[primaryRossi]) : null;
       const isRossiEB = primaryRossi && !ROSSI[primaryRossi] && ROSSI_EB[primaryRossi];
 
+      // Helper: reordena lista colocando o primary sempre em primeiro
+      function primaryFirst(list, primary) {
+        if (!list || !primary) return list || [];
+        return [primary, ...list.filter(m => m !== primary)];
+      }
+
       const formatList = (list, primary) => {
         if (!list || !list.length) return `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
-        return list.map(m => {
+        const ordered = primaryFirst(list, primary);
+        return ordered.map(m => {
           const isPrimary = m === primary;
           return isPrimary
-            ? `<div style="line-height:1.5"><b style="color:var(--accent)">${m}</b></div>`
-            : `<div style="line-height:1.5;color:var(--ink-dim)">${m}</div>`;
+            ? `<div style="line-height:1.5"><b style="color:var(--brev)">${m}</b></div>`
+            : `<div style="line-height:1.5;color:var(--brev-dim)">${m}</div>`;
         }).join('');
       };
       // Para Brevini: juntar série E e série S em uma coluna única
@@ -2315,32 +2332,34 @@ function renderEqTable() {
       // Rossi: mesmo formato, mas adicionar "(EB)" para EB e "(King)" para King
       const formatRossiList = (list, primary) => {
         if (!list || !list.length) return `<span class="na" title="${noEquivTitle}">${noEquivLabel}</span>`;
-        return list.map(m => {
+        const ordered = primaryFirst(list, primary);
+        return ordered.map(m => {
           const isPrimary = m === primary;
           const isEBOnly = !ROSSI[m] && ROSSI_EB[m];
           const isKing = kingSizes.has(m);
           let mark = '';
-          if (isKing) mark = `<span style="font-size:9px;opacity:0.7;color:var(--rossi)" title="${kingTitle}">${kingSuffix}</span>`;
-          else if (isEBOnly) mark = `<span style="font-size:9px;opacity:0.7;color:var(--ink-faint)" title="${ebTitle}">${ebSuffix}</span>`;
+          if (isKing) mark = `<span style="font-size:9px;opacity:0.7;color:var(--rossi-dim)" title="${kingTitle}">${kingSuffix}</span>`;
+          else if (isEBOnly) mark = `<span style="font-size:9px;opacity:0.7;color:var(--rossi-dim)" title="${ebTitle}">${ebSuffix}</span>`;
           return isPrimary
-            ? `<div style="line-height:1.5"><b style="color:var(--accent)">${m}</b>${mark}</div>`
-            : `<div style="line-height:1.5;color:var(--ink-dim)">${m}${mark}</div>`;
+            ? `<div style="line-height:1.5"><b style="color:var(--rossi)">${m}</b>${mark}</div>`
+            : `<div style="line-height:1.5;color:var(--rossi-dim)">${m}${mark}</div>`;
         }).join('');
       };
       const rossiList = formatRossiList(eqr ? eqr.rossi : [], eqr ? eqr.primary : null);
 
       const bonfFullName = `<b>3 ${bonfSizeToCode(eq.bonf)}</b>`;
 
-      // Helper: monta célula multi-modelo (primary em laranja, demais na cor da marca)
-      function multiSpecCell(models, primaryModel, dataLookup, fieldName, brandColor, prefix) {
+      // Helper: monta célula multi-modelo com cor da marca
+      // Primary: cor da marca, negrito. Demais: cor da marca dim, peso normal.
+      function multiSpecCell(models, primaryModel, dataLookup, brandColor, brandDimColor, fieldName) {
         if (!models || !models.length) return '—';
+        const ordered = primaryFirst(models, primaryModel);
         const parts = [];
-        for (const m of models) {
+        for (const m of ordered) {
           const d = dataLookup(m);
           if (!d) continue;
           let val = d[fieldName];
           if (val === undefined || val === null) continue;
-          // Formatação por tipo de campo
           if (fieldName === 'm2max') {
             val = fmtNum(val);
           } else if (fieldName === 'corona') {
@@ -2351,7 +2370,7 @@ function renderEqTable() {
             }
           }
           const isPrimary = m === primaryModel;
-          const color = isPrimary ? 'var(--accent)' : 'var(--ink-dim)';
+          const color = isPrimary ? brandColor : brandDimColor;
           const weight = isPrimary ? '700' : '400';
           const label = models.length > 1 ? `<span style="font-size:9px;opacity:0.55">${m}</span> ` : '';
           parts.push(`<div style="color:${color};font-weight:${weight};line-height:1.5">${label}${val}</div>`);
@@ -2370,18 +2389,18 @@ function renderEqTable() {
       const rossiLookup = (m) => ROSSI[m] || ROSSI_EB[m] || null;
 
       html += `<tr>
-        <td class="bonf">${bonfFullName}<div style="font-size:10px;color:var(--ink-faint);font-weight:400;margin-top:2px">${eq.bonf}</div></td>
+        <td class="bonf" style="color:var(--bonf)">${bonfFullName}<div style="font-size:10px;color:var(--bonf-dim);font-weight:400;margin-top:2px">${eq.bonf}</div></td>
         <td class="brev" style="font-family:var(--mono);font-size:11px">${brevList}</td>
         <td class="rossi" style="font-family:var(--mono);font-size:11px">${rossiList}</td>
-        <td class="num">${fmtNum(bf?.m2max)}</td>
-        <td class="num">${multiSpecCell(brevModels, brevPrimary, brevLookup, 'm2max', 'var(--brev)', '')}</td>
-        <td class="num">${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'm2max', 'var(--rossi)', '')}</td>
-        <td>${bf?.shaft || '—'}</td>
-        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'shaft', 'var(--brev)', '')}</td>
-        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'shaft', 'var(--rossi)', '')}</td>
-        <td>${bf?.corona ? 'Ø'+bf.corona : '—'}</td>
-        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'corona', 'var(--brev)', 'Ø')}</td>
-        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'corona', 'var(--rossi)', 'Ø')}</td>
+        <td class="num" style="color:var(--bonf);font-weight:600">${fmtNum(bf?.m2max)}</td>
+        <td class="num">${multiSpecCell(brevModels, brevPrimary, brevLookup, 'var(--brev)', 'var(--brev-dim)', 'm2max')}</td>
+        <td class="num">${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'var(--rossi)', 'var(--rossi-dim)', 'm2max')}</td>
+        <td style="color:var(--bonf);font-weight:600">${bf?.shaft || '—'}</td>
+        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'var(--brev)', 'var(--brev-dim)', 'shaft')}</td>
+        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'var(--rossi)', 'var(--rossi-dim)', 'shaft')}</td>
+        <td style="color:var(--bonf);font-weight:600">${bf?.corona ? 'Ø'+bf.corona : '—'}</td>
+        <td>${multiSpecCell(brevModels, brevPrimary, brevLookup, 'var(--brev)', 'var(--brev-dim)', 'corona')}</td>
+        <td>${multiSpecCell(rossiModels, rossiPrimary, rossiLookup, 'var(--rossi)', 'var(--rossi-dim)', 'corona')}</td>
       </tr>`;
     });
 
