@@ -56,7 +56,7 @@ body {
     repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,0.015) 39px 40px);
 }
 .wrap {
-  max-width: 1400px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 28px 32px 80px;
 }
@@ -192,6 +192,18 @@ header {
 @media (max-width: 900px) {
   .grid-2 { grid-template-columns: 1fr; }
 }
+.grid-4q {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  align-items: stretch;
+  min-height: 625px;
+}
+.grid-4q > .card { display: flex; flex-direction: column; }
+.grid-4q > .card .card-body { flex: 1; display: flex; flex-direction: column; }
+.grid-4q > .card .card-body .result { flex: 1; }
+@media (max-width: 1400px) { .grid-4q { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .grid-4q { grid-template-columns: 1fr; } }
 
 /* ---------- CARDS ---------- */
 .card {
@@ -287,7 +299,9 @@ select {
   border: 1px dashed var(--border-strong);
   border-radius: 3px;
   padding: 20px;
-  min-height: 200px;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
 }
 .result-empty {
   display: flex;
@@ -306,8 +320,9 @@ select {
 .result-empty svg { opacity: 0.3; }
 
 .equiv-badge {
-  display: inline-flex;
-  align-items: baseline;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   background: var(--bg);
   border: 1px solid var(--border-strong);
@@ -315,6 +330,7 @@ select {
   border-radius: 3px;
   margin-bottom: 18px;
   font-family: var(--mono);
+  min-height: 60px;
 }
 .equiv-badge .src {
   font-size: 14px;
@@ -334,6 +350,7 @@ select {
 .spec-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -343,6 +360,10 @@ select {
 .spec {
   background: var(--bg-elev);
   padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 72px;
 }
 /* Quando o último spec é ímpar (sozinho na linha), ocupa as duas colunas */
 .spec:last-child:nth-child(odd) {
@@ -617,19 +638,38 @@ footer a:hover { color: var(--accent); }
   cursor: not-allowed;
 }
 .equiv-badge-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   margin-top: 8px;
 }
 .equiv-badge-wrap .equiv-badge {
   margin-top: 0;
-  flex: 1;
+  margin-bottom: 0;
+  width: 100%;
+}
+.size-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
 }
 </style>
 </head>
 <body>
 <div class="wrap">
+
+<!-- Cabeçalho visível apenas na impressão/PDF -->
+<div id="print-header" class="print-header" style="display:none;margin-bottom:8mm;padding-bottom:4mm;border-bottom:2px solid #004B87">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-family:'IBM Plex Sans',sans-serif;font-size:16pt;font-weight:800;color:#004B87;text-transform:uppercase;letter-spacing:0.05em">Redutor Planetário · Conversor</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8pt;color:#6B7A94;margin-top:2px">Brevini (E/S) · Rossi EP ↔ Bonfiglioli Série 300M · Catálogo CT-0606 · CT-3206 · 300M · n₁ = 1500 rpm</div>
+    </div>
+    <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:8pt;color:#6B7A94">
+      <div><span style="color:#1B2A4A;font-weight:600" class="ph-direction">—</span></div>
+      <div>Modelo: <span style="color:#004B87;font-weight:700" class="ph-model">—</span></div>
+      <div class="ph-date">—</div>
+    </div>
+  </div>
+</div>
 
 <header>
   <div class="brand">
@@ -655,6 +695,9 @@ footer a:hover { color: var(--accent); }
       }
     })();
   </script>
+  <div class="btn-print-wrap" style="flex-shrink:0">
+    <button onclick="imprimirResultado()" title="Imprimir / Salvar como PDF" style="background:#fff;border:1px solid var(--border);color:var(--ink);padding:8px 10px;cursor:pointer;border-radius:4px;box-shadow:0 1px 3px rgba(0,40,80,0.05);transition:all 0.15s;display:flex;align-items:center;flex-shrink:0" onmouseover="this.style.borderColor='var(--cyan)';this.style.boxShadow='0 0 0 3px rgba(0,121,193,0.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='0 1px 3px rgba(0,40,80,0.05)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+  </div>
   <button class="lang-btn" onclick="toggleLanguage()">
     <span class="flag">🇧🇷</span>
     <span class="lang-text">PT</span>
@@ -668,53 +711,29 @@ footer a:hover { color: var(--accent); }
 
 <!-- ========== PANEL 01: DIRECT ========== -->
 <section class="panel active" id="panel-direct">
-  <div class="grid-2">
+  <div class="grid-4q">
     <div class="card">
-      <div class="card-header">
-        <h2>Entrada</h2>
-        <span class="tag tag-brev">Brevini</span>
-      </div>
+      <div class="card-header"><h2>Entrada</h2><span class="tag tag-brev" id="result-tag">Brevini</span></div>
       <div class="card-body">
-        <div class="field">
-          <label>Direção da Conversão</label>
-          <select id="direction">
-            <option value="br2bf">Brevini → Bonfiglioli Série 300</option>
-            <option value="ro2bf">Rossi EP → Bonfiglioli Série 300</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Modelo de Origem<span class="req">*</span></label>
-          <select id="model-src"></select>
-          <div class="hint" id="hint-src">Selecione um modelo para ver a equivalência.</div>
-        </div>
-        <div class="field">
-          <label>Eixo de Saída <span style="color:var(--ink-faint)">(configuração)</span></label>
-          <select id="output-shaft"></select>
-          <div class="hint" id="hint-shaft">Configuração do eixo de saída do redutor.</div>
-        </div>
-        <div class="field">
-          <label>Redução <span style="color:var(--ink-faint)">(opcional — filtra torques)</span></label>
-          <select id="ratio-select">
-            <option value="">— Todas as reduções —</option>
-          </select>
-        </div>
+        <div class="field"><label>Direção da Conversão</label><select id="direction"><option value="br2bf">Brevini → Bonfiglioli Série 300</option><option value="ro2bf">Rossi EP → Bonfiglioli Série 300</option></select></div>
+        <div class="field"><label>Modelo de Origem<span class="req">*</span></label><select id="model-src"></select><div class="hint" id="hint-src">Selecione um modelo para ver a equivalência.</div></div>
+        <div class="field"><label>Eixo de Saída <span style="color:var(--ink-faint)">(configuração)</span></label><select id="output-shaft"></select><div class="hint" id="hint-shaft">Configuração do eixo de saída do redutor.</div></div>
+        <div class="field"><label>Redução <span style="color:var(--ink-faint)">(opcional — filtra torques)</span></label><select id="ratio-select"><option value="">— Todas as reduções —</option></select></div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-header">
-        <h2>Resultado Equivalente</h2>
-        <span class="tag tag-bonf" id="result-tag">Bonfiglioli 300M</span>
-      </div>
-      <div class="card-body">
-        <div class="result" id="result-direct">
-          <div class="result-empty">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>
-            <div>Aguardando seleção</div>
-          </div>
-        </div>
-      </div>
+      <div class="card-header"><h2>Modelo de Origem</h2><span class="tag tag-brev" id="q2-tag">—</span></div>
+      <div class="card-body"><div class="result" id="result-q2"><div class="result-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg><div>Aguardando</div></div></div></div>
     </div>
+    <div class="card">
+      <div class="card-header"><h2>Equiv. por Torque</h2><span class="tag tag-bonf">Critério A</span></div>
+      <div class="card-body"><div class="result" id="result-q3"><div class="result-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg><div>Aguardando</div></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Equiv. por Eixo</h2><span class="tag tag-bonf">Critério B</span></div>
+      <div class="card-body"><div class="result" id="result-q4"><div class="result-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg><div>Aguardando</div></div></div></div>
+    </div>
+    <div id="result-direct" style="display:none"></div>
   </div>
 </section>
 
@@ -795,6 +814,7 @@ const translations = {
     directionRo2Bf: 'Rossi EP → Bonfiglioli Série 300',
     directionBf2Ro: 'Bonfiglioli Série 300 → Rossi EP',
     installApp: 'Instalar como App',
+    printBtn: 'Imprimir / PDF',
     desktopBadge: 'Versão Desktop',
     modelLabel: 'Modelo de Origem',
     modelHint: 'Selecione um modelo para ver a equivalência.',
@@ -861,6 +881,7 @@ const translations = {
     directionRo2Bf: 'Rossi EP → Bonfiglioli 300 Series',
     directionBf2Ro: 'Bonfiglioli 300 Series → Rossi EP',
     installApp: 'Install as App',
+    printBtn: 'Print / PDF',
     desktopBadge: 'Desktop Version',
     modelLabel: 'Source Model',
     modelHint: 'Select a model to see equivalence.',
@@ -1035,6 +1056,117 @@ function instalarApp() {
 }
 
 
+// ── Imprimir / Salvar como PDF ──────────────────────────────────────
+function imprimirResultado() {
+  const q2 = document.getElementById('result-q2');
+  const hasResult = q2 && !q2.querySelector('.result-empty');
+  if (!hasResult) {
+    alert(currentLang === 'pt'
+      ? 'Selecione um modelo para gerar o resultado antes de imprimir.'
+      : 'Select a model to generate results before printing.');
+    return;
+  }
+
+  // Captura o conteúdo dos 3 cards
+  const q2h = document.querySelector('.grid-4q > .card:nth-child(2) .card-header').innerHTML;
+  const q2c = document.getElementById('result-q2').innerHTML;
+  const q3h = document.querySelector('.grid-4q > .card:nth-child(3) .card-header').innerHTML;
+  const q3c = document.getElementById('result-q3').innerHTML;
+  const q4h = document.querySelector('.grid-4q > .card:nth-child(4) .card-header').innerHTML;
+  const q4c = document.getElementById('result-q4').innerHTML;
+
+  // Info do modelo selecionado
+  const modelVal = parseModelValue(document.getElementById('model-src').value);
+  const dirLabel = directionSel.value === 'br2bf'
+    ? 'Brevini → Bonfiglioli Série 300M'
+    : 'Rossi EP → Bonfiglioli Série 300M';
+  const modelName = modelVal ? (modelVal.full || modelVal.key) : '—';
+  const dateStr = new Date().toLocaleDateString(currentLang === 'pt' ? 'pt-BR' : 'en-US');
+
+  const css = `
+    @page { size: A4 landscape; margin: 8mm 10mm; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 9pt; color: #1B2A4A; background: #fff; margin: 0; padding: 0; }
+
+    /* Cabeçalho */
+    .ph { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #004B87; padding-bottom: 3mm; margin-bottom: 4mm; }
+    .ph-title { font-size: 13pt; font-weight: 800; color: #004B87; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ph-sub { font-size: 6.5pt; color: #6B7A94; margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
+    .ph-meta { text-align: right; font-size: 7pt; color: #6B7A94; font-family: 'IBM Plex Mono', monospace; }
+    .ph-meta strong { color: #004B87; }
+
+    /* Grid 3 colunas */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; height: calc(190mm - 20mm); }
+
+    /* Cards */
+    .card { border: 1px solid #DCE1E8; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 10px; background: #F2F4F7; border-bottom: 1px solid #DCE1E8; }
+    .card-header h2 { font-size: 6.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin: 0; }
+    .tag { font-size: 6pt; font-weight: 700; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .tag-brev { background: rgba(194,99,19,0.08); color: #C26313; border: 1px solid rgba(194,99,19,0.2); }
+    .tag-bonf { background: rgba(0,75,135,0.08); color: #004B87; border: 1px solid rgba(0,75,135,0.2); }
+    .tag-rossi { background: rgba(26,127,66,0.08); color: #1A7F42; border: 1px solid rgba(26,127,66,0.2); }
+
+    /* Result */
+    .result { flex: 1; padding: 6px 8px; background: #F8F9FB; display: flex; flex-direction: column; overflow: hidden; }
+    .result-empty { display: flex; align-items: center; justify-content: center; color: #9AACBF; font-size: 8pt; height: 100%; }
+
+    /* Labels de origem */
+    [style*="▼"] { font-size: 6pt !important; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 4px; }
+
+    /* Badge do modelo */
+    .equiv-badge { display: flex; align-items: center; justify-content: space-between; border-radius: 3px; border: 1px solid #C8CFD9; padding: 5px 10px; margin-bottom: 5px; font-family: 'IBM Plex Mono', monospace; }
+    .equiv-badge .dst { font-size: 10pt; font-weight: 700; }
+    .equiv-badge-wrap { margin-top: 4px; }
+    .size-nav { display: none; }
+
+    /* Specs */
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #DCE1E8; border: 1px solid #DCE1E8; border-radius: 3px; overflow: hidden; margin: 4px 0; }
+    .spec { background: #fff; padding: 4px 8px; }
+    .spec-label { font-family: 'IBM Plex Mono', monospace; font-size: 5.5pt; text-transform: uppercase; letter-spacing: 0.12em; color: #9AACBF; margin-bottom: 2px; }
+    .spec-value { font-family: 'IBM Plex Mono', monospace; font-size: 10pt; font-weight: 600; color: #1B2A4A; }
+    .spec-value .unit { font-size: 6.5pt; color: #6B7A94; font-weight: 400; margin-left: 2px; }
+    .spec:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+    /* Notes */
+    .note { font-size: 6pt; padding: 4px 8px; border-radius: 3px; margin-top: 3px; }
+    .note-green { background: rgba(26,127,66,0.07); border: 1px solid rgba(26,127,66,0.2); color: #1A7F42; }
+    .note-red { background: rgba(198,40,40,0.07); border: 1px solid rgba(198,40,40,0.2); color: #C62828; }
+
+    /* Criterion box */
+    .criterion-box { padding: 5px 10px; border-left: 3px solid; border-radius: 0 3px 3px 0; margin-top: auto; }
+  `;
+
+  const html = `<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>Conversor Planetário — ${modelName}</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>${css}</style>
+  </head><body>
+    <div class="ph">
+      <div>
+        <div class="ph-title">Redutor Planetário · Conversor</div>
+        <div class="ph-sub">Brevini (E/S) · Rossi EP ↔ Bonfiglioli Série 300M · Catálogo CT-0606 · CT-3206 · 300M · n₁ = 1500 rpm</div>
+      </div>
+      <div class="ph-meta">
+        <div>${dirLabel}</div>
+        <div>Modelo: <strong>${modelName}</strong></div>
+        <div>${dateStr}</div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="card-header">${q2h}</div><div class="result">${q2c}</div></div>
+      <div class="card"><div class="card-header">${q3h}</div><div class="result">${q3c}</div></div>
+      <div class="card"><div class="card-header">${q4h}</div><div class="result">${q4c}</div></div>
+    </div>
+    <script>window.onload = function(){ window.print(); window.onafterprint = function(){ window.close(); }; }<\/script>
+  </body></html>`;
+
+  const w = window.open('', '_blank', 'width=1100,height=700');
+  w.document.write(html);
+  w.document.close();
+}
+
 function toggleLanguage() {
   currentLang = currentLang === 'pt' ? 'en' : 'pt';
   const t = translations[currentLang];
@@ -1087,6 +1219,9 @@ function toggleLanguage() {
     if (directionSelect.options[1]) directionSelect.options[1].textContent = t.directionRo2Bf;
   }
   
+  const btnImprimirText = document.getElementById('btnImprimirText');
+  if (btnImprimirText) btnImprimirText.textContent = t.printBtn;
+
   // Update install app button / desktop badge
   const btnInstalarText = document.getElementById('btnInstalarText');
   if (btnInstalarText) btnInstalarText.textContent = t.installApp;
@@ -1530,6 +1665,9 @@ const modelSrc = document.getElementById('model-src');
 const ratioSel = document.getElementById('ratio-select');
 const outputShaftSel = document.getElementById('output-shaft');
 const resultDirect = document.getElementById('result-direct');
+const resultQ2 = document.getElementById('result-q2');
+const resultQ3 = document.getElementById('result-q3');
+const resultQ4 = document.getElementById('result-q4');
 const resultTag = document.getElementById('result-tag');
 const hintSrc = document.getElementById('hint-src');
 const hintShaft = document.getElementById('hint-shaft');
@@ -1576,7 +1714,74 @@ const BONF_OUTPUTS = [
   { code: 'PZ',  descPT: 'Versão com pés + eixo estriado', descEN: 'Foot mounted + splined shaft' },
 ];
 
-// Converte nome comercial Bonfiglioli (ex: "311M", "303", "319") → código de tamanho na designação (ex: "11M", "03", "19")
+// Dimensões de eixo por tipo para Bonfiglioli 300M
+// Formato: { tamanho: { código: "DxL" } }
+// D = diâmetro (oco = interno, sólido = externo), L = comprimento
+// Fonte: catálogo Bonfiglioli 300M
+const BONF_SHAFT_DIM = {
+  '300':  { MC:'50x82',   HC:'50x82',   FP:'42x82',   FZ:'42x82',   MZ:'42x82'  },
+  '301':  { MC:'50x82',   HC:'50x82',   FP:'42x82',   FZ:'42x82',   MZ:'42x82'  },
+  '303':  { MC:'60x105',  HC:'60x105',  FP:'50x105',  FZ:'50x105',  MZ:'50x105' },
+  '304':  { MC:'60x105',  HC:'60x105',  FP:'50x105',  FZ:'50x105',  MZ:'50x105' },
+  '305':  { MC:'60x105',  HC:'60x105',  FP:'55x105',  FZ:'55x105',  MZ:'55x105' },
+  '306':  { MC:'80x130',  HC:'80x130',  FP:'65x130',  FZ:'65x130',  MZ:'65x130' },
+  '307':  { MC:'90x170',  HC:'90x170',  FP:'75x170',  FZ:'75x170',  MZ:'75x170' },
+  '309':  { MC:'100x165', HC:'100x165', FP:'85x165',  FZ:'85x165',  MZ:'85x165' },
+  '310M': { MC:'110x210', HC:'110x210', FP:'95x210',  FZ:'95x210',  MZ:'95x210' },
+  '311M': { MC:'120x210', HC:'120x210', FP:'100x210', FZ:'100x210', MZ:'100x210'},
+  '313M': { MC:'140x200', HC:'140x200', FP:'120x200', FZ:'120x200', MZ:'120x200'},
+  '314M': { MC:'160x240', HC:'160x240', FP:'130x240', FZ:'130x240', MZ:'130x240'},
+  '315M': { MC:'160x240', HC:'160x240', FP:'140x240', FZ:'140x240', MZ:'140x240'},
+  '316M': { MC:'180x260', HC:'180x260', FP:'150x260', FZ:'150x260', MZ:'150x260'},
+  '317M': { MC:'200x260', HC:'200x260', FP:'170x260', FZ:'170x260', MZ:'170x260'},
+  '318M': { MC:'250x330', HC:'250x330', FP:'200x330', FZ:'200x330', MZ:'200x330'},
+  '319':  { MC:'280x380', HC:'280x380', FP:'220x380', FZ:'220x380', MZ:'220x380'},
+  '321':  { MC:'340x540', HC:'340x540', FP:'270x540', FZ:'270x540', MZ:'270x540'},
+  '323':  { MC:'400x480', HC:'400x480', FP:'320x480', FZ:'320x480', MZ:'320x480'},
+  '325':  { MC:'450x540', HC:'450x540', FP:'360x540', FZ:'360x540', MZ:'360x540'},
+};
+
+// Dimensões de eixo por tipo para Brevini E/S
+// Fonte: catálogo Brevini EVOX
+const BREV_SHAFT_DIM = {
+  'E 010': { MN:'42x82',   MN1:'42x82',   FS:'35x82',   FE:'35x82'  },
+  'E 020': { MN:'65x105',  MN1:'65x105',  FS:'55x105',  FE:'55x105' },
+  'E 030': { MN:'65x105',  MN1:'65x105',  FS:'55x105',  FE:'55x105' },
+  'E 040': { MN:'65x105',  MN1:'65x105',  FS:'55x105',  FE:'55x105' },
+  'E 045': { MN:'80x130',  MN1:'80x130',  FS:'65x130',  FE:'65x130' },
+  'E 046': { MN:'80x130',  MN1:'80x130',  FS:'65x130',  FE:'65x130' },
+  'E 067': { MN:'80x130',  MN1:'80x130',  FS:'70x130',  FE:'70x130' },
+  'E 090': { MN:'90x170',  MN1:'90x170',  FS:'75x170',  FE:'75x170' },
+  'E 091': { MN:'90x170',  MN1:'90x170',  FS:'75x170',  FE:'75x170' },
+  'E 150': { MN:'100x210', MN1:'100x210', FS:'85x210',  FE:'85x210' },
+  'E 155': { MN:'100x210', MN1:'100x210', FS:'85x210',  FE:'85x210' },
+  'E 250': { MN:'110x210', MN1:'110x210', FS:'95x210',  FE:'95x210' },
+  'E 255': { MN:'110x210', MN1:'110x210', FS:'95x210',  FE:'95x210' },
+  'E 320': { MN:'120x210', MN1:'120x210', FS:'100x210', FE:'100x210'},
+  'S 300': { MN:'120x210', MN1:'120x210', FS:'100x210', FE:'100x210'},
+  'S 400': { MN:'130x220', MN1:'130x220', FS:'110x220', FE:'110x220'},
+  'S 600': { MN:'160x240', MN1:'160x240', FS:'130x240', FE:'130x240'},
+  'S 850': { MN:'170x240', MN1:'170x240', FS:'140x240', FE:'140x240'},
+  'S 1200':{ MN:'190x260', MN1:'190x260', FS:'160x260', FE:'160x260'},
+  'S 1800':{ MN:'200x260', MN1:'200x260', FS:'170x260', FE:'170x260'},
+  'S 2500':{ MN:'250x330', MN1:'250x330', FS:'200x330', FE:'200x330'},
+  'S 3500':{ MN:'280x380', MN1:'280x380', FS:'220x380', FE:'220x380'},
+  'S 5000':{ MN:'340x540', MN1:'340x540', FS:'270x540', FE:'270x540'},
+};
+
+// Retorna a dimensão do eixo selecionado para um tamanho, dado o código do eixo
+function getBonfShaftDim(bonfSize, shaftCode) {
+  const dims = BONF_SHAFT_DIM[bonfSize];
+  if (!dims || !shaftCode) return null;
+  // Tenta o código exato, depois prefixo (FZB → FZ)
+  return dims[shaftCode] || dims[shaftCode.substring(0,2)] || null;
+}
+
+function getBrevShaftDim(brevKey, shaftCode) {
+  const dims = BREV_SHAFT_DIM[brevKey];
+  if (!dims || !shaftCode) return null;
+  return dims[shaftCode] || null;
+}
 // Conforme catálogo 300M página 30: 00=300, 01=301, 03=303, 04=304, 05=305, 06=306, 07=307, 09=309,
 // 10M=310M, 11M=311M, 13M=313M, 14M=314M, 15M=315M, 16M=316M, 17M=317M, 18M=318M, 19=319, 21=321, 23=323, 25=325
 function bonfSizeToCode(commercialSize) {
@@ -1611,36 +1816,35 @@ function bonfShortName(commercialSize, stages) {
 // Gera as variantes comerciais (EM 1xxx, ED 2xxx, ET 3xxx, EQ 4xxx, PD xxxx, PDA xxxx)
 // a partir da chave interna "E xxx". Para série S: SL <size><stages>, SC <size><stages>.
 function expandBrevModelVariants(internalKey) {
-  // internalKey ex: "E 045" → retorna [{full: "EM 1045", key: "E 045", stages: 1}, ...]
-  // Ou "S 300" → [{full: "SL 3001", key: "S 300", stages: 1}, ...]
+  // internalKey ex: "E 045" → retorna variantes apenas dos estágios que existem nos dados
   const variants = [];
   const m = internalKey.match(/^([ES])\s*(\d+)$/);
   if (!m) return [{full: internalKey, key: internalKey, stages: null}];
   const family = m[1];
   const size = m[2];
 
+  // Descobrir quais estágios realmente existem no banco de dados
+  const data = BREVINI[internalKey];
+  const availableStages = new Set();
+  if (data && data.torques) {
+    Object.values(data.torques).forEach(t => { if (t.stages) availableStages.add(t.stages); });
+  }
+
   if (family === 'E') {
     // Série E: EM 1XXX (1 estágio), ED 2XXX (2), ET 3XXX (3), EQ 4XXX (4)
-    // Nem todos os tamanhos têm todas as variantes de estágios
     const versions = ['EM', 'ED', 'ET', 'EQ'];
     versions.forEach((v, i) => {
       const stages = i + 1;
-      variants.push({
-        full: `${v} ${stages}${size}`,
-        key: internalKey,
-        stages: stages,
-        version: v
-      });
+      if (availableStages.size === 0 || availableStages.has(stages)) {
+        variants.push({ full: `${v} ${stages}${size}`, key: internalKey, stages, version: v });
+      }
     });
   } else if (family === 'S') {
-    // Série S: SL <size><stages> → SL 3001, SL 3002, SL 3003, SL 3004
+    // Série S: SL <size><stages>
     for (let stg = 1; stg <= 4; stg++) {
-      variants.push({
-        full: `SL ${size}${stg}`,
-        key: internalKey,
-        stages: stg,
-        version: 'SL'
-      });
+      if (availableStages.size === 0 || availableStages.has(stg)) {
+        variants.push({ full: `SL ${size}${stg}`, key: internalKey, stages: stg, version: 'SL' });
+      }
     }
   }
   return variants;
@@ -1649,7 +1853,7 @@ function expandBrevModelVariants(internalKey) {
 function populateSrcModels() {
   const dir = directionSel.value;
   modelSrc.innerHTML = '';
-  const sourceCardTag = document.querySelector('#panel-direct .card:first-child .tag');
+  const sourceCardTag = document.getElementById('result-tag');
 
   if (dir === 'br2bf') {
     resultTag.textContent = 'Bonfiglioli 300M';
@@ -1877,6 +2081,43 @@ function getTorqueEntry(torques, ratio) {
   return null;
 }
 
+// Sincroniza a altura dos .spec entre os 3 cards de resultado para alinhar visualmente
+function syncSpecHeights() {
+  requestAnimationFrame(() => {
+    // Sincronizar posição vertical dos badges (alinhar topo)
+    const cards = [resultQ2, resultQ3, resultQ4].filter(Boolean);
+    const badgeEls = cards.map(c => c.querySelector('.equiv-badge')).filter(Boolean);
+    if (badgeEls.length >= 2) {
+      // Resetar
+      badgeEls.forEach(b => { b.style.minHeight = ''; b.style.marginTop = ''; });
+      // Encontrar o maior offset-top relativo ao seu .result
+      const offsets = badgeEls.map(b => {
+        const result = b.closest('.result') || b.parentElement;
+        return b.getBoundingClientRect().top - result.getBoundingClientRect().top;
+      });
+      const maxOffset = Math.max(...offsets);
+      badgeEls.forEach((b, i) => {
+        const extra = maxOffset - offsets[i];
+        if (extra > 0) b.style.marginTop = extra + 'px';
+      });
+      // Igualar alturas
+      const maxH = Math.max(...badgeEls.map(b => b.getBoundingClientRect().height));
+      badgeEls.forEach(b => b.style.minHeight = maxH + 'px');
+    }
+
+    // Sincronizar specs
+    const grids = cards.map(c => c.querySelector('.spec-grid')).filter(Boolean);
+    if (grids.length < 2) return;
+    grids.forEach(g => g.querySelectorAll('.spec').forEach(s => s.style.minHeight = ''));
+    const maxPos = Math.max(...grids.map(g => g.querySelectorAll('.spec').length));
+    for (let i = 0; i < maxPos; i++) {
+      const specs = grids.map(g => g.querySelectorAll('.spec')[i]).filter(Boolean);
+      const maxH = Math.max(...specs.map(s => s.getBoundingClientRect().height));
+      specs.forEach(s => s.style.minHeight = maxH + 'px');
+    }
+  });
+}
+
 function renderDirect() {
   const dir = directionSel.value;
   const srcVal = parseModelValue(modelSrc.value);
@@ -1940,7 +2181,7 @@ function renderDirect() {
     const sameMatch = byTorque && byShaft && byTorque.size === byShaft.size;
 
     if (!byTorque && !byShaft) {
-      resultDirect.innerHTML = `<div class="note note-red"><strong>${currentLang === "pt" ? "Sem equivalência" : "No match"}</strong>${currentLang === "pt" ? "Não foi possível encontrar equivalente Bonfiglioli" : "Could not find Bonfiglioli equivalent"} ${currentLang === 'pt' ? 'para' : 'for'} ${srcFull}.</div>`;
+      resultQ2.innerHTML = `<div class="note note-red"><strong>${currentLang === "pt" ? "Sem equivalência" : "No match"}</strong>${currentLang === "pt" ? "Não foi possível encontrar equivalente Bonfiglioli" : "Could not find Bonfiglioli equivalent"} ${currentLang === 'pt' ? 'para' : 'for'} ${srcFull}.</div>`;
       return;
     }
 
@@ -1973,11 +2214,8 @@ function renderDirect() {
       <div class="spec-grid" style="margin-bottom:14px">
         <div class="spec"><div class="spec-label">T₂max</div><div class="spec-value">${fmtNum(srcData.m2max)}<span class="unit">Nm</span></div></div>
         ${brevNomT2 != null ? `<div class="spec"><div class="spec-label">${brevNomLabel}<br><span style="font-size:9px;opacity:0.6">${brevAtRatioLabel} = ${brevRefRatio}</span></div><div class="spec-value">${fmtNum(brevNomT2)}<span class="unit">Nm</span></div></div>` : ''}
-        <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${getShaftConfigLabel()}</span></div><div class="spec-value">${srcData.shaft || '—'}<span class="unit">mm</span></div></div>
+        <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${selectedShaft ? selectedShaft + ' · ' : ''}${getShaftConfigLabel()}</span></div><div class="spec-value">${(selectedShaft ? getBrevShaftDim(src, selectedShaft) : null) || srcData.shaft || '—'}<span class="unit">mm</span></div></div>
         <div class="spec"><div class="spec-label">${getRingGearLabel()}</div><div class="spec-value">${srcData.corona ? srcData.corona : '—'}<span class="unit">mm</span></div></div>
-        
-      </div>
-    `;
 
     // Helper para renderizar um card Bonfiglioli com um critério
     function renderBonfCard(matchData, criterionLabel, criterionDesc, bgColor, borderColor, criterion) {
@@ -2015,25 +2253,25 @@ function renderDirect() {
       const atRatioLabel = currentLang === 'pt' ? 'em i' : 'at i';
 
       let card = `
-        <div style="margin-top:18px;padding:8px 12px;background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 3px 3px 0">
-          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:${borderColor}">${criterionLabel}</div>
-          <div style="font-family:var(--mono);font-size:10px;opacity:0.7;color:var(--ink-dim);margin-top:2px">${criterionDesc}${isOverridden ? (currentLang === 'pt' ? ' · ajustado manualmente' : ' · manually adjusted') : ''}</div>
-        </div>
+        <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--bonf);font-weight:700;margin-bottom:8px">${currentLang === 'pt' ? '▼ Equivalente · Bonfiglioli' : '▼ Equivalent · Bonfiglioli'}</div>
         <div class="equiv-badge-wrap">
-          <div class="equiv-badge" style="background:rgba(255,91,31,0.06);border-color:rgba(255,91,31,0.3)">
-            <span class="dst">${bonfFullName}</span>
-          </div>
-          <div class="size-nav">
-            <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'up', true)" ${!canGoUp ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Aumentar tamanho' : 'Larger size'}">+</button>
-            <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'down', true)" ${!canGoDown ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Diminuir tamanho' : 'Smaller size'}">−</button>
+          <div class="equiv-badge" style="background:rgba(0,75,135,0.06);border-color:rgba(0,75,135,0.3)">
+            <span class="dst" style="color:var(--bonf)">${bonfFullName}</span>
+            <div class="size-nav">
+              <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'up', true)" ${!canGoUp ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Aumentar tamanho' : 'Larger size'}">+</button>
+              <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'down', true)" ${!canGoDown ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Diminuir tamanho' : 'Smaller size'}">−</button>
+            </div>
           </div>
         </div>
         <div class="spec-grid" style="margin-bottom:12px;margin-top:12px">
           <div class="spec"><div class="spec-label">T₂max</div><div class="spec-value">${fmtNum(bonfData?.m2max)}<span class="unit">Nm</span></div></div>
           ${bonfNomT2 != null ? `<div class="spec"><div class="spec-label">${nomLabel}<br><span style="font-size:9px;opacity:0.6">${atRatioLabel} = ${bonfClosestR || refRatio}</span></div><div class="spec-value">${fmtNum(bonfNomT2)}<span class="unit">Nm</span></div></div>` : ''}
-          <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${getShaftConfigLabel()}</span></div><div class="spec-value">${bonfData?.shaft || '—'}<span class="unit">mm</span></div></div>
+          <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${bonfShaftCode ? bonfShaftCode + ' · ' : ''}${getShaftConfigLabel()}</span></div><div class="spec-value">${(bonfShaftCode ? getBonfShaftDim(bSize, bonfShaftCode) : null) || bonfData?.shaft || '—'}<span class="unit">mm</span></div></div>
           <div class="spec"><div class="spec-label">${getRingGearLabel()}</div><div class="spec-value">${bonfData?.corona ? bonfData.corona : '—'}<span class="unit">mm</span></div></div>
-          
+        </div>
+        <div style="margin-top:auto;padding:14px 20px;background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 3px 3px 0">
+          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:${borderColor}">${criterionLabel}</div>
+          <div style="font-family:var(--mono);font-size:10px;opacity:0.7;color:var(--ink-dim);margin-top:2px">${criterionDesc}${isOverridden ? (currentLang === 'pt' ? ' · ajustado manualmente' : ' · manually adjusted') : ''}</div>
         </div>
       `;
 
@@ -2052,59 +2290,39 @@ function renderDirect() {
           const icon = diff > 0 ? '▲' : diff < 0 ? '▼' : '=';
           const cls = diff >= 0 ? 'note-green' : 'note-red';
           const rLabel = closestR === r ? `i = ${r}` : `i = ${r} (${currentLang === "pt" ? "Bonf. mais próxima:" : "Nearest Bonf.:"} ${closestR})`;
-          card += `<div class="note ${cls}"><strong>${currentLang === "pt" ? "Comparação em" : "Comparison at"} ${rLabel}</strong>${srcFull}: T₂ = <b>${fmtNum(srcT)} Nm</b> · Bonfiglioli ${bSize}: Mn2 = <b>${fmtNum(bonfT)} Nm</b> (${icon} ${diff > 0 ? '+' : ''}${diff.toFixed(1)}%)${diff < 0 ? ' ${currentLang === "pt" ? "⚠ Bonfiglioli abaixo" : "⚠ Bonfiglioli below"}' : ''}</div>`;
+          card += `<div class="note ${cls}"><strong>${currentLang === "pt" ? "Comparação em" : "Comparison at"} ${rLabel}</strong>${srcFull}: T₂ = <b>${fmtNum(srcT)} Nm</b> · Bonfiglioli ${bSize}: Mn2 = <b>${fmtNum(bonfT)} Nm</b> (${icon} ${diff > 0 ? '+' : ''}${diff.toFixed(1)}%)${diff < 0 ? ' ' + (currentLang === "pt" ? "⚠ Bonfiglioli abaixo" : "⚠ Bonfiglioli below") : ''}</div>`;
         }
       }
 
       return card;
     }
 
-    // ========== Seta separadora ==========
-    html += `<div style="text-align:center;font-family:var(--mono);font-size:18px;color:var(--ink-faint);margin:18px 0 6px">↓</div>`;
+    resultQ2.innerHTML = html;
 
-    if (sameMatch) {
-      html += getConvergentNote(byTorque.size);
-    }
-
-    // Card por TORQUE
     if (byTorque) {
       const torqueStr = getMarginText(byTorque.margin, byTorque.underspec, false);
-      html += renderBonfCard(byTorque,
+      let htmlQ3 = renderBonfCard(byTorque,
         getCriterionTitle('A'),
         torqueStr + (byTorque.usedRatio && byTorque.usedRatio !== ratioForSearch ? ` · ref. i = ${byTorque.usedRatio}` : ''),
-        'rgba(74,158,255,0.10)', 'var(--brev)', 'A');
+        'rgba(0,75,135,0.08)', 'var(--bonf)', 'A');
+
+      resultQ3.innerHTML = htmlQ3;
+    } else {
+      resultQ3.innerHTML = `<div class="result-empty"><div style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">Sem equivalência por torque</div></div>`;
     }
-    // Card por EIXO
+
     if (byShaft) {
       const diffD = byShaft.D - byShaft.targetD;
       const shaftStr = getShaftMatchText(diffD, byShaft.targetD, byShaft.D);
-      html += renderBonfCard(byShaft,
+      resultQ4.innerHTML = renderBonfCard(byShaft,
         getCriterionTitle('B'),
         shaftStr,
-        'rgba(255,91,31,0.10)', 'var(--bonf)', 'B');
+        'rgba(0,75,135,0.08)', 'var(--bonf)', 'B');
+      syncSpecHeights();
+    } else {
+      resultQ4.innerHTML = `<div class="result-empty"><div style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">Sem equivalência por eixo</div></div>`;
+      syncSpecHeights();
     }
-
-    // Lista de reduções disponíveis (só se nenhuma redução está escolhida)
-    if (!ratio) {
-      const refSize = (byTorque || byShaft).size;
-      const refData = BONFIGLIOLI[refSize];
-      const wantStg = srcStages;
-      html += `<div style="margin-top:18px"><div class="spec-label" style="font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:0.12em;margin-bottom:6px">${getAvailableRatiosLabel(refSize, wantStg, 'BONFIGLIOLI')}</div><div class="ratios">`;
-      Object.keys(refData?.torques || {})
-        .map(Number)
-        .filter(r => {
-          if (!wantStg) return true;
-          const s = refData.torques[r]?.stages;
-          return s == null ? true : s === wantStg;
-        })
-        .sort((a,b)=>a-b)
-        .forEach(r => {
-          html += `<span class="ratio-chip">${r}</span>`;
-        });
-      html += `</div></div>`;
-    }
-
-    resultDirect.innerHTML = html;
   } else if (dir === 'ro2bf') {
     // ============== ROSSI → BONFIGLIOLI ==============
     // Determinar família EL ou EB a partir do modelo selecionado
@@ -2131,7 +2349,7 @@ function renderDirect() {
     const sameMatch = byTorque && byShaft && byTorque.size === byShaft.size;
 
     if (!byTorque && !byShaft) {
-      resultDirect.innerHTML = `<div class="note note-red"><strong>${currentLang === "pt" ? "Sem equivalência" : "No match"}</strong>${currentLang === "pt" ? "Não foi possível encontrar equivalente Bonfiglioli" : "Could not find Bonfiglioli equivalent"} ${currentLang === 'pt' ? 'para' : 'for'} ${srcFull}.</div>`;
+      resultQ2.innerHTML = `<div class="note note-red"><strong>${currentLang === "pt" ? "Sem equivalência" : "No match"}</strong>${currentLang === "pt" ? "Não foi possível encontrar equivalente Bonfiglioli" : "Could not find Bonfiglioli equivalent"} ${currentLang === 'pt' ? 'para' : 'for'} ${srcFull}.</div>`;
       return;
     }
 
@@ -2144,6 +2362,12 @@ function renderDirect() {
     const brevNomLabel = currentLang === 'pt' ? 'T₂ NOMINAL' : 'NOMINAL T₂';
     const brevAtRatioLabel = currentLang === 'pt' ? 'em i' : 'at i';
 
+    const rossiSelectedShaftDim = (() => {
+      if (!selectedShaft || !ROSSI_SHAFT_DETAILS[src]) return null;
+      const d = ROSSI_SHAFT_DETAILS[src].find(x => x.code && x.code.startsWith(selectedShaft));
+      return d ? d.D + 'x' + d.L : null;
+    })();
+
     let html = '';
     const rossiLabel = family === 'EB' ? 'Rossi EP (Bevel)' : 'Rossi EP';
     html += `
@@ -2154,7 +2378,7 @@ function renderDirect() {
       <div class="spec-grid" style="margin-bottom:14px">
         <div class="spec"><div class="spec-label">T₂max</div><div class="spec-value">${fmtNum(m2maxVal)}<span class="unit">Nm</span></div></div>
         ${brevNomT2 != null ? `<div class="spec"><div class="spec-label">${brevNomLabel}<br><span style="font-size:9px;opacity:0.6">${brevAtRatioLabel} = ${brevRefRatio}</span></div><div class="spec-value">${fmtNum(brevNomT2)}<span class="unit">Nm</span></div></div>` : ''}
-        <div class="spec"><div class="spec-label">${currentLang === 'pt' ? 'Eixo Saída' : 'Output shaft'}<br><span style="font-size:9px;opacity:0.6">D × L</span></div><div class="spec-value">${shaftVal || '—'}<span class="unit">mm</span></div></div>
+        <div class="spec"><div class="spec-label">${currentLang === 'pt' ? 'Eixo Saída' : 'Output shaft'}<br><span style="font-size:9px;opacity:0.6">${selectedShaft ? selectedShaft + ' · ' : ''}D × L</span></div><div class="spec-value">${rossiSelectedShaftDim || shaftVal || '—'}<span class="unit">mm</span></div></div>
         <div class="spec"><div class="spec-label">${getRingGearLabel()}</div><div class="spec-value">${coronaVal === 'n.d.' ? '<span title="' + (currentLang === 'pt' ? 'Dado não publicado no catálogo Rossi EP' : 'Not published in Rossi EP catalog') + '" style="opacity:0.6">n.d.</span>' : (coronaVal || '—')}${coronaVal && coronaVal !== 'n.d.' ? '<span class="unit">mm</span>' : ''}</div></div>
       </div>
     `;
@@ -2207,52 +2431,58 @@ function renderDirect() {
       const atRatioLabel = currentLang === 'pt' ? 'em i' : 'at i';
 
       let card = `
-        <div style="margin-top:18px;padding:8px 12px;background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 3px 3px 0">
-          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:${borderColor}">${criterionLabel}</div>
-          <div style="font-family:var(--mono);font-size:10px;opacity:0.7;color:var(--ink-dim);margin-top:2px">${criterionDesc}${isOverridden ? (currentLang === 'pt' ? ' · ajustado manualmente' : ' · manually adjusted') : ''}</div>
-        </div>
+        <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--bonf);font-weight:700;margin-bottom:8px">${currentLang === 'pt' ? '▼ Equivalente · Bonfiglioli' : '▼ Equivalent · Bonfiglioli'}</div>
         <div class="equiv-badge-wrap">
-          <div class="equiv-badge" style="background:rgba(255,91,31,0.06);border-color:rgba(255,91,31,0.3)">
-            <span class="dst">${bonfFullName}</span>
-          </div>
-          <div class="size-nav">
-            <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'up', true)" ${!canGoUp ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Aumentar tamanho' : 'Larger size'}">+</button>
-            <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'down', true)" ${!canGoDown ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Diminuir tamanho' : 'Smaller size'}">−</button>
+          <div class="equiv-badge" style="background:rgba(0,75,135,0.06);border-color:rgba(0,75,135,0.3)">
+            <span class="dst" style="color:var(--bonf)">${bonfFullName}</span>
+            <div class="size-nav">
+              <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'up', true)" ${!canGoUp ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Aumentar tamanho' : 'Larger size'}">+</button>
+              <button class="size-nav-btn" onclick="navigateSize('${criterion}', 'down', true)" ${!canGoDown ? 'disabled' : ''} title="${currentLang === 'pt' ? 'Diminuir tamanho' : 'Smaller size'}">−</button>
+            </div>
           </div>
         </div>
         <div class="spec-grid" style="margin-bottom:12px;margin-top:12px">
           <div class="spec"><div class="spec-label">T₂max</div><div class="spec-value">${fmtNum(bonfData?.m2max)}<span class="unit">Nm</span></div></div>
           ${bonfNomT2 != null ? `<div class="spec"><div class="spec-label">${nomLabel}<br><span style="font-size:9px;opacity:0.6">${atRatioLabel} = ${bonfClosestR || refRatio}</span></div><div class="spec-value">${fmtNum(bonfNomT2)}<span class="unit">Nm</span></div></div>` : ''}
-          <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${getShaftConfigLabel()}</span></div><div class="spec-value">${bonfData?.shaft || '—'}<span class="unit">mm</span></div></div>
+          <div class="spec"><div class="spec-label">${getOutputShaftLabel()}<br><span style="font-size:9px;opacity:0.6">${bonfShaftCode ? bonfShaftCode + ' · ' : ''}${getShaftConfigLabel()}</span></div><div class="spec-value">${(bonfShaftCode ? getBonfShaftDim(bSize, bonfShaftCode) : null) || bonfData?.shaft || '—'}<span class="unit">mm</span></div></div>
           <div class="spec"><div class="spec-label">${getRingGearLabel()}</div><div class="spec-value">${bonfData?.corona || '—'}<span class="unit">mm</span></div></div>
+        </div>
+        <div style="margin-top:auto;padding:14px 20px;background:${bgColor};border-left:3px solid ${borderColor};border-radius:0 3px 3px 0">
+          <div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:${borderColor}">${criterionLabel}</div>
+          <div style="font-family:var(--mono);font-size:10px;opacity:0.7;color:var(--ink-dim);margin-top:2px">${criterionDesc}${isOverridden ? (currentLang === 'pt' ? ' · ajustado manualmente' : ' · manually adjusted') : ''}</div>
         </div>
       `;
       return card;
     }
 
-    html += `<div style="text-align:center;font-family:var(--mono);font-size:18px;color:var(--ink-faint);margin:18px 0 6px">↓</div>`;
-    if (sameMatch) html += getConvergentNote(byTorque.size);
+    resultQ2.innerHTML = html;
 
     if (byTorque) {
       const torqueStr = byTorque.underspec
         ? (currentLang === 'pt' ? '⚠ Nenhum Bonfiglioli atende — maior disponível' : '⚠ No Bonfiglioli matches — largest available')
-        : (currentLang === 'pt' 
+        : (currentLang === 'pt'
             ? `Margem +${(byTorque.margin*100).toFixed(0)}% acima do T₂ Rossi`
             : `Margin +${(byTorque.margin*100).toFixed(0)}% above Rossi T₂`);
-      html += renderBonfCardR(byTorque,
+      resultQ3.innerHTML = renderBonfCardR(byTorque,
         getCriterionTitle('A'),
         torqueStr + (byTorque.usedRatio && byTorque.usedRatio !== ratioForSearch ? ` · ref. i = ${byTorque.usedRatio}` : ''),
-        'rgba(255,91,31,0.10)', 'var(--bonf)', 'A');
+        'rgba(0,75,135,0.08)', 'var(--bonf)', 'A');
+    } else {
+      resultQ3.innerHTML = `<div class="result-empty"><div style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">Sem equivalência por torque</div></div>`;
     }
+
     if (byShaft) {
       const diffD = byShaft.D - byShaft.targetD;
       const shaftStr = getShaftMatchText(diffD, byShaft.targetD, byShaft.D);
-      html += renderBonfCardR(byShaft,
+      resultQ4.innerHTML = renderBonfCardR(byShaft,
         getCriterionTitle('B'),
         shaftStr,
-        'rgba(110,185,90,0.10)', 'var(--rossi)', 'B');
+        'rgba(0,75,135,0.08)', 'var(--bonf)', 'B');
+      syncSpecHeights();
+    } else {
+      resultQ4.innerHTML = `<div class="result-empty"><div style="font-family:var(--mono);font-size:11px;color:var(--ink-faint)">Sem equivalência por eixo</div></div>`;
+      syncSpecHeights();
     }
-    resultDirect.innerHTML = html;
 
   }
 }
@@ -2971,7 +3201,51 @@ th.bonf { background: #ffeadf; color: #c64717; }
 .footer { position: fixed; bottom: 10mm; left: 16mm; right: 16mm; display: flex; justify-content: space-between; font-size: 8pt; color: #999; border-top: 1px solid #ddd; padding-top: 6px; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
 .note-small { font-size: 8.5pt; color: #666; font-style: italic; margin-top: 4px; }
 .btn-print { background: #ff5b1f; color: white; border: none; padding: 12px 28px; font-size: 12pt; font-weight: 700; cursor: pointer; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.08em; margin: 20px auto; display: block; }
-@media print { .btn-print { display: none; } body { font-size: 10pt; } }
+@media print {
+  @page { size: A4 landscape; margin: 8mm 10mm; }
+
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box !important; }
+  html, body { overflow: hidden !important; }
+
+  /* Ocultar tudo */
+  header, nav.tabs, .btn-print-wrap, footer,
+  #panel-table, .hint, .field, .size-nav,
+  #result-direct, .grid-4q > .card:first-child { display: none !important; }
+
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  .wrap { padding: 0 !important; max-width: 100% !important; }
+
+  /* Cabeçalho de impressão */
+  #print-header { display: flex !important; margin-bottom: 4mm !important; padding-bottom: 3mm !important; border-bottom: 1.5px solid #004B87 !important; }
+
+  section.panel { display: block !important; padding: 0 !important; }
+  #panel-direct { display: block !important; }
+
+  /* Grid 3 colunas */
+  .grid-4q {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4mm !important;
+    min-height: unset !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .card { break-inside: avoid !important; box-shadow: none !important; border: 1px solid #DCE1E8 !important; }
+  .card-header { padding: 4px 10px !important; }
+  .card-header h2 { font-size: 6.5pt !important; }
+  .card-body { padding: 0 !important; }
+  .result { min-height: unset !important; padding: 6px 8px !important; border: none !important; background: #F2F4F7 !important; }
+  .equiv-badge { padding: 6px 10px !important; margin-bottom: 5px !important; min-height: unset !important; }
+  .equiv-badge .dst { font-size: 11pt !important; }
+  .equiv-badge-wrap { margin-top: 4px !important; }
+  .spec-grid { gap: 1px !important; margin: 4px 0 !important; }
+  .spec { padding: 4px 8px !important; min-height: unset !important; }
+  .spec-label { font-size: 6pt !important; margin-bottom: 2px !important; }
+  .spec-value { font-size: 10pt !important; }
+  .spec-value .unit { font-size: 7pt !important; }
+  .note { font-size: 6pt !important; padding: 4px 8px !important; margin-top: 3px !important; }
+}
 </style>
 </head><body>
 
