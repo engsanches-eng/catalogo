@@ -2860,13 +2860,12 @@ function findBonfByTorqueR(rossiModel, ratio, family) {
     return { ...best, underspec: true, targetT2 };
   }
 
-  // Ordenar: 1º menor margem de torque (menor redutor que atende), 2º ratioDiff como desempate
+  // Ordenar: menor margem positiva vence (menor redutor que atende o torque)
+  // ratioDiff só desempata quando as margens são praticamente iguais (< 5%)
   candidates.sort((a, b) => {
-    // Se as margens são muito diferentes (>30%), priorizar menor margem (menor redutor)
     const marginDiff = Math.abs(a.margin - b.margin);
-    if (marginDiff > 0.30) return a.margin - b.margin;
-    // Margens similares: desempatar pela redução mais próxima
-    return a.ratioDiff - b.ratioDiff;
+    if (marginDiff < 0.05) return a.ratioDiff - b.ratioDiff;
+    return a.margin - b.margin;
   });
   const result = { ...candidates[0], targetT2 };
   if (ratio != null && result.ratioDiff > 50) result.ratioWarning = true;
@@ -3112,11 +3111,12 @@ function findBonfByTorque(brevModel, ratio) {
     return { ...best, underspec: true, targetT2 };
   }
 
-  // Ordenar: 1º menor margem de torque (menor redutor que atende), 2º ratioDiff como desempate
+  // Ordenar: menor margem positiva vence (menor redutor que atende o torque)
+  // ratioDiff só desempata quando as margens são praticamente iguais (< 5%)
   candidates.sort((a, b) => {
     const marginDiff = Math.abs(a.margin - b.margin);
-    if (marginDiff > 0.30) return a.margin - b.margin;
-    return a.ratioDiff - b.ratioDiff;
+    if (marginDiff < 0.05) return a.ratioDiff - b.ratioDiff; // margens quase iguais: desempatar por redução
+    return a.margin - b.margin; // sempre: menor margem ganha
   });
   const result = { ...candidates[0], targetT2 };
   if (ratio != null && result.ratioDiff > 50) result.ratioWarning = true;
