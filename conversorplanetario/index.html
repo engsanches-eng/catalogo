@@ -702,9 +702,8 @@ footer a:hover { color: var(--accent); }
   <div class="btn-print-wrap" style="flex-shrink:0">
     <button onclick="imprimirResultado()" title="Imprimir / Salvar como PDF" style="background:#fff;border:1px solid var(--border);color:var(--ink);padding:8px 10px;cursor:pointer;border-radius:4px;box-shadow:0 1px 3px rgba(0,40,80,0.05);transition:all 0.15s;display:flex;align-items:center;flex-shrink:0" onmouseover="this.style.borderColor='var(--cyan)';this.style.boxShadow='0 0 0 3px rgba(0,121,193,0.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='0 1px 3px rgba(0,40,80,0.05)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
   </div>
-  <button class="lang-btn" onclick="toggleLanguage()">
-    <span class="flag">🇧🇷</span>
-    <span class="lang-text">PT</span>
+  <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">
+    <span id="lang-text" style="font-weight:700;letter-spacing:0.05em;font-family:var(--mono)">PT</span>
   </button>
 </header>
 
@@ -1178,9 +1177,7 @@ function toggleLanguage() {
   // Update language button
   const btn = document.querySelector('.lang-btn');
   if (btn) {
-    const flag = btn.querySelector('.flag');
-    const langText = btn.querySelector('.lang-text');
-    if (flag) flag.textContent = currentLang === 'pt' ? '🇧🇷' : '🇺🇸';
+    const langText = document.getElementById('lang-text');
     if (langText) langText.textContent = currentLang === 'pt' ? 'PT' : 'EN';
   }
   
