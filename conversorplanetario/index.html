@@ -702,8 +702,17 @@ footer a:hover { color: var(--accent); }
   <div class="btn-print-wrap" style="flex-shrink:0">
     <button onclick="imprimirResultado()" title="Imprimir / Salvar como PDF" style="background:#fff;border:1px solid var(--border);color:var(--ink);padding:8px 10px;cursor:pointer;border-radius:4px;box-shadow:0 1px 3px rgba(0,40,80,0.05);transition:all 0.15s;display:flex;align-items:center;flex-shrink:0" onmouseover="this.style.borderColor='var(--cyan)';this.style.boxShadow='0 0 0 3px rgba(0,121,193,0.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='0 1px 3px rgba(0,40,80,0.05)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
   </div>
-  <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">
-    <span id="lang-text" style="font-weight:700;letter-spacing:0.05em;font-family:var(--mono)">PT</span>
+  <button class="lang-btn" onclick="toggleLanguage()" id="langBtn" title="Mudar idioma / Change language">
+    <span id="lang-flag" style="display:inline-flex;align-items:center;width:22px;height:16px;border-radius:2px;overflow:hidden;flex-shrink:0">
+      <svg id="flag-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 16" width="22" height="16">
+        <!-- Bandeira Brasil -->
+        <rect width="22" height="16" fill="#009c3b"/>
+        <polygon points="11,1.5 20.5,8 11,14.5 1.5,8" fill="#fedf00"/>
+        <circle cx="11" cy="8" r="3.2" fill="#002776"/>
+        <path d="M8,7.5 Q11,5.8 14,7.5" stroke="white" stroke-width="0.7" fill="none"/>
+      </svg>
+    </span>
+    <span id="lang-text" style="font-weight:700;letter-spacing:0.05em;font-family:var(--mono);font-size:12px">PT</span>
   </button>
 </header>
 
@@ -1179,6 +1188,29 @@ function toggleLanguage() {
   if (btn) {
     const langText = document.getElementById('lang-text');
     if (langText) langText.textContent = currentLang === 'pt' ? 'PT' : 'EN';
+    const flagSvg = document.getElementById('flag-svg');
+    if (flagSvg) {
+      if (currentLang === 'pt') {
+        // Bandeira Brasil
+        flagSvg.innerHTML = `
+          <rect width="22" height="16" fill="#009c3b"/>
+          <polygon points="11,1.5 20.5,8 11,14.5 1.5,8" fill="#fedf00"/>
+          <circle cx="11" cy="8" r="3.2" fill="#002776"/>
+          <path d="M8,7.5 Q11,5.8 14,7.5" stroke="white" stroke-width="0.7" fill="none"/>`;
+      } else {
+        // Bandeira EUA
+        flagSvg.innerHTML = `
+          <rect width="22" height="16" fill="#B22234"/>
+          <rect y="1.23" width="22" height="1.23" fill="white"/>
+          <rect y="3.69" width="22" height="1.23" fill="white"/>
+          <rect y="6.15" width="22" height="1.23" fill="white"/>
+          <rect y="8.62" width="22" height="1.23" fill="white"/>
+          <rect y="11.08" width="22" height="1.23" fill="white"/>
+          <rect y="13.54" width="22" height="1.23" fill="white"/>
+          <rect width="8.8" height="8.62" fill="#3C3B6E"/>
+          ${Array.from({length:5},(_,r)=>Array.from({length:r%2===0?6:5},(_,c)=>`<circle cx="${r%2===0?0.73+c*1.47:1.47+c*1.47}" cy="${0.86+r*1.72}" r="0.5" fill="white"/>`).join('')).join('')}`;
+      }
+    }
   }
   
   // Update document title
@@ -1374,6 +1406,8 @@ function getSeriesLabel() {
 
 function getOutputShaftLabel(shaftCode) {
   if (!shaftCode) return currentLang === 'pt' ? 'Eixo Saída' : 'Output shaft';
+  // Rossi usa códigos longos (H180M1) — usar só a 1ª letra para lookup
+  const key = shaftCode.length > 3 ? shaftCode.charAt(0) : shaftCode;
   const labels = {
     // Bonfiglioli
     MC:  currentLang === 'pt' ? 'Eixo Saída Sólido c/ Chaveta'         : 'Solid Keyed Output Shaft',
@@ -1404,11 +1438,12 @@ function getOutputShaftLabel(shaftCode) {
     M:   currentLang === 'pt' ? 'Eixo Saída Flangeado'                 : 'Flanged Output Shaft',
     T:   currentLang === 'pt' ? 'Saída Flange c/ Eixo'                 : 'Flange Output with Shaft',
   };
-  return labels[shaftCode] || (currentLang === 'pt' ? 'Eixo Saída' : 'Output shaft');
+  return labels[key] || (currentLang === 'pt' ? 'Eixo Saída' : 'Output shaft');
 }
 
 function getShaftConfigLabel(shaftCode) {
   if (!shaftCode) return 'MC/HC ou MR/MR1';
+  const key = shaftCode.length > 3 ? shaftCode.charAt(0) : shaftCode;
   const norms = {
     // Bonfiglioli
     MC: 'DIN 748 · MC',   HC: 'DIN 748 · HC',
@@ -1426,7 +1461,7 @@ function getShaftConfigLabel(shaftCode) {
     K: 'DIN 748 · K',   Z: 'DIN 5480 · Z',
     H: 'ISO 286 · H',   M: 'M',   T: 'T',
   };
-  return norms[shaftCode] || shaftCode;
+  return norms[key] || key;
 }
 
 function getRingGearLabel() {
@@ -2795,15 +2830,16 @@ function findBonfByTorqueR(rossiModel, ratio, family) {
     return { ...best, underspec: true, targetT2 };
   }
 
-  // Ordenar: 1º por ratioDiff (redução mais próxima primeiro), 2º por menor margem de torque
+  // Ordenar: 1º menor margem de torque (menor redutor que atende), 2º ratioDiff como desempate
   candidates.sort((a, b) => {
-    // Se as diferenças de redução são muito distintas (>20%), priorizar a mais próxima
-    if (Math.abs(a.ratioDiff - b.ratioDiff) > 10) return a.ratioDiff - b.ratioDiff;
-    // Se ratioDiff semelhante, priorizar menor margem de torque (mais eficiente)
-    return a.margin - b.margin;
+    // Se as margens são muito diferentes (>30%), priorizar menor margem (menor redutor)
+    const marginDiff = Math.abs(a.margin - b.margin);
+    if (marginDiff > 0.30) return a.margin - b.margin;
+    // Margens similares: desempatar pela redução mais próxima
+    return a.ratioDiff - b.ratioDiff;
   });
   const result = { ...candidates[0], targetT2 };
-  if (ratio != null && result.ratioDiff > 20) result.ratioWarning = true;
+  if (ratio != null && result.ratioDiff > 50) result.ratioWarning = true;
   return result;
 }
 
@@ -2815,13 +2851,15 @@ function findBonfByShaftR(rossiModel, family, selectedShaft) {
   const SHAFT_MAP_ROSSI_TO_BONF = {
     'C': 'MC', 'S': 'MZ', 'K': 'MC', 'Z': 'FZ', 'H': 'FP', 'M': 'MC', 'T': 'MC',
   };
-  const bonfShaftCode = selectedShaft && SHAFT_MAP_ROSSI_TO_BONF[selectedShaft]
-    ? SHAFT_MAP_ROSSI_TO_BONF[selectedShaft] : null;
+  // selectedShaft pode ser código completo (ex: 'H180M1') — extrair só a 1ª letra
+  const shaftLetter = selectedShaft ? selectedShaft.charAt(0) : null;
+  const bonfShaftCode = shaftLetter && SHAFT_MAP_ROSSI_TO_BONF[shaftLetter]
+    ? SHAFT_MAP_ROSSI_TO_BONF[shaftLetter] : null;
 
   // Diâmetro alvo: usa eixo selecionado se disponível
   let targetD;
   if (selectedShaft && ROSSI_SHAFT_DETAILS[rossiModel]) {
-    const detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code && d.code.startsWith(selectedShaft));
+    const detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code === selectedShaft || d.code.startsWith(shaftLetter));
     if (detail && detail.D) targetD = detail.D;
   }
   if (!targetD) {
@@ -3044,13 +3082,14 @@ function findBonfByTorque(brevModel, ratio) {
     return { ...best, underspec: true, targetT2 };
   }
 
-  // Ordenar: 1º por ratioDiff (redução mais próxima), 2º por menor margem de torque
+  // Ordenar: 1º menor margem de torque (menor redutor que atende), 2º ratioDiff como desempate
   candidates.sort((a, b) => {
-    if (Math.abs(a.ratioDiff - b.ratioDiff) > 10) return a.ratioDiff - b.ratioDiff;
-    return a.margin - b.margin;
+    const marginDiff = Math.abs(a.margin - b.margin);
+    if (marginDiff > 0.30) return a.margin - b.margin;
+    return a.ratioDiff - b.ratioDiff;
   });
   const result = { ...candidates[0], targetT2 };
-  if (ratio != null && result.ratioDiff > 20) result.ratioWarning = true;
+  if (ratio != null && result.ratioDiff > 50) result.ratioWarning = true;
   return result;
 }
 
