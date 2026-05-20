@@ -1096,11 +1096,17 @@ function imprimirResultado() {
 
   // Info do modelo selecionado
   const modelVal = parseModelValue(document.getElementById('model-src').value);
+  const isPt = currentLang === 'pt';
   const dirLabel = directionSel.value === 'br2bf'
-    ? 'Brevini → Bonfiglioli Série 300M'
-    : 'Rossi EP → Bonfiglioli Série 300M';
+    ? (isPt ? 'Brevini → Bonfiglioli Série 300M' : 'Brevini → Bonfiglioli 300M Series')
+    : (isPt ? 'Rossi EP → Bonfiglioli Série 300M' : 'Rossi EP → Bonfiglioli 300M Series');
   const modelName = modelVal ? (modelVal.full || modelVal.key) : '—';
-  const dateStr = new Date().toLocaleDateString(currentLang === 'pt' ? 'pt-BR' : 'en-US');
+  const dateStr = new Date().toLocaleDateString(isPt ? 'pt-BR' : 'en-AU');
+  const phTitle = isPt ? 'Redutor Planetário · Conversor' : 'Planetary Gearbox · Converter';
+  const phSub = isPt
+    ? 'Brevini (E/S) · Rossi EP ↔ Bonfiglioli Série 300M · Catálogo CT-0606 · CT-3206 · 300M · n₁ = 1500 rpm'
+    : 'Brevini (E/S) · Rossi EP ↔ Bonfiglioli 300M Series · Catalog CT-0606 · CT-3206 · 300M · n₁ = 1500 rpm';
+  const phModelLabel = isPt ? 'Modelo:' : 'Model:';
 
   const css = `
     @page { size: A4 landscape; margin: 8mm 10mm; }
@@ -1164,12 +1170,12 @@ function imprimirResultado() {
   </head><body>
     <div class="ph">
       <div>
-        <div class="ph-title">Redutor Planetário · Conversor</div>
-        <div class="ph-sub">Brevini (E/S) · Rossi EP ↔ Bonfiglioli Série 300M · Catálogo CT-0606 · CT-3206 · 300M · n₁ = 1500 rpm</div>
+        <div class="ph-title">${phTitle}</div>
+        <div class="ph-sub">${phSub}</div>
       </div>
       <div class="ph-meta">
         <div>${dirLabel}</div>
-        <div>Modelo: <strong>${modelName}</strong></div>
+        <div>${phModelLabel} <strong>${modelName}</strong></div>
         <div>${dateStr}</div>
       </div>
     </div>
