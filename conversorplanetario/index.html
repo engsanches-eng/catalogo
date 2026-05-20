@@ -817,7 +817,11 @@ const translations = {
     tab2: '02 Tabela de Equivalência',
     // Form section
     sectionInput: 'Entrada',
-    sectionResult: 'Resultado Equivalente',
+    sectionResult: 'Modelo de Origem',
+    sectionEquivTorque: 'Equiv. por Torque',
+    sectionEquivShaft: 'Equiv. por Eixo',
+    criterionA: 'Critério A',
+    criterionB: 'Critério B',
     tagBrevini: 'Brevini',
     tagBonfiglioli: 'Bonfiglioli 300M',
     directionLabel: 'Direção da Conversão',
@@ -884,7 +888,11 @@ const translations = {
     tab2: '02 Equivalence Table',
     // Form section
     sectionInput: 'Input',
-    sectionResult: 'Equivalent Result',
+    sectionResult: 'Source Model',
+    sectionEquivTorque: 'Equiv. by Torque',
+    sectionEquivShaft: 'Equiv. by Shaft',
+    criterionA: 'Criterion A',
+    criterionB: 'Criterion B',
     tagBrevini: 'Brevini',
     tagBonfiglioli: 'Bonfiglioli 300M',
     directionLabel: 'Conversion Direction',
@@ -1237,6 +1245,13 @@ function toggleLanguage() {
   const cardHeaders = document.querySelectorAll('.card-header h2');
   if (cardHeaders[0]) cardHeaders[0].textContent = t.sectionInput;
   if (cardHeaders[1]) cardHeaders[1].textContent = t.sectionResult;
+  if (cardHeaders[2]) cardHeaders[2].textContent = t.sectionEquivTorque;
+  if (cardHeaders[3]) cardHeaders[3].textContent = t.sectionEquivShaft;
+
+  // Update criteria tags (Critério A / Critério B)
+  const critTags = document.querySelectorAll('.tag.tag-bonf');
+  if (critTags[0]) critTags[0].textContent = t.criterionA;
+  if (critTags[1]) critTags[1].textContent = t.criterionB;
   
   // Update tags
   const tags = document.querySelectorAll('.tag');
