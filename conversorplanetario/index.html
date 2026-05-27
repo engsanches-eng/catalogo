@@ -1712,9 +1712,15 @@ function parseShaft(s) {
   // Formato eixo oco/sólido simples: "AxB" (Ø x comprimento)
   const m = s.match(/^(\d+(?:\.\d+)?)\s*[xX×]\s*(\d+(?:\.\d+)?)$/);
   if (m) return { D: parseFloat(m[1]), L: parseFloat(m[2]) };
-  // Formato estriado DIN 5480/5482: "AxMxZ DIN5480" ou "AxMxZxFf DIN5480" — Ø nominal = primeiro número
+  // Estriado DIN com prefixo de letra (N/W/A/B): "B58x53 DIN5482", "N220x5 DIN5480" — Ø = nº após a letra
+  const din2 = s.match(/^[A-Za-z](\d+(?:\.\d+)?)\s*[xX×]/);
+  if (din2 && /DIN/i.test(s)) return { D: parseFloat(din2[1]), L: null, spline: s };
+  // Estriado DIN sem letra: "210x5x40 DIN5480" — Ø nominal = primeiro número
   const din = s.match(/^(\d+(?:\.\d+)?)\s*[xX×]\s*\d/);
   if (din && /DIN/i.test(s)) return { D: parseFloat(din[1]), L: null, spline: s };
+  // Eixo sólido c/ chaveta no formato só-Ø com tolerância: "250 m6", "60 h6", "180"
+  const solid = s.match(/^(\d+(?:\.\d+)?)(?:\s*[a-zA-Z]\d+)?\*?$/);
+  if (solid) return { D: parseFloat(solid[1]), L: null };
   return null;
 }
 
@@ -1814,6 +1820,7 @@ const BREV_OUTPUTS = [
   { code: 'MR',  descPT: 'Eixo estriado', descEN: 'Splined shaft' },
   { code: 'MR1', descPT: 'Eixo estriado reforçado', descEN: 'Heavy duty splined shaft' },
   { code: 'FE',  descPT: 'Flange + eixo oco estriado', descEN: 'Flange + female splined hollow shaft' },
+  { code: 'FAR', descPT: 'Eixo oco estriado pendular/flangeado (FAR)', descEN: 'Pendular/flanged splined hollow shaft (FAR)' },
   { code: 'FS',  descPT: 'Eixo oco para disco de contração (shrink disc)', descEN: 'Hollow shaft for shrink disc' },
 ];
 // Configurações de saída Bonfiglioli (conforme catálogo 300M)
@@ -1852,28 +1859,32 @@ const BONF_OUTPUTS = [
 // FP (oco p/ disco de contração) = Ø do furo (coluna B, linhas 11244-11262).
 // MZ/HZ (estriado macho) NÃO constam separadamente no catálogo consultado — aproximados ao sólido.
 const BONF_SHAFT_DIM = {
-  '300':  { MC:'35x64',   MZ:'35x64',   HC:'35x64',   HZ:'35x64',   FP:'42',  FZ:'40x36 DIN5482'  },
-  '301':  { MC:'35x64',   MZ:'35x64',   HC:'35x64',   HZ:'35x64',   FP:'52',  FZ:'40x36 DIN5482'  },
-  '303':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'  },
-  '304':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'  },
-  '305':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'  },
-  '306':  { MC:'80x116',  MZ:'80x116',  HC:'80x116',  HZ:'80x116',  FP:'90',  FZ:'58x53 DIN5482'  },
-  '307':  { MC:'90x141',  MZ:'90x141',  HC:'90x141',  HZ:'90x141',  FP:'100', FZ:'58x53 DIN5482'  },
-  '309':  { HC:'120x128', HZ:'120x128', FP:'120',     FZ:'80x74 DIN5482'  },
-  '310M': { HC:'130x138', HZ:'130x138', FP:'130',     FZ:'80x74 DIN5482'  },
-  // 311M-325: valores lidos VISUALMENTE dos desenhos dimensionais do catálogo 300M.pdf (PDF com imagem),
-  // página de cada modelo (quadro HC/HZ/FZ/FP/FZP). FZ = oco estriado; FZP = oco estriado p/ disco; HZ = estriado macho.
-  '311M': { HC:'140x?',      HZ:'120x3 DIN5480',  FP:'135',  FZ:'120x3 DIN5480',  FZP:'120x3x38 DIN5480' },
-  '313M': { HC:'140x? m6',   HZ:'120x3 DIN5480',  FP:'140',  FZ:'120x3 DIN5480',  FZP:'140x5x26 DIN5480' },
-  '314M': { HC:'160x? m6',   HZ:'150x5 DIN5480',  FP:'180',  FZ:'150x5 DIN5480',  FZP:'150x5x28 DIN5480' },
-  '315M': { HC:'160x? m6',   HZ:'150x5 DIN5480',  FP:'180',  FZ:'150x5 DIN5480',  FZP:'150x5x28 DIN5480' },
-  '316M': { HC:'180x?',      HZ:'170x6 DIN5480',  FP:'240',  FZ:'170x6 DIN5480',  FZP:'170x5x32 DIN5480' },
-  '317M': { HC:'200x? r6',   HZ:'200x5 DIN5480',  FP:'200',  FZ:'200x5 DIN5480',  FZP:'200x5x38 DIN5480' },
-  '318M': { HC:'150x? m6',   HZ:'220x5 DIN5480',  FP:'220',  FZ:'220x5 DIN5480',  FZP:'210x5x40 DIN5480' },
-  '319':  { HC:'280x? h6',   HZ:'260x5 DIN5480',  FP:'280',  FZ:'260x5 DIN5480',  FZP:'260x5x50 DIN5480' },
-  '321':  { HC:'340x? m6',   HZ:'300x8 DIN5480',  FP:'320',  FZ:'300x8 DIN5480',  FZP:'300x8x36 DIN5480' },
-  '323':  { HC:'410x?',      HZ:'400x8 DIN5480',  FP:'410',  FZ:'400x8 DIN5480',  FZP:'400x8x48 DIN5480' },
-  '325':  { HC:'450x?',      HZ:'450x8 DIN5480',  FP:'450',  FZ:'450x8 DIN5480',  FZP:'450x8x55 DIN5480' },
+  // 300-307: tamanhos pequenos — têm MC/MZ (sólido normal) E HC/HZ (heavy). Lidos dos desenhos 300M.pdf.
+  //   MC/HC = sólido c/ chaveta (Ø h6); MZ/HZ = sólido estriado macho (B..DIN5482); FZ oco = A..DIN5482.
+  //   300/301/303/304 não confirmados visualmente (quadro não lido) — valores marcados (*).
+  '300':  { MC:'35*',     MZ:'40x36 DIN5482*', FP:'42',  FZ:'40x36 DIN5482'  },
+  '301':  { MC:'35*',     MZ:'40x36 DIN5482*', FP:'52',  FZ:'40x36 DIN5482'  },
+  '303':  { MC:'60 h6*',  MZ:'58x53 DIN5482*', FP:'75',  FZ:'58x53 DIN5482'  },
+  '304':  { MC:'60 h6*',  MZ:'58x53 DIN5482*', FP:'75',  FZ:'58x53 DIN5482'  },
+  '305':  { MC:'60 h6', MZ:'58x53 DIN5482', HC:'60 h6', HZ:'58x53 DIN5482', FP:'75', FZ:'58x53 DIN5482' },
+  '306':  { MC:'80 h6', MZ:'70x64 DIN5482', HC:'80 h6', HZ:'70x64 DIN5482', FP:'90', FZ:'70x64 DIN5482' },
+  '307':  { MC:'90 h6', MZ:'80x74 DIN5482', HC:'90 h6', HZ:'80x74 DIN5482', FP:'100', FZ:'80x74 DIN5482' },
+  '309':  { HC:'120 h6*', HZ:'80x74 DIN5482*', FP:'120', FZ:'80x74 DIN5482' },
+  '310M': { HC:'130*',    HZ:'80x74 DIN5482*', FP:'130', FZ:'80x74 DIN5482' },
+  // 311M-325: lidos VISUALMENTE dos desenhos do 300M.pdf. Estes tamanhos têm HC/HZ (heavy duty),
+  // NÃO têm MC/MZ. HC = sólido c/ chaveta (Ø m6/h6); HZ = sólido estriado macho (W..DIN5480);
+  // FZ = oco estriado; FZP = oco estriado c/ disco; FP = oco p/ disco de contração.
+  '311M': { HC:'140 m6',  HZ:'120x3 DIN5480',  FP:'135',  FZ:'120x3 DIN5480',  FZP:'120x3x38 DIN5480' },
+  '313M': { HC:'140 m6',  HZ:'120x3 DIN5480',  FP:'140',  FZ:'120x3 DIN5480',  FZP:'140x5x26 DIN5480' },
+  '314M': { HC:'160 m6',  HZ:'150x5 DIN5480',  FP:'180',  FZ:'150x5 DIN5480',  FZP:'150x5x28 DIN5480' },
+  '315M': { HC:'160 m6',  HZ:'150x5 DIN5480',  FP:'180',  FZ:'150x5 DIN5480',  FZP:'150x5x28 DIN5480' },
+  '316M': { HC:'180',     HZ:'170x6 DIN5480',  FP:'240',  FZ:'170x6 DIN5480',  FZP:'170x5x32 DIN5480' },
+  '317M': { HC:'200 r6',  HZ:'200x5 DIN5480',  FP:'200',  FZ:'200x5 DIN5480',  FZP:'200x5x38 DIN5480' },
+  '318M': { HC:'250 m6',  HZ:'220x5 DIN5480',  FP:'220',  FZ:'220x5 DIN5480',  FZP:'210x5x40 DIN5480' },
+  '319':  { HC:'280 h6',  HZ:'260x5 DIN5480',  FP:'280',  FZ:'260x5 DIN5480',  FZP:'260x5x50 DIN5480' },
+  '321':  { HC:'340 m6',  HZ:'300x8 DIN5480',  FP:'320',  FZ:'300x8 DIN5480',  FZP:'300x8x36 DIN5480' },
+  '323':  { HC:'410',     HZ:'400x8 DIN5480',  FP:'410',  FZ:'400x8 DIN5480',  FZP:'400x8x48 DIN5480' },
+  '325':  { HC:'450',     HZ:'450x8 DIN5480',  FP:'450',  FZ:'450x8 DIN5480',  FZP:'450x8x55 DIN5480' },
 };
 // Bonfiglioli 300M Série R (Right-Angle) — dados a n1=1500 rpm — 17 tamanhos, 427 entradas
 const BONFIGLIOLI_R = {"314MR":{"torques":{"51.1":{"t2":39100.0,"stages":3},"82.3":{"t2":54400.0,"stages":3},"97.6":{"t2":57300.0,"stages":3},"65.5":{"t2":50200.0,"stages":3},"77.8":{"t2":52500.0,"stages":3},"113.0":{"t2":47400.0,"stages":3},"70.7":{"t2":49400.0,"stages":3},"90.7":{"t2":61300.0,"stages":3},"108.0":{"t2":55800.0,"stages":3},"114.0":{"t2":58300.0,"stages":3},"135.0":{"t2":59100.0,"stages":3},"157.0":{"t2":47400.0,"stages":3},"160.0":{"t2":26700.0,"stages":4},"189.0":{"t2":31500.0,"stages":4},"238.0":{"t2":39600.0,"stages":4},"276.0":{"t2":46000.0,"stages":4},"354.0":{"t2":59000.0,"stages":4},"421.0":{"t2":68500.0,"stages":4},"614.0":{"t2":54200.0,"stages":4}},"m2max":68500.0,"shaft":"160x240","corona":"480"},"300R":{"torques":{"7.13":{"t2":580.0,"stages":2},"8.74":{"t2":610.0,"stages":2},"11.8":{"t2":590.0,"stages":2},"14.8":{"t2":510.0,"stages":2},"18.5":{"t2":370.0,"stages":2},"24.8":{"t2":730.0,"stages":3},"30.4":{"t2":840.0,"stages":3},"37.3":{"t2":840.0,"stages":3},"41.2":{"t2":650.0,"stages":3},"50.4":{"t2":850.0,"stages":3},"62.9":{"t2":850.0,"stages":3},"68.2":{"t2":650.0,"stages":3},"106.0":{"t2":860.0,"stages":4},"133.0":{"t2":550.0,"stages":3},"130.0":{"t2":860.0,"stages":4},"143.0":{"t2":650.0,"stages":4},"159.0":{"t2":870.0,"stages":4},"175.0":{"t2":880.0,"stages":4},"215.0":{"t2":910.0,"stages":4},"237.0":{"t2":650.0,"stages":4},"268.0":{"t2":930.0,"stages":4},"291.0":{"t2":950.0,"stages":4},"363.0":{"t2":980.0,"stages":4},"394.0":{"t2":680.0,"stages":4},"453.0":{"t2":1020.0,"stages":4},"491.0":{"t2":710.0,"stages":4},"613.0":{"t2":730.0,"stages":4},"766.0":{"t2":760.0,"stages":4}},"m2max":1020.0,"shaft":"50x82","corona":"183"},"301R":{"torques":{"7.13":{"t2":1040.0,"stages":2},"8.74":{"t2":1090.0,"stages":2},"11.8":{"t2":1250.0,"stages":2},"14.8":{"t2":1050.0,"stages":2},"18.5":{"t2":740.0,"stages":2},"24.8":{"t2":1430.0,"stages":3},"30.4":{"t2":1620.0,"stages":3},"37.3":{"t2":1640.0,"stages":3},"41.2":{"t2":1300.0,"stages":3},"50.4":{"t2":1660.0,"stages":3},"62.9":{"t2":1690.0,"stages":3},"68.2":{"t2":1300.0,"stages":3},"78.7":{"t2":1590.0,"stages":3},"85.2":{"t2":1300.0,"stages":3},"106.0":{"t2":1740.0,"stages":4},"133.0":{"t2":1150.0,"stages":3},"130.0":{"t2":1790.0,"stages":4},"143.0":{"t2":1300.0,"stages":4},"159.0":{"t2":1840.0,"stages":4},"175.0":{"t2":1870.0,"stages":4},"215.0":{"t2":1920.0,"stages":4},"237.0":{"t2":1340.0,"stages":4},"268.0":{"t2":2000.0,"stages":4},"291.0":{"t2":2030.0,"stages":4},"363.0":{"t2":2100.0,"stages":4},"394.0":{"t2":1460.0,"stages":4},"453.0":{"t2":2000.0,"stages":4},"491.0":{"t2":1510.0,"stages":4},"613.0":{"t2":1580.0,"stages":4},"766.0":{"t2":1640.0,"stages":4}},"m2max":2100.0,"shaft":"50x82","corona":"183"},"303R":{"torques":{"9.23":{"t2":1680.0,"stages":2},"10.9":{"t2":1900.0,"stages":2},"13.7":{"t2":1970.0,"stages":2},"15.9":{"t2":1820.0,"stages":2},"19.2":{"t2":1550.0,"stages":2},"24.8":{"t2":860.0,"stages":2},"25.7":{"t2":2030.0,"stages":3},"31.5":{"t2":2110.0,"stages":3},"37.1":{"t2":2390.0,"stages":3},"42.6":{"t2":2070.0,"stages":3},"46.6":{"t2":2160.0,"stages":3},"50.3":{"t2":2380.0,"stages":3},"54.2":{"t2":1820.0,"stages":3},"63.1":{"t2":2170.0,"stages":3},"73.3":{"t2":1820.0,"stages":3},"78.7":{"t2":2180.0,"stages":3},"91.5":{"t2":1820.0,"stages":3},"114.0":{"t2":1820.0,"stages":3},"129.0":{"t2":2620.0,"stages":4},"148.0":{"t2":2310.0,"stages":4},"158.0":{"t2":2660.0,"stages":4},"185.0":{"t2":2310.0,"stages":4},"214.0":{"t2":2730.0,"stages":4},"231.0":{"t2":1830.0,"stages":4},"255.0":{"t2":1840.0,"stages":4},"290.0":{"t2":2650.0,"stages":4},"313.0":{"t2":1850.0,"stages":4},"336.0":{"t2":2270.0,"stages":4},"364.0":{"t2":2310.0,"stages":4},"390.0":{"t2":1930.0,"stages":4},"452.0":{"t2":2250.0,"stages":4},"528.0":{"t2":2030.0,"stages":4},"567.0":{"t2":2430.0,"stages":4},"659.0":{"t2":2110.0,"stages":4},"797.0":{"t2":1820.0,"stages":4},"824.0":{"t2":2200.0,"stages":4}},"m2max":2730.0,"shaft":"60x105","corona":"245"},"304R":{"torques":{"9.23":{"t2":1680.0,"stages":2},"10.9":{"t2":1980.0,"stages":2},"13.7":{"t2":2490.0,"stages":2},"16.8":{"t2":2390.0,"stages":2},"25.7":{"t2":3020.0,"stages":3},"31.5":{"t2":3090.0,"stages":3},"37.1":{"t2":3440.0,"stages":3},"42.6":{"t2":3190.0,"stages":3},"46.6":{"t2":2850.0,"stages":3},"50.3":{"t2":3460.0,"stages":3},"63.1":{"t2":2850.0,"stages":3},"78.7":{"t2":2850.0,"stages":3},"97.0":{"t2":2390.0,"stages":3},"121.0":{"t2":2390.0,"stages":3},"89.4":{"t2":3330.0,"stages":4},"109.0":{"t2":3370.0,"stages":4},"129.0":{"t2":3530.0,"stages":4},"148.0":{"t2":3440.0,"stages":4},"158.0":{"t2":3550.0,"stages":4},"185.0":{"t2":3460.0,"stages":4},"214.0":{"t2":3620.0,"stages":4},"227.0":{"t2":3480.0,"stages":4},"267.0":{"t2":3660.0,"stages":4},"290.0":{"t2":3680.0,"stages":4},"307.0":{"t2":3500.0,"stages":4},"338.0":{"t2":2420.0,"stages":4},"364.0":{"t2":2940.0,"stages":4},"414.0":{"t2":2470.0,"stages":4},"452.0":{"t2":3690.0,"stages":4},"560.0":{"t2":2540.0,"stages":4},"699.0":{"t2":2630.0,"stages":4}},"m2max":3690.0,"shaft":"60x105","corona":"245"},"305R":{"torques":{"9.23":{"t2":1680.0,"stages":2},"10.9":{"t2":1980.0,"stages":2},"13.7":{"t2":2490.0,"stages":2},"15.9":{"t2":2890.0,"stages":2},"19.2":{"t2":2860.0,"stages":2},"25.7":{"t2":3630.0,"stages":3},"31.5":{"t2":3770.0,"stages":3},"37.1":{"t2":4340.0,"stages":3},"42.6":{"t2":3790.0,"stages":3},"46.6":{"t2":4310.0,"stages":3},"50.3":{"t2":4410.0,"stages":3},"54.2":{"t2":3570.0,"stages":3},"63.1":{"t2":4330.0,"stages":3},"73.3":{"t2":3580.0,"stages":3},"78.7":{"t2":4350.0,"stages":3},"91.5":{"t2":3580.0,"stages":3},"114.0":{"t2":3580.0,"stages":3},"129.0":{"t2":5200.0,"stages":4},"148.0":{"t2":4480.0,"stages":4},"158.0":{"t2":5310.0,"stages":4},"185.0":{"t2":4490.0,"stages":4},"214.0":{"t2":5390.0,"stages":4},"231.0":{"t2":3600.0,"stages":4},"255.0":{"t2":3600.0,"stages":4},"290.0":{"t2":5300.0,"stages":4},"313.0":{"t2":3620.0,"stages":4},"336.0":{"t2":4560.0,"stages":4},"364.0":{"t2":4620.0,"stages":4},"390.0":{"t2":3750.0,"stages":4},"452.0":{"t2":4750.0,"stages":4},"528.0":{"t2":3920.0,"stages":4},"567.0":{"t2":4860.0,"stages":4},"659.0":{"t2":4070.0,"stages":4},"797.0":{"t2":3450.0,"stages":4},"824.0":{"t2":4230.0,"stages":4}},"m2max":5390.0,"shaft":"60x105","corona":"245"},"306R":{"torques":{"9.23":{"t2":2330.0,"stages":2},"10.9":{"t2":2750.0,"stages":2},"13.7":{"t2":3460.0,"stages":2},"15.9":{"t2":4020.0,"stages":2},"19.2":{"t2":4510.0,"stages":2},"33.2":{"t2":7350.0,"stages":3},"39.2":{"t2":8730.0,"stages":3},"46.3":{"t2":9450.0,"stages":3},"58.1":{"t2":9100.0,"stages":3},"67.5":{"t2":7590.0,"stages":3},"72.9":{"t2":8140.0,"stages":3},"84.7":{"t2":7820.0,"stages":3},"98.5":{"t2":6500.0,"stages":3},"119.0":{"t2":6510.0,"stages":3},"144.0":{"t2":5500.0,"stages":3},"158.0":{"t2":9760.0,"stages":4},"168.0":{"t2":7660.0,"stages":4},"181.0":{"t2":9450.0,"stages":4},"214.0":{"t2":9850.0,"stages":4},"230.0":{"t2":7590.0,"stages":4},"249.0":{"t2":8620.0,"stages":4},"289.0":{"t2":8840.0,"stages":4},"312.0":{"t2":7590.0,"stages":4},"389.0":{"t2":7590.0,"stages":4},"420.0":{"t2":9390.0,"stages":4},"550.0":{"t2":7740.0,"stages":4},"590.0":{"t2":8910.0,"stages":4},"665.0":{"t2":6490.0,"stages":4},"830.0":{"t2":6760.0,"stages":4},"455.0":{"t2":7530.0,"stages":4},"488.0":{"t2":9390.0,"stages":4}},"m2max":9850.0,"shaft":"80x130","corona":"292"},"307R":{"torques":{"13.0":{"t2":5110.0,"stages":2},"15.5":{"t2":6090.0,"stages":2},"19.8":{"t2":7820.0,"stages":2},"23.5":{"t2":7970.0,"stages":2},"31.6":{"t2":5570.0,"stages":3},"37.7":{"t2":6650.0,"stages":3},"44.6":{"t2":7860.0,"stages":3},"55.9":{"t2":9860.0,"stages":3},"65.0":{"t2":11000.0,"stages":3},"71.8":{"t2":10100.0,"stages":3},"78.6":{"t2":11100.0,"stages":3},"83.4":{"t2":10200.0,"stages":3},"99.0":{"t2":8580.0,"stages":3},"120.0":{"t2":8630.0,"stages":3},"152.0":{"t2":13500.0,"stages":4},"165.0":{"t2":10900.0,"stages":4},"191.0":{"t2":14000.0,"stages":4},"206.0":{"t2":14100.0,"stages":4},"232.0":{"t2":11100.0,"stages":4},"258.0":{"t2":14600.0,"stages":4},"284.0":{"t2":11300.0,"stages":4},"300.0":{"t2":14000.0,"stages":4},"331.0":{"t2":11500.0,"stages":4},"363.0":{"t2":12300.0,"stages":4},"413.0":{"t2":11900.0,"stages":4},"453.0":{"t2":13400.0,"stages":4},"490.0":{"t2":9330.0,"stages":4},"581.0":{"t2":12600.0,"stages":4},"690.0":{"t2":9800.0,"stages":4}},"m2max":14600.0,"shaft":"90x170","corona":"348"},"309R":{"torques":{"13.0":{"t2":5110.0,"stages":2},"15.5":{"t2":6090.0,"stages":2},"19.8":{"t2":7820.0,"stages":2},"23.5":{"t2":9280.0,"stages":2},"31.6":{"t2":5580.0,"stages":3},"37.7":{"t2":6650.0,"stages":3},"44.6":{"t2":7860.0,"stages":3},"55.9":{"t2":9860.0,"stages":3},"65.0":{"t2":11200.0,"stages":3},"71.8":{"t2":12700.0,"stages":3},"83.4":{"t2":14000.0,"stages":3},"99.0":{"t2":12800.0,"stages":3},"120.0":{"t2":12900.0,"stages":3},"152.0":{"t2":18600.0,"stages":4},"165.0":{"t2":16300.0,"stages":4},"191.0":{"t2":17300.0,"stages":4},"206.0":{"t2":19800.0,"stages":4},"232.0":{"t2":16700.0,"stages":4},"258.0":{"t2":17400.0,"stages":4},"284.0":{"t2":16900.0,"stages":4},"331.0":{"t2":17200.0,"stages":4},"374.0":{"t2":14300.0,"stages":4},"413.0":{"t2":17900.0,"stages":4},"457.0":{"t2":13800.0,"stages":4},"490.0":{"t2":14000.0,"stages":4},"581.0":{"t2":15800.0,"stages":4},"690.0":{"t2":14800.0,"stages":4}},"m2max":19800.0,"shaft":"100x165","corona":"400"},"310MR":{"torques":{"12.0":{"t2":11900.0,"stages":2},"15.4":{"t2":15200.0,"stages":2},"18.3":{"t2":17000.0,"stages":2},"16.6":{"t2":15000.0,"stages":2},"21.3":{"t2":18700.0,"stages":2},"25.3":{"t2":17500.0,"stages":2},"37.7":{"t2":6480.0,"stages":3},"44.6":{"t2":7650.0,"stages":3},"55.9":{"t2":9600.0,"stages":3},"65.0":{"t2":11200.0,"stages":3},"71.8":{"t2":12300.0,"stages":3},"78.6":{"t2":13500.0,"stages":3},"83.4":{"t2":14300.0,"stages":3},"99.0":{"t2":16000.0,"stages":3},"120.0":{"t2":17100.0,"stages":3},"136.0":{"t2":22600.0,"stages":4},"160.0":{"t2":26100.0,"stages":4},"189.0":{"t2":27400.0,"stages":4},"206.0":{"t2":22100.0,"stages":4},"238.0":{"t2":28400.0,"stages":4},"258.0":{"t2":22500.0,"stages":4},"276.0":{"t2":27900.0,"stages":4},"305.0":{"t2":22800.0,"stages":4},"347.0":{"t2":29600.0,"stages":4},"383.0":{"t2":23700.0,"stages":4},"454.0":{"t2":19400.0,"stages":4},"517.0":{"t2":25000.0,"stages":4},"590.0":{"t2":19300.0,"stages":4},"639.0":{"t2":20600.0,"stages":4},"757.0":{"t2":24800.0,"stages":4},"898.0":{"t2":21900.0,"stages":4}},"m2max":29600.0,"shaft":"110x210","corona":"400"},"311MR":{"torques":{"12.0":{"t2":11900.0,"stages":2},"15.4":{"t2":15200.0,"stages":2},"18.3":{"t2":18100.0,"stages":2},"16.6":{"t2":15000.0,"stages":2},"21.3":{"t2":19200.0,"stages":2},"25.3":{"t2":22800.0,"stages":2},"53.0":{"t2":20300.0,"stages":3},"63.2":{"t2":24200.0,"stages":3},"68.0":{"t2":26000.0,"stages":3},"81.1":{"t2":29800.0,"stages":3},"96.3":{"t2":29600.0,"stages":3},"104.0":{"t2":33100.0,"stages":3},"154.0":{"t2":25700.0,"stages":4},"182.0":{"t2":30400.0,"stages":4},"198.0":{"t2":32800.0,"stages":4},"229.0":{"t2":38100.0,"stages":4},"266.0":{"t2":43900.0,"stages":4},"294.0":{"t2":36600.0,"stages":4},"341.0":{"t2":37500.0,"stages":4},"413.0":{"t2":38800.0,"stages":4},"438.0":{"t2":39200.0,"stages":4},"490.0":{"t2":32000.0,"stages":4},"520.0":{"t2":40200.0,"stages":4},"629.0":{"t2":41200.0,"stages":4},"746.0":{"t2":32300.0,"stages":4}},"m2max":43900.0,"shaft":"120x210","corona":"428"},"313MR":{"torques":{"12.2":{"t2":12000.0,"stages":2},"15.9":{"t2":15700.0,"stages":2},"19.1":{"t2":18800.0,"stages":2},"16.8":{"t2":15200.0,"stages":2},"22.0":{"t2":19800.0,"stages":2},"26.4":{"t2":23800.0,"stages":2},"53.7":{"t2":20500.0,"stages":3},"64.0":{"t2":24500.0,"stages":3},"69.9":{"t2":26700.0,"stages":3},"82.2":{"t2":31400.0,"stages":3},"97.5":{"t2":37300.0,"stages":3},"107.0":{"t2":38200.0,"stages":3},"127.0":{"t2":40300.0,"stages":3},"153.0":{"t2":30200.0,"stages":3},"185.0":{"t2":30700.0,"stages":4},"201.0":{"t2":33400.0,"stages":4},"237.0":{"t2":39500.0,"stages":4},"281.0":{"t2":46800.0,"stages":4},"309.0":{"t2":43400.0,"stages":4},"346.0":{"t2":55700.0,"stages":4},"387.0":{"t2":45100.0,"stages":4},"450.0":{"t2":46300.0,"stages":4},"496.0":{"t2":48600.0,"stages":4},"535.0":{"t2":47700.0,"stages":4},"647.0":{"t2":49300.0,"stages":4},"778.0":{"t2":35800.0,"stages":4}},"m2max":55700.0,"shaft":"140x200","corona":"445"},"315MR":{"torques":{"51.1":{"t2":48900.0,"stages":3},"65.5":{"t2":62700.0,"stages":3},"77.8":{"t2":73600.0,"stages":3},"82.3":{"t2":68000.0,"stages":3},"97.6":{"t2":72000.0,"stages":3},"113.0":{"t2":59200.0,"stages":3},"70.7":{"t2":61700.0,"stages":3},"90.7":{"t2":77300.0,"stages":3},"108.0":{"t2":83100.0,"stages":3},"114.0":{"t2":72900.0,"stages":3},"135.0":{"t2":74000.0,"stages":3},"157.0":{"t2":59300.0,"stages":3},"345.0":{"t2":94600.0,"stages":4},"409.0":{"t2":94600.0,"stages":4},"525.0":{"t2":94600.0,"stages":4},"623.0":{"t2":94900.0,"stages":4},"659.0":{"t2":85100.0,"stages":4},"782.0":{"t2":86400.0,"stages":4},"909.0":{"t2":72500.0,"stages":4}},"m2max":94900.0,"shaft":"160x240","corona":"530"},"317MR":{"torques":{"49.8":{"t2":47700.0,"stages":3},"64.9":{"t2":62100.0,"stages":3},"78.1":{"t2":74800.0,"stages":3},"83.3":{"t2":79700.0,"stages":3},"100.0":{"t2":96000.0,"stages":3},"119.0":{"t2":106600.0,"stages":3},"68.9":{"t2":60200.0,"stages":3},"89.8":{"t2":78400.0,"stages":3},"108.0":{"t2":94400.0,"stages":3},"115.0":{"t2":100600.0,"stages":3},"139.0":{"t2":121200.0,"stages":3},"165.0":{"t2":113100.0,"stages":3},"220.0":{"t2":81500.0,"stages":4},"262.0":{"t2":97200.0,"stages":4},"336.0":{"t2":124700.0,"stages":4},"399.0":{"t2":148000.0,"stages":4},"438.0":{"t2":156700.0,"stages":4},"520.0":{"t2":166200.0,"stages":4},"626.0":{"t2":121500.0,"stages":4},"677.0":{"t2":156000.0,"stages":4},"803.0":{"t2":155900.0,"stages":4},"953.0":{"t2":139100.0,"stages":4}},"m2max":166200.0,"shaft":"200x260","corona":"580"},"318MR":{"torques":{"225.0":{"t2":208700.0,"stages":4},"288.0":{"t2":231100.0,"stages":4},"342.0":{"t2":237000.0,"stages":4},"362.0":{"t2":239200.0,"stages":4},"430.0":{"t2":246200.0,"stages":4},"499.0":{"t2":249400.0,"stages":4},"311.0":{"t2":233200.0,"stages":4},"399.0":{"t2":243200.0,"stages":4},"474.0":{"t2":250300.0,"stages":4},"501.0":{"t2":252700.0,"stages":4},"595.0":{"t2":260100.0,"stages":4},"691.0":{"t2":257500.0,"stages":4}},"m2max":260100.0,"shaft":"250x330","corona":"695"},"319R":{"torques":{"249.0":{"t2":231200.0,"stages":4},"320.0":{"t2":296700.0,"stages":4},"379.0":{"t2":334500.0,"stages":4},"401.0":{"t2":340200.0,"stages":4},"475.0":{"t2":294100.0,"stages":4},"563.0":{"t2":302600.0,"stages":4},"655.0":{"t2":308600.0,"stages":4},"345.0":{"t2":291900.0,"stages":4},"442.0":{"t2":350400.0,"stages":4},"525.0":{"t2":368800.0,"stages":4},"555.0":{"t2":375000.0,"stages":4},"657.0":{"t2":310500.0,"stages":4},"780.0":{"t2":319500.0,"stages":4},"906.0":{"t2":319200.0,"stages":4}},"m2max":375000.0,"shaft":"280x380","corona":"940"},"321R":{"torques":{"221.0":{"t2":205600.0,"stages":4},"288.0":{"t2":265300.0,"stages":4},"347.0":{"t2":320600.0,"stages":4},"370.0":{"t2":341300.0,"stages":4},"446.0":{"t2":409600.0,"stages":4},"529.0":{"t2":484700.0,"stages":4},"306.0":{"t2":249000.0,"stages":4},"399.0":{"t2":324600.0,"stages":4},"481.0":{"t2":390700.0,"stages":4},"512.0":{"t2":416600.0,"stages":4},"617.0":{"t2":501400.0,"stages":4},"732.0":{"t2":521400.0,"stages":4}},"m2max":521400.0,"shaft":"340x540","corona":"1000"}};
@@ -1934,23 +1945,23 @@ function findBonfRByTorqueBrev(brevOrthoKey, ratio) {
 // Dimensões de eixo por tipo para 300MR (Right-Angle) — eixo de SAÍDA = mesma carcaça do 300M reto.
 // FZ corrigido conforme catálogo 300M_c2.pdf (mesmos valores do BONF_SHAFT_DIM equivalente).
 const BONF_R_SHAFT_DIM = {
-  '300R':  { MC:'35x64',   MZ:'35x64',   HC:'35x64',   HZ:'35x64',   FP:'42',  FZ:'40x36 DIN5482'   },
-  '301R':  { MC:'35x64',   MZ:'35x64',   HC:'35x64',   HZ:'35x64',   FP:'52',  FZ:'40x36 DIN5482'   },
-  '303R':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'   },
-  '304R':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'   },
-  '305R':  { MC:'65x95',   MZ:'65x95',   HC:'65x95',   HZ:'65x95',   FP:'75',  FZ:'40x36 DIN5482'   },
-  '306R':  { MC:'80x116',  MZ:'80x116',  HC:'80x116',  HZ:'80x116',  FP:'90',  FZ:'58x53 DIN5482'   },
-  '307R':  { MC:'90x141',  MZ:'90x141',  HC:'90x141',  HZ:'90x141',  FP:'100', FZ:'58x53 DIN5482'   },
-  '309R':  { MC:'120x128', MZ:'120x128', HC:'120x128', HZ:'120x128', FP:'120', FZ:'80x74 DIN5482'   },
-  '310MR': { MC:'130x138', MZ:'130x138', HC:'130x138', HZ:'130x138', FP:'130', FZ:'80x74 DIN5482'   },
-  '311MR': { HC:'140x?',     HZ:'120x3 DIN5480', FP:'135', FZ:'120x3 DIN5480', FZP:'120x3x38 DIN5480' },
-  '313MR': { HC:'140x? m6',  HZ:'120x3 DIN5480', FP:'140', FZ:'120x3 DIN5480', FZP:'140x5x26 DIN5480' },
-  '314MR': { HC:'160x? m6',  HZ:'150x5 DIN5480', FP:'180', FZ:'150x5 DIN5480', FZP:'150x5x28 DIN5480' },
-  '315MR': { HC:'160x? m6',  HZ:'150x5 DIN5480', FP:'180', FZ:'150x5 DIN5480', FZP:'150x5x28 DIN5480' },
-  '317MR': { HC:'200x? r6',  HZ:'200x5 DIN5480', FP:'200', FZ:'200x5 DIN5480', FZP:'200x5x38 DIN5480' },
-  '318MR': { HC:'150x? m6',  HZ:'220x5 DIN5480', FP:'220', FZ:'220x5 DIN5480', FZP:'210x5x40 DIN5480' },
-  '319R':  { HC:'280x? h6',  HZ:'260x5 DIN5480', FP:'280', FZ:'260x5 DIN5480', FZP:'260x5x50 DIN5480' },
-  '321R':  { HC:'340x? m6',  HZ:'300x8 DIN5480', FP:'320', FZ:'300x8 DIN5480', FZP:'300x8x36 DIN5480' },
+  '300R':  { MC:'35*',     MZ:'40x36 DIN5482*', FP:'42',  FZ:'40x36 DIN5482'   },
+  '301R':  { MC:'35*',     MZ:'40x36 DIN5482*', FP:'52',  FZ:'40x36 DIN5482'   },
+  '303R':  { MC:'60 h6*',  MZ:'58x53 DIN5482*', FP:'75',  FZ:'58x53 DIN5482'   },
+  '304R':  { MC:'60 h6*',  MZ:'58x53 DIN5482*', FP:'75',  FZ:'58x53 DIN5482'   },
+  '305R':  { MC:'60 h6', MZ:'58x53 DIN5482', HC:'60 h6', HZ:'58x53 DIN5482', FP:'75', FZ:'58x53 DIN5482' },
+  '306R':  { MC:'80 h6', MZ:'70x64 DIN5482', HC:'80 h6', HZ:'70x64 DIN5482', FP:'90', FZ:'70x64 DIN5482' },
+  '307R':  { MC:'90 h6', MZ:'80x74 DIN5482', HC:'90 h6', HZ:'80x74 DIN5482', FP:'100', FZ:'80x74 DIN5482' },
+  '309R':  { HC:'120 h6*', HZ:'80x74 DIN5482*', FP:'120', FZ:'80x74 DIN5482'   },
+  '310MR': { HC:'130*',     HZ:'80x74 DIN5482*', FP:'130', FZ:'80x74 DIN5482'   },
+  '311MR': { HC:'140 m6',    HZ:'120x3 DIN5480', FP:'135', FZ:'120x3 DIN5480', FZP:'120x3x38 DIN5480' },
+  '313MR': { HC:'140 m6',    HZ:'120x3 DIN5480', FP:'140', FZ:'120x3 DIN5480', FZP:'140x5x26 DIN5480' },
+  '314MR': { HC:'160 m6',    HZ:'150x5 DIN5480', FP:'180', FZ:'150x5 DIN5480', FZP:'150x5x28 DIN5480' },
+  '315MR': { HC:'160 m6',    HZ:'150x5 DIN5480', FP:'180', FZ:'150x5 DIN5480', FZP:'150x5x28 DIN5480' },
+  '317MR': { HC:'200 r6',    HZ:'200x5 DIN5480', FP:'200', FZ:'200x5 DIN5480', FZP:'200x5x38 DIN5480' },
+  '318MR': { HC:'250 m6',    HZ:'220x5 DIN5480', FP:'220', FZ:'220x5 DIN5480', FZP:'210x5x40 DIN5480' },
+  '319R':  { HC:'280 h6',    HZ:'260x5 DIN5480', FP:'280', FZ:'260x5 DIN5480', FZP:'260x5x50 DIN5480' },
+  '321R':  { HC:'340 m6',    HZ:'300x8 DIN5480', FP:'320', FZ:'300x8 DIN5480', FZP:'300x8x36 DIN5480' },
 };
 
 // Encontra Bonfiglioli 300MR (ortogonal) pelo torque — usado para equivalência Rossi EB
@@ -2009,13 +2020,24 @@ function findBonfRByTorque(rossiModel, ratio, family) {
 
 // Encontra Bonfiglioli 300MR pelo eixo — usado para equivalência Rossi EB
 function findBonfRByShaft(rossiModel, selectedShaft) {
-  const SHAFT_MAP = { 'C':'MC','S':'MZ','K':'MC','Z':'FZ','H':'FP','M':'MC','T':'MC' };
+  const SHAFT_MAP = { 'C':'MC','S':'MZ','K':'MC','Z':'FZ','H':'FP','M':'HC','T':'HZ' };
   const shaftLetter = selectedShaft ? selectedShaft.charAt(0) : null;
   const bonfShaftCode = shaftLetter && SHAFT_MAP[shaftLetter] ? SHAFT_MAP[shaftLetter] : null;
 
   let targetD;
   if (selectedShaft && ROSSI_SHAFT_DETAILS[rossiModel]) {
-    const detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code === selectedShaft || d.code.startsWith(shaftLetter));
+    // Prioriza o código EXATO escolhido (ex.: H090M1 → Ø90), não o primeiro da mesma letra
+    let detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code === selectedShaft);
+    // Fallback: tenta extrair o Ø do próprio código (H090 → 90) antes de cair na 1ª letra
+    if (!detail) {
+      const numMatch = selectedShaft.match(/[A-Z](\d{2,3})/);
+      if (numMatch) {
+        const dWanted = parseInt(numMatch[1], 10);
+        detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.D === dWanted && d.code.startsWith(shaftLetter));
+      }
+    }
+    // Último fallback: primeiro da mesma letra
+    if (!detail) detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code.startsWith(shaftLetter));
     if (detail && detail.D) targetD = detail.D;
   }
   if (!targetD) {
@@ -2067,15 +2089,15 @@ const BREV_SHAFT_DIM = {
   'E 250': { MN:'110x210', MN1:'110x210', MR:'110x210', MR1:'110x210', FS:'100x94 DIN5482', FE:'100x94 DIN5482' },
   'E 255': { MN:'110x210', MN1:'110x210', MR:'110x210', MR1:'110x210', FS:'100x94 DIN5482', FE:'100x94 DIN5482' },
   'E 320': { MN:'120x210', MN1:'120x210', MR:'120x210', MR1:'120x210', FS:'100x94 DIN5482', FE:'100x94 DIN5482' },
-  'S 300': { MN:'120x210', MN1:'120x210', MR:'120x210', MR1:'120x210', FS:'120x5x22 DIN5480', FE:'120x5x22 DIN5480' },
-  'S 400': { MN:'130x220', MN1:'130x220', MR:'130x220', MR1:'130x220', FS:'140x5x26 DIN5480', FE:'140x5x26 DIN5480' },
-  'S 600': { MN:'160x240', MN1:'160x240', MR:'160x240', MR1:'160x240', FS:'150x5x28 DIN5480', FE:'150x5x28 DIN5480' },
-  'S 850': { MN:'170x240', MN1:'170x240', MR:'170x240', MR1:'170x240', FS:'170x5x32 DIN5480', FE:'170x5x32 DIN5480' },
-  'S 1200':{ MN:'190x260', MN1:'190x260', MR:'190x260', MR1:'190x260', FS:'200x5x38 DIN5480', FE:'200x5x38 DIN5480' },
-  'S 1800':{ MN:'200x260', MN1:'200x260', MR:'200x260', MR1:'200x260', FS:'210x5x40 DIN5480', FE:'210x5x40 DIN5480' },
-  'S 2500':{ MN:'250x330', MN1:'250x330', MR:'250x330', MR1:'250x330', FS:'240x5x46 DIN5480', FE:'240x5x46 DIN5480' },
-  'S 3500':{ MN:'280x380', MN1:'280x380', MR:'280x380', MR1:'280x380', FS:'280x8x34 DIN5480', FE:'280x8x34 DIN5480' },
-  'S 5000':{ MN:'340x540', MN1:'340x540', MR:'340x540', MR1:'340x540', FS:'340x8x41 DIN5480', FE:'340x8x41 DIN5480' },
+  'S 300': { MN:'120x210', MN1:'120x210', MR:'120x210', MR1:'120x210', FS:'120x5x22 DIN5480', FE:'120x5x22 DIN5480' , FAR:'120x5x22 DIN5480 FAR137'},
+  'S 400': { MN:'130x220', MN1:'130x220', MR:'130x220', MR1:'130x220', FS:'140x5x26 DIN5480', FE:'140x5x26 DIN5480' , FAR:'140x5x26 DIN5480 FAR160'},
+  'S 600': { MN:'160x240', MN1:'160x240', MR:'160x240', MR1:'160x240', FS:'150x5x28 DIN5480', FE:'150x5x28 DIN5480' , FAR:'150x5x28 DIN5480 FAR180'},
+  'S 850': { MN:'170x240', MN1:'170x240', MR:'170x240', MR1:'170x240', FS:'170x5x32 DIN5480', FE:'170x5x32 DIN5480' , FAR:'170x5x32 DIN5480 FAR194'},
+  'S 1200':{ MN:'190x260', MN1:'190x260', MR:'190x260', MR1:'190x260', FS:'200x5x38 DIN5480', FE:'200x5x38 DIN5480' , FAR:'200x5x38 DIN5480 FAR225'},
+  'S 1800':{ MN:'200x260', MN1:'200x260', MR:'200x260', MR1:'200x260', FS:'210x5x40 DIN5480', FE:'210x5x40 DIN5480' , FAR:'210x5x40 DIN5480 FAR243'},
+  'S 2500':{ MN:'250x330', MN1:'250x330', MR:'250x330', MR1:'250x330', FS:'240x5x46 DIN5480', FE:'240x5x46 DIN5480' , FAR:'240x5x46 DIN5480 FAR257'},
+  'S 3500':{ MN:'280x380', MN1:'280x380', MR:'280x380', MR1:'280x380', FS:'280x8x34 DIN5480', FE:'280x8x34 DIN5480' , FAR:'280x8x34 DIN5480 FAR290'},
+  'S 5000':{ MN:'340x540', MN1:'340x540', MR:'340x540', MR1:'340x540', FS:'340x8x41 DIN5480', FE:'340x8x41 DIN5480' , FAR:'340x8x41 DIN5480 FAR368'},
 };
 
 // Retorna a dimensão do eixo selecionado para um tamanho, dado o código do eixo
@@ -2083,6 +2105,65 @@ function getBonfShaftDim(bonfSize, shaftCode) {
   const dims = BONF_R_SHAFT_DIM[bonfSize] || BONF_SHAFT_DIM[bonfSize];
   if (!dims || !shaftCode) return null;
   return dims[shaftCode] || dims[shaftCode.substring(0,2)] || null;
+}
+
+// Famílias de eixo: a escolha do melhor diâmetro acontece DENTRO da mesma família.
+//   keyed   = sólido com chaveta      → MC, HC
+//   splined = sólido estriado macho   → MZ, HZ
+//   hollow  = oco estriado            → FZ, FZP
+//   disc    = oco p/ disco            → FP
+const SHAFT_FAMILY = {
+  MC:'keyed', HC:'keyed',
+  MZ:'splined', HZ:'splined',
+  FZ:'hollow', FZP:'hollow',
+  FP:'disc'
+};
+
+// Escolhe, entre as montagens da MESMA família que existem no tamanho Bonfiglioli,
+// aquela cujo Ø é mais próximo do eixo de origem (targetD).
+// Regra de desempate: prefere Ø >= origem (não enfraquece o eixo); se só houver
+// diâmetros menores, pega o MAIOR disponível e marca below=true.
+// Retorna { code, dim, D, below } ou null.
+// FAR (Brevini, saída fêmea pendular) equivale ao FZP da Bonfiglioli (oco estriado
+// com disco/retenção axial), QUANDO o tamanho oferece FZP. Caso o tamanho não tenha
+// FZP, usa FZ (oco estriado simples). O FE (flangeado) permanece como FZ.
+function resolveFarToBonf(bonfSize) {
+  const dims = BONF_R_SHAFT_DIM[bonfSize] || BONF_SHAFT_DIM[bonfSize];
+  return (dims && dims.FZP != null) ? 'FZP' : 'FZ';
+}
+
+function getBonfShaftBestMatch(bonfSize, requestedCode, targetD) {
+  const dims = BONF_R_SHAFT_DIM[bonfSize] || BONF_SHAFT_DIM[bonfSize];
+  if (!dims || !requestedCode) return null;
+  const family = SHAFT_FAMILY[requestedCode] || SHAFT_FAMILY[requestedCode.substring(0,2)];
+  if (!family) {
+    const dim = getBonfShaftDim(bonfSize, requestedCode);
+    return dim ? { code: requestedCode, dim, D: (parseShaft(dim)||{}).D, below: false } : null;
+  }
+  // Candidatos: todas as configs presentes nesse tamanho que pertencem à mesma família
+  const cands = [];
+  for (const code of Object.keys(dims)) {
+    if ((SHAFT_FAMILY[code] || SHAFT_FAMILY[code.substring(0,2)]) !== family) continue;
+    const dim = dims[code];
+    const p = parseShaft(dim);
+    if (!p || !p.D) continue;
+    cands.push({ code, dim, D: p.D });
+  }
+  if (!cands.length) return null;
+  // Sem alvo: devolve o pedido (ou o primeiro da família)
+  if (!targetD) {
+    const exact = cands.find(c => c.code === requestedCode);
+    const c = exact || cands[0];
+    return { ...c, below: false };
+  }
+  // Ordena por menor diferença absoluta de Ø (o mais próximo, mesmo que menor).
+  cands.sort((a, b) => {
+    const da = Math.abs(a.D - targetD), db = Math.abs(b.D - targetD);
+    if (da !== db) return da - db;
+    return b.D - a.D; // empate de distância (ex.: 58 e 78 p/ alvo 68): prefere o maior
+  });
+  const best = cands[0];
+  return { code: best.code, dim: best.dim, D: best.D, below: best.D < targetD };
 }
 
 function getBrevShaftDim(brevKey, shaftCode) {
@@ -2105,13 +2186,18 @@ function bonfSizeToCode(commercialSize) {
 // Monta o código completo Bonfiglioli na designação oficial:
 //   "3 <SIZE_CODE> L <STAGES> <RATIO> <OUTPUT>"
 // Exemplo: bonfDesignation("311M", 2, "16.7", "HZ") → "3 11M L 2 16.7 HZ"
-function bonfDesignation(commercialSize, stages, ratio, output) {
+// Quando o eixo de saída é FP (oco p/ disco de contração), acrescenta " G0A"
+// (G0A = disco de contração / shrink disc que acompanha o eixo FP).
+// accessory: sufixo extra opcional (ex.: 'W0A' = flange de saída, p/ eixo flange Rossi 'T').
+function bonfDesignation(commercialSize, stages, ratio, output, accessory) {
   const sz = bonfSizeToCode(commercialSize);
   const stg = stages || '?';
   const r = ratio != null && ratio !== '' ? ratio : '<redução>';
   const o = output || 'FZ';
   const type = commercialSize in BONFIGLIOLI_R ? 'R' : 'L';
-  return `3 ${sz} ${type} ${stg} ${r} ${o}`;
+  let suffix = (o === 'FP' || /\bFP\b/.test(o)) ? ' G0A' : '';
+  if (accessory) suffix += ' ' + accessory;
+  return `3 ${sz} ${type} ${stg} ${r} ${o}${suffix}`;
 }
 
 // Versão curta sem ratio/output (para nomes em listas)
@@ -2286,6 +2372,38 @@ function populateOutputShaft() {
     // Fallback: lista genérica
   }
 
+  // Brevini: mostra só as configurações que EXISTEM no tamanho selecionado.
+  // As chaves presentes em BREV_SHAFT_DIM[tamanho] definem o que é ofertado
+  // (ex.: FAR só na série S; série E não tem FAR).
+  if (dir === 'br2bf') {
+    const srcVal = parseModelValue(modelSrc.value);
+    let key = srcVal?.key;
+    // Normaliza chave ortogonal (EC/PDA "EC 3255" / "PDA 3150") para a chave de eixo da série E.
+    // O tamanho são os últimos 3 dígitos; ex.: "EC 3255" → "E 255", "PDA 3150" → "E 150".
+    if (key && !BREV_SHAFT_DIM[key]) {
+      const om = key.match(/^(?:EC|PDA)\s*\d(\d{3})$/);
+      if (om) key = 'E ' + om[1];
+    }
+    const dims = key ? BREV_SHAFT_DIM[key] : null;
+    if (dims) {
+      // ordem de exibição preferida
+      const order = ['MN','MN1','MR','MR1','FE','FAR','FS'];
+      const present = order.filter(code => dims[code] != null);
+      // inclui qualquer chave extra não prevista na ordem
+      Object.keys(dims).forEach(k => { if (!present.includes(k)) present.push(k); });
+      present.forEach(code => {
+        const meta = BREV_OUTPUTS.find(o => o.code === code);
+        const opt = document.createElement('option');
+        opt.value = code;
+        const desc = meta ? (currentLang === 'pt' ? meta.descPT : meta.descEN) : code;
+        opt.textContent = `${code} — ${desc}`;
+        outputShaftSel.appendChild(opt);
+      });
+      return;
+    }
+    // sem tamanho selecionado: lista genérica completa
+  }
+
   let list;
   if (dir === 'br2bf') list = BREV_OUTPUTS;
   else if (dir === 'ro2bf') list = ROSSI_OUTPUTS;
@@ -2456,6 +2574,7 @@ function renderDirect() {
     'MR':  { code: 'MZ',  descPT: 'Eixo estriado', descEN: 'Splined shaft' },
     'MR1': { code: 'HZ',  descPT: 'Eixo estriado reforçado', descEN: 'Heavy duty splined shaft' },
     'FE':  { code: 'FZ',  descPT: 'Eixo oco estriado', descEN: 'Hollow splined shaft' },
+    'FAR': { code: 'FZ',  descPT: 'Eixo oco estriado pendular/flangeado', descEN: 'Pendular/flanged splined hollow shaft' },
     'FS':  { code: 'FP',  descPT: 'Eixo oco para disco de contração (shrink disc)', descEN: 'Hollow shaft for shrink disc' },
   };
   const SHAFT_MAP_BONF_TO_BREV = {
@@ -2480,8 +2599,10 @@ function renderDirect() {
     const overrideSize = sizeOverrides[criterion];
     const bSize = overrideSize || matchData.size;
     const bonfData = isBrevOrtho_local ? (BONFIGLIOLI_R[bSize] || BONFIGLIOLI[bSize]) : BONFIGLIOLI[bSize];
-    const bonfShaftCode = selectedShaft && SHAFT_MAP_BREV_TO_BONF[selectedShaft]
+    let bonfShaftCode = selectedShaft && SHAFT_MAP_BREV_TO_BONF[selectedShaft]
       ? SHAFT_MAP_BREV_TO_BONF[selectedShaft].code : null;
+    // FAR (pendular) → FZP quando o tamanho oferece FZP; senão FZ.
+    if (selectedShaft === 'FAR') bonfShaftCode = resolveFarToBonf(bSize);
     const brevSrcData = BREVINI_ORTHO[src] || BREVINI[src];
     const brevSrcStages = srcStages;
     const sortedSizes = isBrevOrtho_local
@@ -2501,8 +2622,27 @@ function renderDirect() {
       }
     }
     const effectiveRatio = bonfClosestR || refRatio;
-    const bonfFullName = bonfDesignation(bSize, brevSrcStages, effectiveRatio, bonfShaftCode);
-    const bonfShaftDimStr = bonfShaftCode ? getBonfShaftDim(bSize, bonfShaftCode) : null;
+    // Ø do eixo de SAÍDA da origem (Brevini) — usado para escolher a montagem Bonfiglioli
+    // da MESMA família (estriado/chaveta) com diâmetro mais próximo.
+    let srcShaftD = null;
+    if (selectedShaft) {
+      const srcDimStr = getBrevShaftDim(src, selectedShaft);
+      const sp = srcDimStr ? parseShaft(srcDimStr) : null;
+      if (sp && sp.D) srcShaftD = sp.D;
+    }
+    // Seleciona a melhor montagem Bonfiglioli da mesma família pelo Ø mais próximo.
+    // Exceção: para eixos OCOS (FZ/FZP) a escolha é semântica (flangeado=FZ vs pendular=FZP),
+    // não por diâmetro — então respeita o código pedido em vez de trocar por Ø.
+    let bonfMatch;
+    if (bonfShaftCode === 'FZ' || bonfShaftCode === 'FZP') {
+      const dimStr = getBonfShaftDim(bSize, bonfShaftCode);
+      bonfMatch = dimStr ? { code: bonfShaftCode, dim: dimStr, D: (parseShaft(dimStr)||{}).D, below: false } : null;
+    } else {
+      bonfMatch = bonfShaftCode ? getBonfShaftBestMatch(bSize, bonfShaftCode, srcShaftD) : null;
+    }
+    let effectiveShaftCode = bonfMatch ? bonfMatch.code : bonfShaftCode;
+    const bonfFullName = bonfDesignation(bSize, brevSrcStages, effectiveRatio, effectiveShaftCode);
+    const bonfShaftDimStr = bonfMatch ? bonfMatch.dim : (bonfShaftCode ? getBonfShaftDim(bSize, bonfShaftCode) : null);
     const bonfShaftParsed = bonfShaftDimStr ? parseShaft(bonfShaftDimStr) : null;
     const bonfCoronaVal = bonfData?.corona ? 'Ø' + bonfData.corona : '—';
     const nomLabel = currentLang === 'pt' ? 'T₂ NOMINAL' : 'NOMINAL T₂';
@@ -2521,10 +2661,24 @@ function renderDirect() {
       <div class="spec-grid">
         <div class="spec"><div class="spec-label">T₂max</div><div class="spec-value">${fmtNum(bonfData?.m2max)}<span class="unit">Nm</span></div></div>
         ${bonfNomT2 != null ? `<div class="spec"><div class="spec-label">${nomLabel}<br><span style="font-size:9px;opacity:0.6">${atRatioLabel} = ${effectiveRatio}</span></div><div class="spec-value">${fmtNum(bonfNomT2)}<span class="unit">Nm</span></div></div>` : ''}
-        ${(() => { const ds = bonfShaftDimStr || getBonfShaftDim(bSize, 'MC'); const lbl = bonfShaftCode || 'MC'; return ds ? `<div class="spec"><div class="spec-label">${getOutputShaftLabel(lbl)}<br><span style="font-size:9px;opacity:0.6">${getShaftConfigLabel(lbl)}</span></div><div class="spec-value">${ds}<span class="unit">mm</span></div></div>` : ''; })()}
+        ${(() => { const ds = bonfShaftDimStr || getBonfShaftDim(bSize, 'MC'); const lbl = effectiveShaftCode || 'MC'; return ds ? `<div class="spec"><div class="spec-label">${getOutputShaftLabel(lbl)}<br><span style="font-size:9px;opacity:0.6">${getShaftConfigLabel(lbl)}</span></div><div class="spec-value">${ds}<span class="unit">mm</span></div></div>` : ''; })()}
         <div class="spec"><div class="spec-label">${getRingGearLabel()}</div><div class="spec-value">${bonfCoronaVal !== '—' ? bonfCoronaVal : '—'}<span class="unit">${bonfCoronaVal !== '—' ? 'mm' : ''}</span></div></div>
       </div>
       <div class="note note-blue"><strong>${criterionLabel}</strong>${criterionDesc}</div>
+      ${(() => {
+        if (!bonfMatch || !srcShaftD) return '';
+        const reqFam = SHAFT_FAMILY[bonfShaftCode] || (bonfShaftCode ? SHAFT_FAMILY[bonfShaftCode.substring(0,2)] : null);
+        const famPT = { keyed:'com chaveta', splined:'estriado', hollow:'oco estriado', disc:'p/ disco' }[reqFam] || '';
+        if (bonfMatch.code !== bonfShaftCode) {
+          return `<div class="note note-green"><strong>${currentLang==='pt'?'Montagem compatível':'Compatible mounting'}</strong>${currentLang==='pt'
+            ? `Eixo de origem Ø${srcShaftD} mm (${famPT}). Entre as montagens ${famPT} da Bonfiglioli, a mais próxima é <b>${bonfMatch.code}</b> (Ø${bonfMatch.D} mm).`
+            : `Source shaft Ø${srcShaftD} mm. Closest same-type Bonfiglioli mounting is <b>${bonfMatch.code}</b> (Ø${bonfMatch.D} mm).`}${bonfMatch.below?(currentLang==='pt'?' ⚠ Ø menor que a origem.':' ⚠ Ø smaller than source.'):''}</div>`;
+        }
+        if (bonfMatch.below) {
+          return `<div class="note note-red">${currentLang==='pt'?`⚠ Eixo Bonfiglioli Ø${bonfMatch.D} mm menor que origem Ø${srcShaftD} mm — verificar capacidade.`:`⚠ Bonfiglioli shaft Ø${bonfMatch.D} mm smaller than source Ø${srcShaftD} mm.`}</div>`;
+        }
+        return '';
+      })()}
     `;
     if (ratio) {
       const r = parseFloat(ratio);
@@ -2556,14 +2710,24 @@ function renderDirect() {
     const bonfData = isRightAngle ? BONFIGLIOLI_R[bSize] : BONFIGLIOLI[bSize];
     const shaftLetter = selectedShaft ? selectedShaft.charAt(0).toUpperCase() : null;
     const ROSSI_TO_BONF_SHAFT = {
-      'C': (sz) => 'HC',
-      'S': (sz) => 'HZ',
-      'K': () => 'FDK', 'Z': () => 'FZ', 'H': () => 'FP', 'M': () => 'MC', 'T': () => 'MC'
+      'C': 'MC', 'S': 'MZ', 'K': 'FDK', 'Z': 'FZ', 'H': 'FP', 'M': 'HC', 'T': 'HZ'
     };
-    let bonfShaftCode = null;
-    if (shaftLetter && ROSSI_TO_BONF_SHAFT[shaftLetter]) {
-      bonfShaftCode = ROSSI_TO_BONF_SHAFT[shaftLetter](bSize);
+    let bonfShaftCode = shaftLetter && ROSSI_TO_BONF_SHAFT[shaftLetter] ? ROSSI_TO_BONF_SHAFT[shaftLetter] : null;
+    const isFlangeOutput = (shaftLetter === 'T'); // T = HZ + acoplamento de flange W0A
+    // Ø do eixo de saída da origem Rossi (para escolher a montagem por família com Ø mais próximo)
+    let srcShaftD = null;
+    if (selectedShaft && ROSSI_SHAFT_DETAILS[src]) {
+      let det = ROSSI_SHAFT_DETAILS[src].find(d => d.code === selectedShaft);
+      if (!det) {
+        const nm = selectedShaft.match(/[A-Z](\d{2,3})/);
+        if (nm) det = ROSSI_SHAFT_DETAILS[src].find(d => d.D === parseInt(nm[1],10) && d.code.startsWith(shaftLetter));
+      }
+      if (!det) det = ROSSI_SHAFT_DETAILS[src].find(d => d.code.startsWith(shaftLetter));
+      if (det && det.D) srcShaftD = det.D;
     }
+    // best-match por família: MC/MZ só onde existem (pequenos); grandes caem em HC/HZ automaticamente
+    let bonfMatch = bonfShaftCode ? getBonfShaftBestMatch(bSize, bonfShaftCode, srcShaftD) : null;
+    if (bonfMatch && bonfMatch.code) bonfShaftCode = bonfMatch.code;
     let refRatio = ratio ? parseFloat(ratio) : (matchData.usedRatio || null);
     let bonfNomT2 = null, bonfClosestR = null;
     if (refRatio != null && bonfData?.torques) {
@@ -2574,7 +2738,7 @@ function renderDirect() {
       }
     }
     const effectiveRatio = bonfClosestR || refRatio;
-    const bonfFullName = bonfDesignation(bSize, srcStages, effectiveRatio, bonfShaftCode);
+    const bonfFullName = bonfDesignation(bSize, srcStages, effectiveRatio, bonfShaftCode, isFlangeOutput ? 'W0A' : null);
     const sortedSizes = isRightAngle
       ? Object.keys(BONFIGLIOLI_R).sort((a,b) => BONFIGLIOLI_R[a].m2max - BONFIGLIOLI_R[b].m2max)
       : getBonfSortedSizes();
@@ -2648,27 +2812,40 @@ function renderDirect() {
     // Para ortogonal: buscar eixo em BONFIGLIOLI_R usando dimensões Brevini
     let byShaft;
     if (isBrevOrtho) {
-      // Extrair base key (ex: 'SC 3002' → 'S 300', 'EC 2010' → 'S 010' → 'E 010')
+      // Extrair base key (ex: 'SC 3002' → 'S 300', 'EC 2010' → 'E 010', 'PDA 3150' → 'E 150')
       const baseMatch = src.match(/(?:EC|SC|PDA)\s+([1-4])(\d{3})/);
       const baseKey = baseMatch ? (src.startsWith('EC') || src.startsWith('PDA') ? `E ${baseMatch[2]}` : `S ${baseMatch[2]}`) : null;
-      // Usar dimensões Brevini do modelo base para comparar com BONFIGLIOLI_R
+      // Diâmetro-alvo: PRIORIZA o eixo de saída real do modelo ortogonal (BREVINI_ORTHO[src].shaft),
+      // que reflete o eixo efetivo (ex.: PDA 3150 = 100x210 → Ø100). Só usa a dimensão da chave
+      // base normalizada como fallback, pois o eixo do modelo ortho pode diferir do da série base.
+      const orthoData = BREVINI_ORTHO[src];
+      let targetD = null;
+      // 1) tenta a dimensão da configuração selecionada na chave base
       const brevDimStr = baseKey ? getBrevShaftDim(baseKey, selectedShaft) : null;
-      if (brevDimStr) {
-        const parsed = parseShaft(brevDimStr);
-        if (parsed) {
-          const SHAFT_MAP = { 'MN':'MC','MN1':'HC','MR':'MZ','MR1':'HZ','FE':'FZ','FS':'FP' };
-          const bonfCode = selectedShaft ? (SHAFT_MAP[selectedShaft] || 'MC') : 'MC';
-          const candidates = [];
-          for (const [size, data] of Object.entries(BONFIGLIOLI_R)) {
-            const dimStr = getBonfShaftDim(size, bonfCode);
-            if (!dimStr) continue;
-            const p = parseShaft(dimStr);
-            if (!p) continue;
-            candidates.push({ size, D: p.D, L: p.L, diff: Math.abs(p.D - parsed.D), targetD: parsed.D });
-          }
-          candidates.sort((a,b) => a.diff !== b.diff ? a.diff - b.diff : (a.D >= a.targetD ? -1 : 1));
-          byShaft = candidates[0] || null;
+      const parsedBase = brevDimStr ? parseShaft(brevDimStr) : null;
+      // 2) eixo real do modelo ortogonal
+      const orthoShaft = orthoData && orthoData.shaft ? parseShaft(orthoData.shaft) : null;
+      // Para eixos OCOS estriados (FE/FAR) a referência é o perfil estriado da base (parsedBase);
+      // para sólidos/disco, o eixo real do ortho é mais fiel. Preferimos o que existir, com
+      // preferência ao eixo real do ortho quando disponível.
+      if (orthoShaft && orthoShaft.D) targetD = orthoShaft.D;
+      else if (parsedBase && parsedBase.D) targetD = parsedBase.D;
+
+      if (targetD != null) {
+        const SHAFT_MAP = { 'MN':'MC','MN1':'HC','MR':'MZ','MR1':'HZ','FE':'FZ','FAR':'FZ','FS':'FP' };
+        let bonfCode = selectedShaft ? (SHAFT_MAP[selectedShaft] || 'MC') : 'MC';
+        if (selectedShaft === 'FAR') bonfCode = 'FZP'; // FAR → FZP (resolve p/ FZ por tamanho abaixo)
+        const candidates = [];
+        for (const [size, data] of Object.entries(BONFIGLIOLI_R)) {
+          const codeForSize = (bonfCode === 'FZP' && !getBonfShaftDim(size, 'FZP')) ? 'FZ' : bonfCode;
+          const dimStr = getBonfShaftDim(size, codeForSize);
+          if (!dimStr) continue;
+          const p = parseShaft(dimStr);
+          if (!p) continue;
+          candidates.push({ size, D: p.D, L: p.L, diff: Math.abs(p.D - targetD), targetD: targetD });
         }
+        candidates.sort((a,b) => a.diff !== b.diff ? a.diff - b.diff : (a.D >= a.targetD ? -1 : 1));
+        byShaft = candidates[0] || null;
       }
       // Fallback: se não encontrou por eixo, usar o mesmo resultado do torque
       if (!byShaft) byShaft = byTorque;
@@ -3127,17 +3304,25 @@ function findBonfByShaftR(rossiModel, family, selectedShaft) {
 
   // Mapa Rossi → Bonfiglioli para eixos
   const SHAFT_MAP_ROSSI_TO_BONF = {
-    'C': 'HC', 'S': 'HZ', 'K': 'HC', 'Z': 'FZ', 'H': 'FP', 'M': 'HC', 'T': 'HC',
+    'C': 'MC', 'S': 'MZ', 'K': 'MC', 'Z': 'FZ', 'H': 'FP', 'M': 'HC', 'T': 'HZ',
   };
   // selectedShaft pode ser código completo (ex: 'H180M1') — extrair só a 1ª letra
   const shaftLetter = selectedShaft ? selectedShaft.charAt(0) : null;
   const bonfShaftCode = shaftLetter && SHAFT_MAP_ROSSI_TO_BONF[shaftLetter]
     ? SHAFT_MAP_ROSSI_TO_BONF[shaftLetter] : null;
 
-  // Diâmetro alvo: usa eixo selecionado se disponível
+  // Diâmetro alvo: usa o eixo EXATO selecionado (ex.: T240M1 → Ø240)
   let targetD;
   if (selectedShaft && ROSSI_SHAFT_DETAILS[rossiModel]) {
-    const detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code === selectedShaft || d.code.startsWith(shaftLetter));
+    let detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code === selectedShaft);
+    if (!detail) {
+      const numMatch = selectedShaft.match(/[A-Z](\d{2,3})/);
+      if (numMatch) {
+        const dWanted = parseInt(numMatch[1], 10);
+        detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.D === dWanted && d.code.startsWith(shaftLetter));
+      }
+    }
+    if (!detail) detail = ROSSI_SHAFT_DETAILS[rossiModel].find(d => d.code.startsWith(shaftLetter));
     if (detail && detail.D) targetD = detail.D;
   }
   if (!targetD) {
@@ -3150,20 +3335,21 @@ function findBonfByShaftR(rossiModel, family, selectedShaft) {
 
   const candidates = [];
   for (const [size, data] of Object.entries(BONFIGLIOLI)) {
-    let D, L;
+    let D, L, chosenCode = bonfShaftCode;
     if (bonfShaftCode) {
-      const dimStr = getBonfShaftDim(size, bonfShaftCode);
-      if (dimStr) {
-        const parsed = parseShaft(dimStr);
-        if (parsed) { D = parsed.D; L = parsed.L; }
-      }
+      // Escolhe, dentro da MESMA família (chaveta MC/HC ou estriado MZ/HZ), a montagem
+      // que existe neste tamanho com Ø mais próximo do eixo do cliente.
+      // Assim MC/MZ só é usado em tamanhos pequenos (onde existe e dá melhor match);
+      // nos grandes, só HC/HZ existem e são escolhidos automaticamente.
+      const match = getBonfShaftBestMatch(size, bonfShaftCode, targetD);
+      if (match && match.D) { D = match.D; L = null; chosenCode = match.code; }
     }
     if (!D) {
       const sh = parseShaft(data.shaft);
       if (!sh) continue;
       D = sh.D; L = sh.L;
     }
-    candidates.push({ size, D, L, diff: Math.abs(D - targetD), targetD });
+    candidates.push({ size, D, L, diff: Math.abs(D - targetD), targetD, shaftCode: chosenCode });
   }
   if (!candidates.length) return null;
   candidates.sort((a, b) => {
@@ -3383,9 +3569,9 @@ function findBonfByShaft(brevModel, selectedShaft) {
   // Determinar o diâmetro alvo: usa o eixo selecionado se disponível, senão o padrão
   let targetD;
   const SHAFT_MAP = {
-    'MN': 'MC', 'MN1': 'HC', 'MR': 'MZ', 'MR1': 'HZ', 'FE': 'FZ', 'FS': 'FP',
+    'MN': 'MC', 'MN1': 'HC', 'MR': 'MZ', 'MR1': 'HZ', 'FE': 'FZ', 'FAR': 'FZP', 'FS': 'FP',
   };
-  const bonfShaftCode = selectedShaft && SHAFT_MAP[selectedShaft] ? SHAFT_MAP[selectedShaft] : null;
+  let bonfShaftCode = selectedShaft && SHAFT_MAP[selectedShaft] ? SHAFT_MAP[selectedShaft] : null;
 
   if (selectedShaft) {
     const dimStr = getBrevShaftDim(brevModel, selectedShaft);
@@ -3403,10 +3589,13 @@ function findBonfByShaft(brevModel, selectedShaft) {
 
   const candidates = [];
   for (const [size, data] of Object.entries(BONFIGLIOLI)) {
-    // Usar dimensão do tipo de eixo equivalente Bonfiglioli, se disponível
+    // Usar dimensão do tipo de eixo equivalente Bonfiglioli, se disponível.
+    // FAR→FZP onde existir, senão FZ (mesma regra da designação).
+    let codeForSize = bonfShaftCode;
+    if (bonfShaftCode === 'FZP' && !getBonfShaftDim(size, 'FZP')) codeForSize = 'FZ';
     let D, L;
-    if (bonfShaftCode) {
-      const dimStr = getBonfShaftDim(size, bonfShaftCode);
+    if (codeForSize) {
+      const dimStr = getBonfShaftDim(size, codeForSize);
       if (dimStr) {
         const parsed = parseShaft(dimStr);
         if (parsed) { D = parsed.D; L = parsed.L; }
@@ -3594,11 +3783,18 @@ function generateDatasheet() {
     const bonfShafts = getBonfShafts(primarySize, p.stages);
 
   const stagesSuffix = p.stages ? ' L ' + p.stages : '';
+  // Mapa de saída: aceita tanto códigos Brevini (MR/MN/FS...) quanto letras Rossi (C/S/K/Z/H/M/T).
   const outputMap = {
     'MR':'MC', 'MR1':'HC', 'MN':'MZ', 'MN1':'HZ',
-    'FS':'FZ', 'FE':'FZ', 'FP':'FZ', 'MP':'PC', 'PD':'PC', 'PDA':'PC'
+    'FS':'FZ', 'FE':'FZ', 'FP':'FZ', 'MP':'PC', 'PD':'PC', 'PDA':'PC',
+    // Letras Rossi:
+    'C':'MC', 'S':'MZ', 'K':'MC', 'Z':'FZ', 'H':'FP', 'M':'HC', 'T':'HZ'
   };
-  const bonfOutput = outputMap[p.output] || p.output || 'FZ';
+  // p.output pode ser código completo (ex.: 'T240M1') — usa a 1ª letra se for código Rossi
+  const outKey = p.output && /^[CSKZHMT]\d/.test(p.output) ? p.output.charAt(0) : p.output;
+  const bonfOutput = outputMap[outKey] || p.output || 'FZ';
+  // 'T' (saída eixo flange Rossi) = HZ Bonfiglioli + acoplamento de flange W0A na saída.
+  const isFlangeOutput = (outKey === 'T');
 
   let brevT = null, bonfT = null, closestR = r;
   if (r) {
@@ -3631,7 +3827,7 @@ function generateDatasheet() {
     ? `${bonfInputDisp[0]} (Ø${bonfInputDisp[1]}×${bonfInputDisp[2]})`
     : 'Consultar catálogo';
 
-  const suggestedCode = bonfDesignation(primarySize, p.stages, r, bonfOutput);
+  const suggestedCode = bonfDesignation(primarySize, p.stages, r, bonfOutput, isFlangeOutput ? 'W0A' : null);
 
   const html = `<!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>Datasheet — ${p.brevFullName || p.brevModel} → ${primarySize}</title>
@@ -3813,8 +4009,8 @@ ${(function(){
     return `<tr><td>Mn2 (redução i=${r})</td><td>${fmtNum(tT)} Nm</td><td>${fmtNum(sT)} Nm</td></tr>`;
   })()}
   <tr><td>Código Sugerido</td>
-    <td><b>${bonfDesignation(byTorque.size, p.stages, r, bonfOutput)}</b></td>
-    <td><b>${bonfDesignation(byShaft.size, p.stages, r, bonfOutput)}</b></td>
+    <td><b>${bonfDesignation(byTorque.size, p.stages, r, bonfOutput, isFlangeOutput ? 'W0A' : null)}</b></td>
+    <td><b>${bonfDesignation(byShaft.size, p.stages, r, bonfOutput, isFlangeOutput ? 'W0A' : null)}</b></td>
   </tr>
 </table>
 <div class="note-small">Escolha o modelo conforme o parâmetro crítico da aplicação: use o de torque se T₂ é limitante; use o de eixo se há restrição geométrica de acoplamento.</div>`;
