@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -249,8 +249,8 @@
 
     <!-- Language toggle -->
     <div class="lang-toggle">
-        <button class="lang-btn active" id="btn-pt" onclick="setLang('pt')">PT</button>
-        <button class="lang-btn"        id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-pt" onclick="setLang('pt')">PT</button>
+                    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
 
     <div class="main-container">
@@ -441,7 +441,7 @@
 
     <script>
         /* ── Language system ── */
-        var currentLang = 'pt';
+        var currentLang = 'en';
 
         function setLang(lang) {
             currentLang = lang;
@@ -463,7 +463,7 @@
         /* ── Geolocation auto-detect ── */
         function detectLangByLocation() {
             if (!navigator.geolocation) {
-                // Geolocation not supported — keep PT as default
+                            // Geolocation not supported — keep EN as default
                 return;
             }
 
@@ -481,7 +481,7 @@
                     setLang(inBrazil ? 'pt' : 'en');
                 },
                 function(error) {
-                    // User denied or error — keep current default (PT)
+                 // User denied or error — keep current default (EN)
                     // Silently ignore
                 }
             );
