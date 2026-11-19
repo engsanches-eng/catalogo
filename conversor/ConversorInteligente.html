@@ -1749,6 +1749,9 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
   const targetShaft = sewShaftMM || 0;
   const targetFS = sewFS || 1.0;
   const targetN2 = sewMotorRPM / sewRatio; // RPM real já ajustado por frequência
+  // Concorrente com eixo VAZADO (chavetado, estriado, disco de contração): o diâmetro é o do eixo da máquina,
+  // então o Bonfiglioli precisa ter exatamente o mesmo Ø — isso vale mais que a proximidade de rotação.
+  const isHollowIn = /^[FK][AVHT]/.test(sewForma || '');
   
   // Build size→available shafts mapping
   const sizeShaftOpts = BSHAFT_OPTS[bType] || {};
@@ -1808,6 +1811,15 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     if (a.hasAdequateShaft && !b.hasAdequateShaft) return -1;
     if (!a.hasAdequateShaft && b.hasAdequateShaft) return 1;
     
+    // Priority 1b: eixo vazado → diâmetro exato, com rotação até ±25% e FS mínimo:
+    // FS >= 85% do concorrente, limitado a 1,0 (se o concorrente está folgado, FS 1,0 já basta)
+    if (isHollowIn) {
+      const fsH = Math.min(targetFS * 0.85, 1.0);
+      const aH = a.hasExactShaft && a.n2Pct <= 0.25 && a.eFS >= fsH;
+      const bH = b.hasExactShaft && b.n2Pct <= 0.25 && b.eFS >= fsH;
+      if (aH !== bH) return aH ? -1 : 1;
+    }
+    
     // Priority 2: rotação de saída dentro de ±10% do concorrente (define a aplicação).
     // Se o FS não fecha dentro dessa faixa, sobe-se de tamanho em vez de mudar a redução.
     const aN2Ok = a.n2Pct <= 0.10, bN2Ok = b.n2Pct <= 0.10;
@@ -1831,6 +1843,10 @@ function findBonfiglioliEquiv(sewLine, sewTorque, sewRatio, sewMotorRPM, sewPowe
     
     // Priority 4: Output RPM closest to SEW (defines the application)
     if (Math.abs(a.n2Pct - b.n2Pct) > 0.03) return a.n2Pct - b.n2Pct;
+    if (a.eSize === b.eSize) {
+      if (a.entry[3] !== b.entry[3]) return a.entry[3] - b.entry[3]; // menos estágios
+      if (a.eFS !== b.eFS) return b.eFS - a.eFS;                     // maior FS
+    }
     
     // Priority 5: Smallest shaft difference (prefer not oversizing)
     if (a.shaftDiff !== b.shaftDiff) return a.shaftDiff - b.shaftDiff;
@@ -2002,7 +2018,14 @@ function findVFWEquiv(sewTorque, sewRatio, sewMotorRPM, sewPowerKW, sewShaftMM, 
   const fsMin = scored.filter(c => c.eFS >= 1.0);
   const pool = fsMin.length > 0 ? fsMin : scored;
 
+  const isHollowW = /^S[AHT]/.test(sewForma || '');
   pool.sort((a, b) => {
+    // Priority 0: eixo vazado → diâmetro exato (rotação até ±25%)
+    if (isHollowW) {
+      // (o pool do VF/W já exige FS >= 1,0)
+      const aH = a.shaftDiff === 0 && a.n2Pct <= 0.25, bH = b.shaftDiff === 0 && b.n2Pct <= 0.25;
+      if (aH !== bH) return aH ? -1 : 1;
+    }
     // Priority 1: rotação de saída dentro de ±10% do concorrente
     const aN2Ok = a.n2Pct <= 0.10, bN2Ok = b.n2Pct <= 0.10;
     if (aN2Ok !== bN2Ok) return aN2Ok ? -1 : 1;
